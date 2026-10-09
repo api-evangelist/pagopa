@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/pagopa/main/json-schema/pagopa-rate-limit-limit-schema.json",
+  "title": "RateLimitLimit",
+  "description": "The number of allowed requests in the current period",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/pagopa-mdc-citizen-consent-openapi.yml#/components/schemas/RateLimitLimit",
+  "type": "integer",
+  "format": "int32",
+  "minimum": 1,
+  "maximum": 240
+}

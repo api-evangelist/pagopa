@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/pagopa/main/json-schema/pagopa-signal-pull-response-schema.json",
+  "title": "SignalPullResponse",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/pagopa-pdnd-signal-hub-pull-openapi.yml#/components/schemas/SignalPullResponse",
+  "type": "object",
+  "properties": {
+    "signals": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "signalType": {
+            "$ref": "#/$defs/signalType"
+          },
+          "objectId": {
+            "type": "string"
+          },
+          "eserviceId": {
+            "type": "string"
+          },
+          "signalId": {
+            "type": "number"
+          },
+          "objectType": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "signalType",
+          "objectId",
+          "eserviceId",
+          "signalId",
+          "objectType"
+        ]
+      }
+    },
+    "lastSignalId": {
+      "type": [
+        "number",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "signals"
+  ],
+  "$defs": {
+    "signalType": {
+      "type": "string",
+      "enum": [
+        "CREATE",
+        "UPDATE",
+        "DELETE",
+        "SEEDUPDATE"
+      ]
+    }
+  }
+}

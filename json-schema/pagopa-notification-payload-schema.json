@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/pagopa/main/json-schema/pagopa-notification-payload-schema.json",
+  "title": "NotificationPayload",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/pagopa-mdc-tpp-message-openapi.yml#/components/schemas/NotificationPayload",
+  "type": "object",
+  "required": [
+    "messageId",
+    "recipientId",
+    "title",
+    "triggerDateTime",
+    "triggerDateTimeUTC",
+    "senderDescription",
+    "messageUrl",
+    "originId",
+    "content",
+    "workflowType"
+  ],
+  "properties": {
+    "messageId": {
+      "description": "ID univoco del messaggio.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "recipientId": {
+      "description": "ID del destinatario (Codice Fiscale).",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "triggerDateTime": {
+      "description": "Data e ora in cui il soggetto che ha originato il messaggio ha richiesto l'invio.",
+      "type": "string",
+      "format": "date-time"
+    },
+    "triggerDateTimeUTC": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Data e ora in cui il soggetto che ha originato il messaggio ha richiesto l'invio (ISO 8601)."
+    },
+    "senderDescription": {
+      "description": "Descrizione del soggetto che ha originato il messaggio. Supporta UTF-8.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 250
+    },
+    "messageUrl": {
+      "description": "URL per recuperare il messaggio originale.",
+      "type": "string",
+      "format": "uri",
+      "minLength": 1,
+      "maxLength": 2048
+    },
+    "originId": {
+      "description": "ID del messaggio originale.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "title": {
+      "description": "Titolo del messaggio. Supporta UTF-8.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 250
+    },
+    "content": {
+      "description": "Contenuto del messaggio in formato Markdown, dinamico in base a workflowType (ANALOG/DIGITAL).\n\n- ANALOG: include la scadenza per accedere alla notifica ed evitare la consegna postale\n- DIGITAL: messaggio standard senza scadenza, include informazioni sulla consegna legale\n",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100000
+    },
+    "associatedPayment": {
+      "description": "Flag che indica se è presente un pagamento associato.",
+      "type": "boolean"
+    },
+    "analogSchedulingDate": {
+      "description": "Data di scadenza per la deadline di 5 giorni (ISO 8601).\nObbligatorio solo quando workflowType è ANALOG.\n",
+      "type": "string",
+      "format": "date-time"
+    },
+    "workflowType": {
+      "description": "Identifica il tipo di notifica (ANALOG o DIGITAL).",
+      "type": "string",
+      "enum": [
+        "ANALOG",
+        "DIGITAL"
+      ]
+    }
+  }
+}

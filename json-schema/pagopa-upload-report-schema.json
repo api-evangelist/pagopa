@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/pagopa/main/json-schema/pagopa-upload-report-schema.json",
+  "title": "UploadReport",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/pagopa-gpd-massive-v1-openapi.yml#/components/schemas/UploadReport",
+  "type": "object",
+  "properties": {
+    "uploadID": {
+      "type": "string"
+    },
+    "processedItem": {
+      "type": "integer",
+      "format": "int32"
+    },
+    "submittedItem": {
+      "type": "integer",
+      "format": "int32"
+    },
+    "responses": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/ResponseEntry"
+      }
+    },
+    "startTime": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "endTime": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "$defs": {
+    "ResponseEntry": {
+      "type": "object",
+      "properties": {
+        "statusCode": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "statusMessage": {
+          "type": "string"
+        },
+        "requestIDs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,190 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/pagopa/main/json-schema/pagopa-dossier-detail-view-schema.json",
+  "title": "DossierDetailView",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/pagopa-firma-con-io-issuer-openapi.yml#/components/schemas/DossierDetailView",
+  "type": "object",
+  "properties": {
+    "id": {
+      "$ref": "#/$defs/Id"
+    },
+    "title": {
+      "$ref": "#/$defs/DossierTitle"
+    },
+    "support_email": {
+      "$ref": "#/$defs/DossierSupportEmail"
+    },
+    "documents_metadata": {
+      "$ref": "#/$defs/DocumentMetadataList"
+    },
+    "created_at": {
+      "$ref": "#/$defs/Timestamp"
+    },
+    "updated_at": {
+      "$ref": "#/$defs/Timestamp"
+    }
+  },
+  "required": [
+    "id",
+    "title",
+    "documents_metadata",
+    "created_at",
+    "updated_at"
+  ],
+  "$defs": {
+    "Clause": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 80
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "REQUIRED",
+            "UNFAIR",
+            "OPTIONAL"
+          ]
+        }
+      },
+      "required": [
+        "title",
+        "type"
+      ]
+    },
+    "DocumentMetadata": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 60
+        },
+        "signature_fields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SignatureField"
+          }
+        }
+      },
+      "required": [
+        "title"
+      ]
+    },
+    "DocumentMetadataList": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/DocumentMetadata"
+      },
+      "minLength": 1
+    },
+    "DossierSupportEmail": {
+      "type": "string",
+      "description": "Issuer's support email for a specific dossier.",
+      "format": "email"
+    },
+    "DossierTitle": {
+      "type": "string",
+      "minLength": 3
+    },
+    "ExistingSignatureFieldAttrs": {
+      "type": "object",
+      "properties": {
+        "unique_name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "unique_name"
+      ]
+    },
+    "Id": {
+      "type": "string",
+      "description": "Entity Id",
+      "format": "NonEmptyString",
+      "x-import": "@pagopa/ts-commons/lib/strings"
+    },
+    "SignatureField": {
+      "type": "object",
+      "properties": {
+        "attrs": {
+          "$ref": "#/$defs/SignatureFieldAttrs"
+        },
+        "clause": {
+          "$ref": "#/$defs/Clause"
+        }
+      },
+      "required": [
+        "attrs",
+        "clause"
+      ]
+    },
+    "SignatureFieldAttrs": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ExistingSignatureFieldAttrs"
+        },
+        {
+          "$ref": "#/$defs/SignatureFieldToBeCreatedAttrs"
+        }
+      ]
+    },
+    "SignatureFieldToBeCreatedAttrs": {
+      "type": "object",
+      "properties": {
+        "coordinates": {
+          "type": "object",
+          "properties": {
+            "x": {
+              "type": "number"
+            },
+            "y": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "x",
+            "y"
+          ]
+        },
+        "page": {
+          "type": "number",
+          "minimum": 0
+        },
+        "size": {
+          "type": "object",
+          "properties": {
+            "w": {
+              "type": "number",
+              "minimum": 0
+            },
+            "h": {
+              "type": "number",
+              "minimum": 0
+            }
+          },
+          "required": [
+            "w",
+            "h"
+          ]
+        }
+      },
+      "required": [
+        "coordinates",
+        "page",
+        "size"
+      ]
+    },
+    "Timestamp": {
+      "type": "string",
+      "format": "UTCISODateFromString",
+      "description": "A date-time field in ISO-8601 format and UTC timezone.",
+      "x-import": "@pagopa/ts-commons/lib/dates"
+    }
+  }
+}

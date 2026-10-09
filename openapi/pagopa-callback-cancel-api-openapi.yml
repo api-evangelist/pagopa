@@ -1,0 +1,960 @@
+openapi: 3.2.0
+info:
+  title: Pagopa Callback Cancel API
+  version: 0.0.1
+  contact:
+    email: cstar@pagopa.it
+  description: 'Operations tagged callback-cancel across 2 of this provider''s published API definitions: srtp-callback.yaml, pagopa-srtp-callback-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- description: Development/Test
+  url: https://api-rtp-cb.dev.cstar.pagopa.it/rtp/cb/v1
+  x-internal: true
+- description: User Acceptance Test
+  url: https://api-rtp-cb.uat.cstar.pagopa.it/rtp/cb/v1
+  x-internal: false
+- description: Production
+  url: https://api-rtp-cb.cstar.pagopa.it/rtp/cb/v1
+  x-internal: false
+tags:
+- name: callback-cancel
+paths:
+  /cancel:
+    post:
+      summary: Posting of a SEPA Request-To-Pay Cancellation Response to the Payee's SRTP…
+      description: This endpoint is called by the payer's SRTP-SP to forward a SEPA payment cancellation request response to the payee's SRTP-SP via the callback URL provided during the initial request.
+      operationId: sendCallbackCancel
+      tags:
+      - callback-cancel
+      requestBody:
+        description: ISO20022 based SEPA Request-To-Pay Cancellation Response
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SepaRequestToPayCancellationResponseResource'
+        required: true
+      responses:
+        '200':
+          description: OK - the callback server accepts the callback.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '415':
+          $ref: '#/components/responses/UnsupportedMediaType'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    servers:
+    - description: Development/Test
+      url: https://api-rtp-cb.dev.cstar.pagopa.it/rtp/cb/v1
+      x-internal: true
+    - description: User Acceptance Test
+      url: https://api-rtp-cb.uat.cstar.pagopa.it/rtp/cb/v1
+      x-internal: false
+    - description: Production
+      url: https://api-rtp-cb.cstar.pagopa.it/rtp/cb/v1
+      x-internal: false
+components:
+  schemas:
+    RemittanceInformation16_EPC259-22_V3.0_DS04b:
+      type: object
+      properties:
+        Ustrd:
+          $ref: '#/components/schemas/Max140Text'
+        Strd:
+          $ref: '#/components/schemas/StructuredRemittanceInformation16_EPC259-22_V3.0_DS04b'
+    Max140Text:
+      maxLength: 140
+      minLength: 1
+      type: string
+    CancellationStatusReason3Choice_EPC259-22_V3.0_DS12N:
+      oneOf:
+      - $ref: '#/components/schemas/ExternalPaymentCancellationRejection1Code_II_Wrapper'
+    ExternalServiceLevel1Code:
+      maxLength: 4
+      minLength: 1
+      enum:
+      - SEPA
+      - SRTP
+      type: string
+    RemittanceAmount2_EPC259-22_V3.0_DS02:
+      type: object
+      properties:
+        CdtNoteAmt:
+          $ref: '#/components/schemas/ActiveOrHistoricCurrencyAndAmount_EPC259-22_V3.0_DS02_2'
+    BICFIDec2014Identifier:
+      pattern: '[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}([A-Z0-9]{3,3}){0,1}'
+      type: string
+    GenericHalLink:
+      type: object
+      properties:
+        href:
+          type: string
+        templated:
+          type: boolean
+          default: false
+      required:
+      - href
+    CashAccount38:
+      type: object
+      properties:
+        Id:
+          $ref: '#/components/schemas/AccountIdentification4Choice'
+      required:
+      - Id
+    Party40Choice_EPC259-22_V3.0_DS11:
+      oneOf:
+      - $ref: '#/components/schemas/PartyIdentification135_EPC259-22_V3.0_DS04b_Wrapper'
+      - $ref: '#/components/schemas/BranchAndFinancialInstitutionIdentification6_EPC259-22_V3.0_DS02_Wrapper'
+    PaymentTransaction102_EPC259-22_V3.0_DS12N:
+      type: object
+      properties:
+        CxlStsId:
+          $ref: '#/components/schemas/Max35Text'
+        OrgnlGrpInf:
+          $ref: '#/components/schemas/OriginalGroupInformation29_EPC259-22_V3.0_DS15RTP'
+        OrgnlInstrId:
+          $ref: '#/components/schemas/Max35Text'
+        OrgnlEndToEndId:
+          $ref: '#/components/schemas/Max35Text'
+        OrgnlTxId:
+          $ref: '#/components/schemas/Max35Text'
+        TxCxlSts:
+          $ref: '#/components/schemas/CancellationIndividualStatus1Code'
+        CxlStsRsnInf:
+          $ref: '#/components/schemas/CancellationStatusReason4_EPC259-22_V3.0_DS12N'
+        RsltnRltdInf:
+          $ref: '#/components/schemas/ResolutionData1_EPC259-22_V3.0_DS16RFC'
+        OrgnlTxRef:
+          $ref: '#/components/schemas/OriginalTransactionReference28_EPC259-22_V3.0_DS16RFC'
+      required:
+      - CxlStsId
+      - OrgnlGrpInf
+      - OrgnlInstrId
+      - OrgnlEndToEndId
+      - TxCxlSts
+      - CxlStsRsnInf
+      - OrgnlTxRef
+    ISODateTime:
+      type: string
+    PaymentTransaction103_EPC259-22_V3.0_DS16RFC:
+      type: object
+      properties:
+        OrgnlInstrId:
+          $ref: '#/components/schemas/Max35Text'
+        OrgnlEndToEndId:
+          $ref: '#/components/schemas/Max35Text'
+      required:
+      - OrgnlInstrId
+      - OrgnlEndToEndId
+    AmountType4Choice_EPC259-22_V3.0_DS02:
+      oneOf:
+      - $ref: '#/components/schemas/ActiveOrHistoricCurrencyAndAmount_EPC259-22_V3.0_DS02_Wrapper'
+    PaymentTypeInformation27_EPC259-22_V3.0_DS15RTP:
+      type: object
+      properties:
+        SvcLvl:
+          $ref: '#/components/schemas/ServiceLevel8Choice'
+        LclInstrm:
+          $ref: '#/components/schemas/LocalInstrument2Choice'
+      required:
+      - SvcLvl
+      - LclInstrm
+    ISODateTime_Wrapper:
+      type: object
+      properties:
+        DtTm:
+          $ref: '#/components/schemas/ISODateTime'
+    GenericOrganisationIdentification1_EPC259-22_V3.0_DS15RTP:
+      type: object
+      properties:
+        Id:
+          $ref: '#/components/schemas/Max35Text'
+        SchmeNm:
+          $ref: '#/components/schemas/OrganisationIdentificationSchemeName1Choice_EPC259-22_V3.0_DS16RTP_2'
+      required:
+      - Id
+      - SchmeNm
+    ErrorDetail:
+      type: object
+      properties:
+        location:
+          enum:
+          - header
+          - query
+          type: string
+        name:
+          type: string
+        path:
+          type: string
+        erroneousValue:
+          type: string
+        message:
+          type: string
+        expectedPattern:
+          type: string
+        expectedValueRange:
+          type: object
+          properties:
+            minValue:
+              type: integer
+            maxValue:
+              type: integer
+        expectedValueCount:
+          type: object
+          properties:
+            minValue:
+              type: integer
+            maxValue:
+              type: integer
+        expectedEnumeration:
+          type: array
+          items:
+            type: string
+    GenericOrganisationIdentification1_EPC259-22_V3.0_DS04b:
+      type: object
+      properties:
+        Id:
+          $ref: '#/components/schemas/Max35Text'
+        SchmeNm:
+          $ref: '#/components/schemas/OrganisationIdentificationSchemeName1Choice_EPC259-22_V3.0_DS04b'
+        Issr:
+          $ref: '#/components/schemas/Max35Text'
+      required:
+      - Id
+    PaymentTransaction102_EPC259-22_V3.0_DS12P:
+      type: object
+      properties:
+        CxlStsId:
+          $ref: '#/components/schemas/Max35Text'
+        OrgnlGrpInf:
+          $ref: '#/components/schemas/OriginalGroupInformation29_EPC259-22_V3.0_DS15RTP'
+        OrgnlInstrId:
+          $ref: '#/components/schemas/Max35Text'
+        OrgnlEndToEndId:
+          $ref: '#/components/schemas/Max35Text'
+        OrgnlTxId:
+          $ref: '#/components/schemas/Max35Text'
+        TxCxlSts:
+          $ref: '#/components/schemas/CancellationIndividualStatus1Code_II'
+        CxlStsRsnInf:
+          $ref: '#/components/schemas/CancellationStatusReason4_EPC259-22_V3.0_DS12P'
+        RsltnRltdInf:
+          $ref: '#/components/schemas/ResolutionData1_EPC259-22_V3.0_DS16RFC'
+        OrgnlTxRef:
+          $ref: '#/components/schemas/OriginalTransactionReference28_EPC259-22_V3.0_DS16RFC'
+      required:
+      - CxlStsId
+      - OrgnlGrpInf
+      - OrgnlInstrId
+      - OrgnlEndToEndId
+      - TxCxlSts
+      - CxlStsRsnInf
+      - OrgnlTxRef
+    DocumentType3Code:
+      enum:
+      - SCOR
+      type: string
+    ExternalOrganisationIdentification1Code_II_Wrapper:
+      type: object
+      properties:
+        Cd:
+          $ref: '#/components/schemas/ExternalOrganisationIdentification1Code_II'
+    ActiveOrHistoricCurrencyAndAmount_EPC259-22_V3.0_DS02:
+      minimum: 0
+      type: number
+    Max35Text:
+      maxLength: 35
+      minLength: 1
+      type: string
+    OrganisationIdentificationSchemeName1Choice_EPC259-22_V3.0_DS16RTP_2:
+      oneOf:
+      - $ref: '#/components/schemas/ExternalOrganisationIdentification1Code_II_Wrapper'
+    OriginalGroupInformation29_EPC259-22_V3.0_DS15RTP:
+      type: object
+      properties:
+        OrgnlMsgId:
+          $ref: '#/components/schemas/Max35Text'
+        OrgnlMsgNmId:
+          $ref: '#/components/schemas/Max35Text'
+        OrgnlCreDtTm:
+          $ref: '#/components/schemas/ISODateTime'
+      required:
+      - OrgnlMsgId
+      - OrgnlMsgNmId
+      - OrgnlCreDtTm
+    ResolutionOfInvestigationV09_EPC259-22_V3.0_DS12P:
+      type: object
+      properties:
+        Assgnmt:
+          $ref: '#/components/schemas/CaseAssignment5_EPC259-22_V3.0_DS11'
+        Sts:
+          $ref: '#/components/schemas/InvestigationStatus5Choice_EPC259-22_V3.0_DS12P'
+        CxlDtls:
+          $ref: '#/components/schemas/UnderlyingTransaction22_EPC259-22_V3.0_DS12P'
+      required:
+      - Assgnmt
+      - Sts
+      - CxlDtls
+    PartyIdentification135_EPC259-22_V3.0_DS15RTP_Wrapper:
+      type: object
+      properties:
+        Pty:
+          $ref: '#/components/schemas/PartyIdentification135_EPC259-22_V3.0_DS15RTP'
+    ExternalPaymentCancellationRejection1Code_II_Wrapper:
+      type: object
+      properties:
+        Cd:
+          $ref: '#/components/schemas/ExternalPaymentCancellationRejection1Code_II'
+    InvestigationStatus5Choice_EPC259-22_V3.0_DS12P:
+      oneOf:
+      - $ref: '#/components/schemas/ExternalInvestigationExecutionConfirmation1Code_II_Wrapper'
+    StructuredRemittanceInformation16_EPC259-22_V3.0_DS04b:
+      type: object
+      properties:
+        RfrdDocAmt:
+          $ref: '#/components/schemas/RemittanceAmount2_EPC259-22_V3.0_DS02'
+        CdtrRefInf:
+          $ref: '#/components/schemas/CreditorReferenceInformation2_EPC259-22_V3.0_DS02'
+    DateAndDateTime2Choice_EPC259-22_V3.0_DS02:
+      oneOf:
+      - $ref: '#/components/schemas/ISODate_Wrapper'
+      - $ref: '#/components/schemas/ISODateTime_Wrapper'
+    ExternalLocalInstrument1Code:
+      maxLength: 35
+      minLength: 1
+      enum:
+      - CTP
+      - INST
+      - ITP
+      - TRF
+      type: string
+    ExternalPaymentCancellationRejection1Code_II:
+      maxLength: 4
+      minLength: 1
+      enum:
+      - ACLR
+      - AEXR
+      - ARFR
+      - ARJR
+      - PATE
+      - RR04
+      - URTP
+      type: string
+    LEIIdentifier:
+      pattern: '[A-Z0-9]{18,18}[0-9]{2,2}'
+      type: string
+    BranchAndFinancialInstitutionIdentification6_EPC259-22_V3.0_DS02:
+      type: object
+      properties:
+        FinInstnId:
+          $ref: '#/components/schemas/FinancialInstitutionIdentification18_EPC259-22_V3.0_DS02'
+      required:
+      - FinInstnId
+    PartyIdentification135_EPC259-22_V3.0_DS15RTP:
+      type: object
+      properties:
+        Nm:
+          $ref: '#/components/schemas/Max140Text_EPC259-22_V3.0_DS02'
+        Id:
+          $ref: '#/components/schemas/Party38Choice_EPC259-22_V3.0_DS15RTP'
+      required:
+      - Nm
+      - Id
+    ExternalFinancialInstitutionIdentification1Code:
+      maxLength: 4
+      minLength: 1
+      type: string
+    OrganisationIdentification29_EPC259-22_V3.0_DS04b:
+      type: object
+      properties:
+        AnyBIC:
+          $ref: '#/components/schemas/AnyBICDec2014Identifier'
+        LEI:
+          $ref: '#/components/schemas/LEIIdentifier'
+        Othr:
+          $ref: '#/components/schemas/GenericOrganisationIdentification1_EPC259-22_V3.0_DS04b'
+    IBAN2007Identifier_Wrapper:
+      type: object
+      properties:
+        IBAN:
+          $ref: '#/components/schemas/IBAN2007Identifier'
+    FinancialInstitutionIdentification18_EPC259-22_V3.0_DS02:
+      type: object
+      properties:
+        BICFI:
+          $ref: '#/components/schemas/BICFIDec2014Identifier'
+        LEI:
+          $ref: '#/components/schemas/LEIIdentifier'
+        Othr:
+          $ref: '#/components/schemas/GenericFinancialIdentification1'
+    ExternalFinancialInstitutionIdentification1Code_Wrapper:
+      type: object
+      properties:
+        Cd:
+          $ref: '#/components/schemas/ExternalFinancialInstitutionIdentification1Code'
+    OrganisationIdentificationSchemeName1Choice_EPC259-22_V3.0_DS04b:
+      oneOf:
+      - $ref: '#/components/schemas/ExternalOrganisationIdentification1Code_II_Wrapper'
+      - $ref: '#/components/schemas/Max35Text_Wrapper'
+    FinancialIdentificationSchemeName1Choice:
+      oneOf:
+      - $ref: '#/components/schemas/ExternalFinancialInstitutionIdentification1Code_Wrapper'
+      - $ref: '#/components/schemas/Max35Text_Wrapper'
+    ExternalPersonIdentification1Code_II:
+      maxLength: 4
+      minLength: 1
+      enum:
+      - ARNU
+      - CCPT
+      - CUST
+      - DRLC
+      - EMPL
+      - NIDN
+      - POID
+      - SOSE
+      - TELE
+      - TXID
+      type: string
+    OrganisationIdentification29_EPC259-22_V3.0_DS15RTP_Wrapper:
+      type: object
+      properties:
+        OrgId:
+          $ref: '#/components/schemas/OrganisationIdentification29_EPC259-22_V3.0_DS15RTP'
+    ExternalInvestigationExecutionConfirmation1Code_II_Wrapper:
+      type: object
+      properties:
+        Conf:
+          $ref: '#/components/schemas/ExternalInvestigationExecutionConfirmation1Code_II'
+    Party40Choice_EPC259-22_V3.0_DS15RTP:
+      oneOf:
+      - $ref: '#/components/schemas/PartyIdentification135_EPC259-22_V3.0_DS15RTP_Wrapper'
+    ActiveOrHistoricCurrencyAndAmount_EPC259-22_V3.0_DS02_Wrapper:
+      type: object
+      properties:
+        InstdAmt:
+          $ref: '#/components/schemas/ActiveOrHistoricCurrencyAndAmount_EPC259-22_V3.0_DS02'
+    OrganisationIdentification29_EPC259-22_V3.0_DS15RTP:
+      type: object
+      properties:
+        AnyBIC:
+          $ref: '#/components/schemas/AnyBICDec2014Identifier'
+        LEI:
+          $ref: '#/components/schemas/LEIIdentifier'
+        Othr:
+          $ref: '#/components/schemas/GenericOrganisationIdentification1_EPC259-22_V3.0_DS15RTP'
+    GenericPersonIdentification1_EPC259-22_V3.0_DS15RTP:
+      type: object
+      properties:
+        Id:
+          $ref: '#/components/schemas/Max35Text'
+        SchmeNm:
+          $ref: '#/components/schemas/PersonIdentificationSchemeName1Choice_V'
+      required:
+      - Id
+      - SchmeNm
+    UnderlyingTransaction22_EPC259-22_V3.0_DS12N:
+      type: object
+      properties:
+        OrgnlPmtInfAndSts:
+          type: array
+          items:
+            $ref: '#/components/schemas/OriginalPaymentInstruction30_EPC259-22_V3.0_DS12N'
+          maxItems: 2
+        TxInfAndSts:
+          $ref: '#/components/schemas/PaymentTransaction102_EPC259-22_V3.0_DS12N'
+      required:
+      - TxInfAndSts
+    CreditorReferenceType1Choice_EPC259-22_V3.0_DS02:
+      oneOf:
+      - $ref: '#/components/schemas/DocumentType3Code_Wrapper'
+    Charges7_EPC259-22_V3.0_DS04b:
+      type: object
+      properties:
+        Amt:
+          $ref: '#/components/schemas/ActiveOrHistoricCurrencyAndAmount_EPC259-22_V3.0_DS04b'
+        Agt:
+          $ref: '#/components/schemas/BranchAndFinancialInstitutionIdentification6_EPC259-22_V3.0_DS02'
+      required:
+      - Amt
+      - Agt
+    PartyIdentification135_EPC259-22_V3.0_DS04b:
+      type: object
+      properties:
+        Id:
+          $ref: '#/components/schemas/Party38Choice_EPC259-22_V3.0_DS04b'
+      required:
+      - Id
+    PartyIdentification135_EPC259-22_V3.0_DS04b_Wrapper:
+      type: object
+      properties:
+        Pty:
+          $ref: '#/components/schemas/PartyIdentification135_EPC259-22_V3.0_DS04b'
+    Max105Text:
+      maxLength: 105
+      minLength: 1
+      type: string
+    PersonIdentification13_EPC259-22_V3.0_DS15RTP_Wrapper:
+      type: object
+      properties:
+        PrvtId:
+          $ref: '#/components/schemas/PersonIdentification13_EPC259-22_V3.0_DS15RTP'
+    SepaRequestToPayCancellationResponse:
+      oneOf:
+      - $ref: '#/components/schemas/PositiveSepaRequestToPayCancellationResponse'
+      - $ref: '#/components/schemas/NegativeSepaRequestToPayCancellationResponse'
+    BranchAndFinancialInstitutionIdentification6_EPC259-22_V3.0_DS02_Wrapper:
+      type: object
+      properties:
+        Agt:
+          $ref: '#/components/schemas/BranchAndFinancialInstitutionIdentification6_EPC259-22_V3.0_DS02'
+    OriginalPaymentInstruction30_EPC259-22_V3.0_DS16RFC:
+      type: object
+      properties:
+        OrgnlPmtInfId:
+          $ref: '#/components/schemas/Max35Text'
+        TxInfAndSts:
+          type: array
+          items:
+            $ref: '#/components/schemas/PaymentTransaction103_EPC259-22_V3.0_DS16RFC'
+      required:
+      - OrgnlPmtInfId
+    ErrorModelType2:
+      type: object
+      description: Error response format returned by the Spring WebFlux gateway layer.
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          example: '2026-05-26T08:51:22.506+00:00'
+        status:
+          type: integer
+          format: int32
+          example: 400
+        error:
+          type: string
+          maxLength: 140
+          example: Bad Request
+        exception:
+          type: string
+          maxLength: 140
+          description: The class name of the root exception (if configured).
+        message:
+          type: string
+          maxLength: 140
+          description: The exception message (if configured).
+        errors:
+          type: array
+          description: Any ObjectErrors from a BindingResult or MethodValidationResult exception (if configured).
+          items:
+            type: object
+        trace:
+          type: string
+          description: The exception stack trace (if configured).
+        path:
+          type: string
+          maxLength: 140
+          example: /send
+        requestId:
+          type: string
+          maxLength: 140
+          example: b280c067-21973
+      required:
+      - timestamp
+      - path
+      - status
+      - error
+      - requestId
+    ExternalInvestigationExecutionConfirmation1Code_II:
+      maxLength: 4
+      minLength: 1
+      enum:
+      - CNCL
+      type: string
+    NegativeSepaRequestToPayCancellationResponse:
+      type: object
+      properties:
+        Document:
+          $ref: '#/components/schemas/Document_EPC259-22_V3.0_DS12N'
+    CancellationStatusReason4_EPC259-22_V3.0_DS12P:
+      type: object
+      properties:
+        Orgtr:
+          $ref: '#/components/schemas/PartyIdentification135_EPC259-22_V3.0_DS04b'
+        AddtlInf:
+          type: array
+          items:
+            $ref: '#/components/schemas/Max105Text'
+          maxItems: 4
+      required:
+      - Orgtr
+    ErrorModel:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        status:
+          type: integer
+          format: int32
+        error:
+          maxLength: 140
+          type: string
+        message:
+          maxLength: 140
+          type: string
+        path:
+          maxLength: 140
+          type: string
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          minItems: 1
+      required:
+      - status
+      - message
+    InvestigationStatus5Choice_EPC259-22_V3.0_DS12N:
+      oneOf:
+      - $ref: '#/components/schemas/ExternalInvestigationExecutionConfirmation1Code_Wrapper'
+    OrganisationIdentification29_EPC259-22_V3.0_DS04b_Wrapper:
+      type: object
+      properties:
+        OrgId:
+          $ref: '#/components/schemas/OrganisationIdentification29_EPC259-22_V3.0_DS04b'
+    CancellationIndividualStatus1Code:
+      enum:
+      - RJCR
+      type: string
+    AccountIdentification4Choice:
+      oneOf:
+      - $ref: '#/components/schemas/IBAN2007Identifier_Wrapper'
+    SepaRequestToPayCancellationResponseResource:
+      type: object
+      properties:
+        resourceId:
+          $ref: '#/components/schemas/ResourceId'
+        SepaRequestToPayCancellationResponse:
+          $ref: '#/components/schemas/SepaRequestToPayCancellationResponse'
+        _links:
+          type: object
+          properties:
+            initialSepaRequestToPayUri:
+              $ref: '#/components/schemas/GenericHalLink'
+          required:
+          - initialSepaRequestToPayUri
+    CancellationStatusReason4_EPC259-22_V3.0_DS12N:
+      type: object
+      properties:
+        Orgtr:
+          $ref: '#/components/schemas/PartyIdentification135_EPC259-22_V3.0_DS04b'
+        Rsn:
+          $ref: '#/components/schemas/CancellationStatusReason3Choice_EPC259-22_V3.0_DS12N'
+        AddtlInf:
+          type: array
+          items:
+            $ref: '#/components/schemas/Max105Text'
+          maxItems: 4
+      required:
+      - Orgtr
+      - Rsn
+    OriginalPaymentInstruction30_EPC259-22_V3.0_DS12N:
+      type: object
+      properties:
+        OrgnlPmtInfId:
+          $ref: '#/components/schemas/Max35Text'
+        TxInfAndSts:
+          $ref: '#/components/schemas/PaymentTransaction103_EPC259-22_V3.0_DS16RFC'
+      required:
+      - OrgnlPmtInfId
+      - TxInfAndSts
+    Document_EPC259-22_V3.0_DS12P:
+      type: object
+      properties:
+        RsltnOfInvstgtn:
+          $ref: '#/components/schemas/ResolutionOfInvestigationV09_EPC259-22_V3.0_DS12P'
+      required:
+      - RsltnOfInvstgtn
+    ExternalLocalInstrument1Code_Wrapper:
+      type: object
+      properties:
+        Cd:
+          $ref: '#/components/schemas/ExternalLocalInstrument1Code'
+    PositiveSepaRequestToPayCancellationResponse:
+      type: object
+      properties:
+        Document:
+          $ref: '#/components/schemas/Document_EPC259-22_V3.0_DS12P'
+    IBAN2007Identifier:
+      pattern: '[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}'
+      type: string
+    ResourceId:
+      type: string
+    PersonIdentificationSchemeName1Choice_V:
+      oneOf:
+      - $ref: '#/components/schemas/ExternalPersonIdentification1Code_II_Wrapper'
+    ExternalPersonIdentification1Code_II_Wrapper:
+      type: object
+      properties:
+        Cd:
+          $ref: '#/components/schemas/ExternalPersonIdentification1Code_II'
+    Party38Choice_EPC259-22_V3.0_DS04b:
+      oneOf:
+      - $ref: '#/components/schemas/OrganisationIdentification29_EPC259-22_V3.0_DS04b_Wrapper'
+    Max140Text_EPC259-22_V3.0_DS02:
+      maxLength: 70
+      minLength: 1
+      type: string
+    Document_EPC259-22_V3.0_DS12N:
+      type: object
+      properties:
+        RsltnOfInvstgtn:
+          $ref: '#/components/schemas/ResolutionOfInvestigationV09_EPC259-22_V3.0_DS12N'
+      required:
+      - RsltnOfInvstgtn
+    ExternalServiceLevel1Code_Wrapper:
+      type: object
+      properties:
+        Cd:
+          $ref: '#/components/schemas/ExternalServiceLevel1Code'
+    Max35Text_Wrapper:
+      type: object
+      properties:
+        Prtry:
+          $ref: '#/components/schemas/Max35Text'
+    Party38Choice_EPC259-22_V3.0_DS15RTP:
+      oneOf:
+      - $ref: '#/components/schemas/OrganisationIdentification29_EPC259-22_V3.0_DS15RTP_Wrapper'
+      - $ref: '#/components/schemas/PersonIdentification13_EPC259-22_V3.0_DS15RTP_Wrapper'
+    ExternalOrganisationIdentification1Code_II:
+      maxLength: 4
+      minLength: 1
+      enum:
+      - BANK
+      - BDID
+      - BOID
+      - CBID
+      - CHID
+      - CINC
+      - COID
+      - CUST
+      - DUNS
+      - EMPL
+      - GS1G
+      - SREN
+      - SRET
+      - TXID
+      type: string
+    ExternalInvestigationExecutionConfirmation1Code_Wrapper:
+      type: object
+      properties:
+        Conf:
+          $ref: '#/components/schemas/ExternalInvestigationExecutionConfirmation1Code'
+    CaseAssignment5_EPC259-22_V3.0_DS11:
+      type: object
+      properties:
+        Id:
+          $ref: '#/components/schemas/Max35Text'
+        Assgnr:
+          $ref: '#/components/schemas/Party40Choice_EPC259-22_V3.0_DS11'
+        Assgne:
+          $ref: '#/components/schemas/Party40Choice_EPC259-22_V3.0_DS11'
+        CreDtTm:
+          $ref: '#/components/schemas/ISODateTime'
+      required:
+      - Id
+      - Assgnr
+      - Assgne
+      - CreDtTm
+    ExternalInvestigationExecutionConfirmation1Code:
+      maxLength: 4
+      minLength: 1
+      enum:
+      - RJCR
+      type: string
+    CreditorReferenceInformation2_EPC259-22_V3.0_DS02:
+      type: object
+      properties:
+        Tp:
+          $ref: '#/components/schemas/CreditorReferenceType2_EPC259-22_V3.0_DS02'
+        Ref:
+          $ref: '#/components/schemas/Max35Text'
+      required:
+      - Tp
+      - Ref
+    ResolutionOfInvestigationV09_EPC259-22_V3.0_DS12N:
+      type: object
+      properties:
+        Assgnmt:
+          $ref: '#/components/schemas/CaseAssignment5_EPC259-22_V3.0_DS11'
+        Sts:
+          $ref: '#/components/schemas/InvestigationStatus5Choice_EPC259-22_V3.0_DS12N'
+        CxlDtls:
+          $ref: '#/components/schemas/UnderlyingTransaction22_EPC259-22_V3.0_DS12N'
+      required:
+      - Assgnmt
+      - Sts
+      - CxlDtls
+    ISODate:
+      type: string
+    ActiveOrHistoricCurrencyAndAmount_EPC259-22_V3.0_DS02_2:
+      maximum: 999999999.99
+      minimum: 0.01
+      type: number
+    UnderlyingTransaction22_EPC259-22_V3.0_DS12P:
+      type: object
+      properties:
+        OrgnlPmtInfAndSts:
+          type: array
+          items:
+            $ref: '#/components/schemas/OriginalPaymentInstruction30_EPC259-22_V3.0_DS16RFC'
+          maxItems: 2
+        TxInfAndSts:
+          type: array
+          items:
+            $ref: '#/components/schemas/PaymentTransaction102_EPC259-22_V3.0_DS12P'
+    OriginalTransactionReference28_EPC259-22_V3.0_DS16RFC:
+      type: object
+      properties:
+        Amt:
+          $ref: '#/components/schemas/AmountType4Choice_EPC259-22_V3.0_DS02'
+        ReqdExctnDt:
+          $ref: '#/components/schemas/DateAndDateTime2Choice_EPC259-22_V3.0_DS02'
+        PmtTpInf:
+          $ref: '#/components/schemas/PaymentTypeInformation27_EPC259-22_V3.0_DS15RTP'
+        RmtInf:
+          $ref: '#/components/schemas/RemittanceInformation16_EPC259-22_V3.0_DS04b'
+        DbtrAgt:
+          $ref: '#/components/schemas/BranchAndFinancialInstitutionIdentification6_EPC259-22_V3.0_DS02'
+        CdtrAgt:
+          $ref: '#/components/schemas/BranchAndFinancialInstitutionIdentification6_EPC259-22_V3.0_DS02'
+        Cdtr:
+          $ref: '#/components/schemas/Party40Choice_EPC259-22_V3.0_DS15RTP'
+        CdtrAcct:
+          $ref: '#/components/schemas/CashAccount38'
+      required:
+      - Amt
+      - ReqdExctnDt
+      - PmtTpInf
+      - DbtrAgt
+      - CdtrAgt
+      - Cdtr
+      - CdtrAcct
+    LocalInstrument2Choice:
+      oneOf:
+      - $ref: '#/components/schemas/ExternalLocalInstrument1Code_Wrapper'
+      - $ref: '#/components/schemas/Max35Text_Wrapper'
+    AnyBICDec2014Identifier:
+      pattern: '[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}([A-Z0-9]{3,3}){0,1}'
+      type: string
+    ServiceLevel8Choice:
+      oneOf:
+      - $ref: '#/components/schemas/ExternalServiceLevel1Code_Wrapper'
+    ActiveOrHistoricCurrencyAndAmount_EPC259-22_V3.0_DS04b:
+      minimum: 0.01
+      type: number
+    PersonIdentification13_EPC259-22_V3.0_DS15RTP:
+      type: object
+      properties:
+        Othr:
+          $ref: '#/components/schemas/GenericPersonIdentification1_EPC259-22_V3.0_DS15RTP'
+      required:
+      - Othr
+    GenericFinancialIdentification1:
+      type: object
+      properties:
+        Id:
+          $ref: '#/components/schemas/Max35Text'
+        SchmeNm:
+          $ref: '#/components/schemas/FinancialIdentificationSchemeName1Choice'
+        Issr:
+          $ref: '#/components/schemas/Max35Text'
+      required:
+      - Id
+    ISODate_Wrapper:
+      type: object
+      properties:
+        Dt:
+          $ref: '#/components/schemas/ISODate'
+    ResolutionData1_EPC259-22_V3.0_DS16RFC:
+      type: object
+      properties:
+        Chrgs:
+          $ref: '#/components/schemas/Charges7_EPC259-22_V3.0_DS04b'
+      required:
+      - Chrgs
+    DocumentType3Code_Wrapper:
+      type: object
+      properties:
+        Cd:
+          $ref: '#/components/schemas/DocumentType3Code'
+    CancellationIndividualStatus1Code_II:
+      enum:
+      - ACCR
+      type: string
+    CreditorReferenceType2_EPC259-22_V3.0_DS02:
+      type: object
+      properties:
+        CdOrPrtry:
+          $ref: '#/components/schemas/CreditorReferenceType1Choice_EPC259-22_V3.0_DS02'
+        Issr:
+          $ref: '#/components/schemas/Max35Text'
+      required:
+      - CdOrPrtry
+  responses:
+    Forbidden:
+      description: The client is not authorized to call this endpoint (HTTP403).
+      headers:
+        Correlation:
+          $ref: '#/components/headers/X-Request-ID'
+      content:
+        application/json:
+          schema:
+            oneOf:
+            - $ref: '#/components/schemas/ErrorModel'
+            - $ref: '#/components/schemas/ErrorModelType2'
+    InternalServerError:
+      description: An unexpected error occurred on the server side (HTTP500).
+      headers:
+        Correlation:
+          $ref: '#/components/headers/X-Request-ID'
+      content:
+        application/json:
+          schema:
+            oneOf:
+            - $ref: '#/components/schemas/ErrorModel'
+            - $ref: '#/components/schemas/ErrorModelType2'
+    BadRequest:
+      description: The request could not be parsed or processed (HTTP400).
+      headers:
+        Correlation:
+          $ref: '#/components/headers/X-Request-ID'
+      content:
+        application/json:
+          schema:
+            oneOf:
+            - $ref: '#/components/schemas/ErrorModel'
+            - $ref: '#/components/schemas/ErrorModelType2'
+    UnsupportedMediaType:
+      description: The media-type in Content-type of the request is not supported by the server. (HTTP415)
+      headers:
+        Correlation:
+          $ref: '#/components/headers/X-Request-ID'
+      content:
+        application/json:
+          schema:
+            oneOf:
+            - $ref: '#/components/schemas/ErrorModel'
+            - $ref: '#/components/schemas/ErrorModelType2'
+  headers:
+    X-Request-ID:
+      description: Correlation header to be set in a request and retrieved in the relevant response
+      required: false
+      deprecated: false
+      allowEmptyValue: false
+      explode: false
+      allowReserved: false
+      schema:
+        type: string
+x-refined-from:
+- srtp-callback.yaml
+- pagopa-srtp-callback-openapi.yml

@@ -1,0 +1,1933 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/pagopa/main/json-schema/pagopa-asynchronous-sepa-request-to-pay-response-resource-schema.json",
+  "title": "AsynchronousSepaRequestToPayResponseResource",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/pagopa-srtp-callback-openapi.yml#/components/schemas/AsynchronousSepaRequestToPayResponseResource",
+  "type": "object",
+  "properties": {
+    "resourceId": {
+      "$ref": "#/$defs/ResourceId"
+    },
+    "AsynchronousSepaRequestToPayResponse": {
+      "$ref": "#/$defs/AsynchronousSepaRequestToPayResponse"
+    },
+    "_links": {
+      "type": "object",
+      "properties": {
+        "initialSepaRequestToPayUri": {
+          "$ref": "#/$defs/GenericHalLink"
+        }
+      },
+      "required": [
+        "initialSepaRequestToPayUri"
+      ]
+    }
+  },
+  "$defs": {
+    "AccountIdentification4Choice": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/IBAN2007Identifier_Wrapper"
+        }
+      ]
+    },
+    "AccountIdentification4Choice_EPC259-22_V3.0_DS08N": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/IBAN2007Identifier_Wrapper"
+        },
+        {
+          "$ref": "#/$defs/GenericAccountIdentification1_EPC259-22_V3.0_DS08N_Wrapper"
+        }
+      ]
+    },
+    "AccountSchemeName1Choice_EPC259-22_V3.0_DS08N": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ExternalAccountIdentification1Code_II_Wrapper"
+        },
+        {
+          "$ref": "#/$defs/Max35Text_Wrapper"
+        }
+      ]
+    },
+    "ActiveCurrencyAndAmount_EPC259-22_V3.0_DS08P": {
+      "minimum": 0.01,
+      "type": "number"
+    },
+    "ActiveOrHistoricCurrencyAndAmount_EPC259-22_V3.0_DS02": {
+      "minimum": 0,
+      "type": "number"
+    },
+    "ActiveOrHistoricCurrencyAndAmount_EPC259-22_V3.0_DS02_2": {
+      "maximum": 999999999.99,
+      "minimum": 0.01,
+      "type": "number"
+    },
+    "ActiveOrHistoricCurrencyAndAmount_EPC259-22_V3.0_DS02_Wrapper": {
+      "type": "object",
+      "properties": {
+        "InstdAmt": {
+          "$ref": "#/$defs/ActiveOrHistoricCurrencyAndAmount_EPC259-22_V3.0_DS02"
+        }
+      }
+    },
+    "ActiveOrHistoricCurrencyAndAmount_EPC259-22_V3.0_DS04b": {
+      "minimum": 0.01,
+      "type": "number"
+    },
+    "AmountType4Choice_EPC259-22_V3.0_DS02": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ActiveOrHistoricCurrencyAndAmount_EPC259-22_V3.0_DS02_Wrapper"
+        }
+      ]
+    },
+    "AnyBICDec2014Identifier": {
+      "pattern": "[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}([A-Z0-9]{3,3}){0,1}",
+      "type": "string"
+    },
+    "AsynchronousSepaRequestToPayResponse": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/RedirectSepaRequestToPayResponseResource_DS05b"
+        },
+        {
+          "$ref": "#/$defs/PositiveSepaRequestToPayResponseResource_DS05"
+        },
+        {
+          "$ref": "#/$defs/Document"
+        },
+        {
+          "$ref": "#/$defs/PositiveSepaRequestToPayResponse_DS08P"
+        },
+        {
+          "$ref": "#/$defs/NegativeSepaRequestToPayResponse_DS08N"
+        }
+      ]
+    },
+    "BICFIDec2014Identifier": {
+      "pattern": "[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}([A-Z0-9]{3,3}){0,1}",
+      "type": "string"
+    },
+    "BranchAndFinancialInstitutionIdentification6_EPC259-22_V3.0_DS02": {
+      "type": "object",
+      "properties": {
+        "FinInstnId": {
+          "$ref": "#/$defs/FinancialInstitutionIdentification18_EPC259-22_V3.0_DS02"
+        }
+      },
+      "required": [
+        "FinInstnId"
+      ]
+    },
+    "CashAccount38": {
+      "type": "object",
+      "properties": {
+        "Id": {
+          "$ref": "#/$defs/AccountIdentification4Choice"
+        }
+      },
+      "required": [
+        "Id"
+      ]
+    },
+    "CashAccount38_EPC259-22_V3.0_DS08N": {
+      "type": "object",
+      "properties": {
+        "Id": {
+          "$ref": "#/$defs/AccountIdentification4Choice_EPC259-22_V3.0_DS08N"
+        },
+        "Nm": {
+          "$ref": "#/$defs/Max70Text"
+        },
+        "Prxy": {
+          "$ref": "#/$defs/ProxyAccountIdentification1_EPC259-22_V3.0_DS08N"
+        }
+      },
+      "required": [
+        "Id"
+      ]
+    },
+    "Charges7": {
+      "type": "object",
+      "properties": {
+        "Amt": {
+          "$ref": "#/$defs/ActiveOrHistoricCurrencyAndAmount_EPC259-22_V3.0_DS02"
+        },
+        "Agt": {
+          "$ref": "#/$defs/BranchAndFinancialInstitutionIdentification6_EPC259-22_V3.0_DS02"
+        }
+      },
+      "required": [
+        "Amt",
+        "Agt"
+      ]
+    },
+    "Charges7_EPC259-22_V3.0_DS04b": {
+      "type": "object",
+      "properties": {
+        "Amt": {
+          "$ref": "#/$defs/ActiveOrHistoricCurrencyAndAmount_EPC259-22_V3.0_DS04b"
+        },
+        "Agt": {
+          "$ref": "#/$defs/BranchAndFinancialInstitutionIdentification6_EPC259-22_V3.0_DS02"
+        }
+      },
+      "required": [
+        "Amt",
+        "Agt"
+      ]
+    },
+    "CountryCode": {
+      "pattern": "[A-Z]{2,2}",
+      "type": "string"
+    },
+    "CreditorPaymentActivationRequestStatusReportV07": {
+      "type": "object",
+      "properties": {
+        "GrpHdr": {
+          "$ref": "#/$defs/GroupHeader87"
+        },
+        "OrgnlGrpInfAndSts": {
+          "$ref": "#/$defs/OriginalGroupInformation30_EPC259-22_V3.0_DS04b"
+        },
+        "OrgnlPmtInfAndSts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/OriginalPaymentInstruction31"
+          },
+          "maxItems": 2
+        }
+      },
+      "required": [
+        "GrpHdr",
+        "OrgnlGrpInfAndSts"
+      ]
+    },
+    "CreditorPaymentActivationRequestStatusReportV07_EPC259-22_V3.0_DS05": {
+      "type": "object",
+      "properties": {
+        "GrpHdr": {
+          "$ref": "#/$defs/GroupHeader87_EPC259-22_V3.0_DS04b"
+        },
+        "OrgnlGrpInfAndSts": {
+          "$ref": "#/$defs/OriginalGroupInformation30_EPC259-22_V3.0_DS04b"
+        },
+        "OrgnlPmtInfAndSts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/OriginalPaymentInstruction31_EPC259-22_V3.0_DS05"
+          },
+          "maxItems": 2
+        }
+      },
+      "required": [
+        "GrpHdr",
+        "OrgnlGrpInfAndSts"
+      ]
+    },
+    "CreditorPaymentActivationRequestStatusReportV07_EPC259-22_V3.0_DS08N": {
+      "type": "object",
+      "properties": {
+        "GrpHdr": {
+          "$ref": "#/$defs/GroupHeader87_EPC259-22_V3.0_DS08N"
+        },
+        "OrgnlGrpInfAndSts": {
+          "$ref": "#/$defs/OriginalGroupInformation30_EPC259-22_V3.0_DS04b"
+        },
+        "OrgnlPmtInfAndSts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/OriginalPaymentInstruction31_EPC259-22_V3.0_DS08N"
+          },
+          "maxItems": 2
+        }
+      },
+      "required": [
+        "GrpHdr",
+        "OrgnlGrpInfAndSts"
+      ]
+    },
+    "CreditorPaymentActivationRequestStatusReportV07_EPC259-22_V3.0_DS08P": {
+      "type": "object",
+      "properties": {
+        "GrpHdr": {
+          "$ref": "#/$defs/GroupHeader87_EPC259-22_V3.0_DS08N"
+        },
+        "OrgnlGrpInfAndSts": {
+          "$ref": "#/$defs/OriginalGroupInformation30_EPC259-22_V3.0_DS04b"
+        },
+        "OrgnlPmtInfAndSts": {
+          "$ref": "#/$defs/OriginalPaymentInstruction31_EPC259-22_V3.0_DS08P"
+        }
+      },
+      "required": [
+        "GrpHdr",
+        "OrgnlGrpInfAndSts",
+        "OrgnlPmtInfAndSts"
+      ]
+    },
+    "CreditorPaymentActivationRequestStatusReportV07_EPC259-22_V3.0_REDIRECT": {
+      "type": "object",
+      "properties": {
+        "GrpHdr": {
+          "$ref": "#/$defs/GroupHeader87_EPC259-22_V3.0_DS04b"
+        },
+        "OrgnlGrpInfAndSts": {
+          "$ref": "#/$defs/OriginalGroupInformation30_EPC259-22_V3.0_DS04b"
+        },
+        "OrgnlPmtInfAndSts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/OriginalPaymentInstruction31_EPC259-22_V3.0_REDIRECT"
+          },
+          "maxItems": 2
+        }
+      },
+      "required": [
+        "GrpHdr",
+        "OrgnlGrpInfAndSts"
+      ]
+    },
+    "CreditorReferenceInformation2_EPC259-22_V3.0_DS02": {
+      "type": "object",
+      "properties": {
+        "Tp": {
+          "$ref": "#/$defs/CreditorReferenceType2_EPC259-22_V3.0_DS02"
+        },
+        "Ref": {
+          "$ref": "#/$defs/Max35Text"
+        }
+      },
+      "required": [
+        "Tp",
+        "Ref"
+      ]
+    },
+    "CreditorReferenceType1Choice_EPC259-22_V3.0_DS02": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/DocumentType3Code_Wrapper"
+        }
+      ]
+    },
+    "CreditorReferenceType2_EPC259-22_V3.0_DS02": {
+      "type": "object",
+      "properties": {
+        "CdOrPrtry": {
+          "$ref": "#/$defs/CreditorReferenceType1Choice_EPC259-22_V3.0_DS02"
+        },
+        "Issr": {
+          "$ref": "#/$defs/Max35Text"
+        }
+      },
+      "required": [
+        "CdOrPrtry"
+      ]
+    },
+    "DateAndDateTime2Choice_EPC259-22_V3.0_DS02": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ISODate_Wrapper"
+        },
+        {
+          "$ref": "#/$defs/ISODateTime_Wrapper"
+        }
+      ]
+    },
+    "DateAndPlaceOfBirth1": {
+      "type": "object",
+      "properties": {
+        "BirthDt": {
+          "$ref": "#/$defs/ISODate"
+        },
+        "PrvcOfBirth": {
+          "$ref": "#/$defs/Max35Text"
+        },
+        "CityOfBirth": {
+          "$ref": "#/$defs/Max35Text"
+        },
+        "CtryOfBirth": {
+          "$ref": "#/$defs/CountryCode"
+        }
+      },
+      "required": [
+        "BirthDt",
+        "CityOfBirth",
+        "CtryOfBirth"
+      ]
+    },
+    "Document": {
+      "type": "object",
+      "properties": {
+        "CdtrPmtActvtnReqStsRpt": {
+          "$ref": "#/$defs/CreditorPaymentActivationRequestStatusReportV07"
+        }
+      },
+      "required": [
+        "CdtrPmtActvtnReqStsRpt"
+      ]
+    },
+    "DocumentType3Code": {
+      "enum": [
+        "SCOR"
+      ],
+      "type": "string"
+    },
+    "DocumentType3Code_Wrapper": {
+      "type": "object",
+      "properties": {
+        "Cd": {
+          "$ref": "#/$defs/DocumentType3Code"
+        }
+      }
+    },
+    "Document_EPC259-22_V3.0_DS05": {
+      "type": "object",
+      "properties": {
+        "CdtrPmtActvtnReqStsRpt": {
+          "$ref": "#/$defs/CreditorPaymentActivationRequestStatusReportV07_EPC259-22_V3.0_DS05"
+        }
+      },
+      "required": [
+        "CdtrPmtActvtnReqStsRpt"
+      ]
+    },
+    "Document_EPC259-22_V3.0_DS08N": {
+      "type": "object",
+      "properties": {
+        "CdtrPmtActvtnReqStsRpt": {
+          "$ref": "#/$defs/CreditorPaymentActivationRequestStatusReportV07_EPC259-22_V3.0_DS08N"
+        }
+      },
+      "required": [
+        "CdtrPmtActvtnReqStsRpt"
+      ]
+    },
+    "Document_EPC259-22_V3.0_DS08P": {
+      "type": "object",
+      "properties": {
+        "CdtrPmtActvtnReqStsRpt": {
+          "$ref": "#/$defs/CreditorPaymentActivationRequestStatusReportV07_EPC259-22_V3.0_DS08P"
+        }
+      },
+      "required": [
+        "CdtrPmtActvtnReqStsRpt"
+      ]
+    },
+    "Document_EPC259-22_V3.0_REDIRECT": {
+      "type": "object",
+      "properties": {
+        "CdtrPmtActvtnReqStsRpt": {
+          "$ref": "#/$defs/CreditorPaymentActivationRequestStatusReportV07_EPC259-22_V3.0_REDIRECT"
+        }
+      },
+      "required": [
+        "CdtrPmtActvtnReqStsRpt"
+      ]
+    },
+    "ExternalAccountIdentification1Code_II": {
+      "maxLength": 4,
+      "minLength": 1,
+      "enum": [
+        "AIIN",
+        "BBAN",
+        "CUID",
+        "UPIC"
+      ],
+      "type": "string"
+    },
+    "ExternalAccountIdentification1Code_II_Wrapper": {
+      "type": "object",
+      "properties": {
+        "Cd": {
+          "$ref": "#/$defs/ExternalAccountIdentification1Code_II"
+        }
+      }
+    },
+    "ExternalFinancialInstitutionIdentification1Code": {
+      "maxLength": 4,
+      "minLength": 1,
+      "type": "string"
+    },
+    "ExternalFinancialInstitutionIdentification1Code_Wrapper": {
+      "type": "object",
+      "properties": {
+        "Cd": {
+          "$ref": "#/$defs/ExternalFinancialInstitutionIdentification1Code"
+        }
+      }
+    },
+    "ExternalLocalInstrument1Code": {
+      "maxLength": 35,
+      "minLength": 1,
+      "enum": [
+        "CTP",
+        "INST",
+        "ITP",
+        "TRF"
+      ],
+      "type": "string"
+    },
+    "ExternalLocalInstrument1Code_Wrapper": {
+      "type": "object",
+      "properties": {
+        "Cd": {
+          "$ref": "#/$defs/ExternalLocalInstrument1Code"
+        }
+      }
+    },
+    "ExternalOrganisationIdentification1Code_EPC259-22_V3.0_DS02": {
+      "maxLength": 4,
+      "minLength": 1,
+      "enum": [
+        "BOID"
+      ],
+      "type": "string"
+    },
+    "ExternalOrganisationIdentification1Code_EPC259-22_V3.0_DS02_Wrapper": {
+      "type": "object",
+      "properties": {
+        "Cd": {
+          "$ref": "#/$defs/ExternalOrganisationIdentification1Code_EPC259-22_V3.0_DS02"
+        }
+      }
+    },
+    "ExternalOrganisationIdentification1Code_II": {
+      "maxLength": 4,
+      "minLength": 1,
+      "enum": [
+        "BANK",
+        "BDID",
+        "BOID",
+        "CBID",
+        "CHID",
+        "CINC",
+        "COID",
+        "CUST",
+        "DUNS",
+        "EMPL",
+        "GS1G",
+        "SREN",
+        "SRET",
+        "TXID"
+      ],
+      "type": "string"
+    },
+    "ExternalOrganisationIdentification1Code_II_Wrapper": {
+      "type": "object",
+      "properties": {
+        "Cd": {
+          "$ref": "#/$defs/ExternalOrganisationIdentification1Code_II"
+        }
+      }
+    },
+    "ExternalPaymentTransactionStatus1Code": {
+      "maxLength": 4,
+      "minLength": 1,
+      "enum": [
+        "RJCT"
+      ],
+      "type": "string"
+    },
+    "ExternalPaymentTransactionStatus1Code_EPC259-22_V3.0_REDIRECT": {
+      "maxLength": 4,
+      "minLength": 1,
+      "enum": [
+        "",
+        "ACTC"
+      ],
+      "type": "string"
+    },
+    "ExternalPaymentTransactionStatus1Code_II": {
+      "maxLength": 4,
+      "minLength": 1,
+      "enum": [
+        "ACTC"
+      ],
+      "type": "string"
+    },
+    "ExternalPaymentTransactionStatus1Code_IV": {
+      "maxLength": 4,
+      "minLength": 1,
+      "enum": [
+        "ACCP",
+        "ACWC"
+      ],
+      "type": "string"
+    },
+    "ExternalPersonIdentification1Code_EPC259-22_V3.0_DS02": {
+      "maxLength": 4,
+      "minLength": 1,
+      "enum": [
+        "POID"
+      ],
+      "type": "string"
+    },
+    "ExternalPersonIdentification1Code_EPC259-22_V3.0_DS02_Wrapper": {
+      "type": "object",
+      "properties": {
+        "Cd": {
+          "$ref": "#/$defs/ExternalPersonIdentification1Code_EPC259-22_V3.0_DS02"
+        }
+      }
+    },
+    "ExternalPersonIdentification1Code_II": {
+      "maxLength": 4,
+      "minLength": 1,
+      "enum": [
+        "ARNU",
+        "CCPT",
+        "CUST",
+        "DRLC",
+        "EMPL",
+        "NIDN",
+        "POID",
+        "SOSE",
+        "TELE",
+        "TXID"
+      ],
+      "type": "string"
+    },
+    "ExternalPersonIdentification1Code_II_Wrapper": {
+      "type": "object",
+      "properties": {
+        "Cd": {
+          "$ref": "#/$defs/ExternalPersonIdentification1Code_II"
+        }
+      }
+    },
+    "ExternalProxyAccountType1Code_II": {
+      "maxLength": 4,
+      "minLength": 1,
+      "enum": [
+        "BIID",
+        "CCPT",
+        "CINC",
+        "COID",
+        "COTX",
+        "CUST",
+        "DNAM",
+        "DRLC",
+        "EIDN",
+        "EMAL",
+        "EWAL",
+        "LEIC",
+        "MBNO",
+        "NIDN",
+        "PVTX",
+        "SHID",
+        "SOSE",
+        "TELE",
+        "TOKN",
+        "UBIL",
+        "VIPN"
+      ],
+      "type": "string"
+    },
+    "ExternalProxyAccountType1Code_II_Wrapper": {
+      "type": "object",
+      "properties": {
+        "Cd": {
+          "$ref": "#/$defs/ExternalProxyAccountType1Code_II"
+        }
+      }
+    },
+    "ExternalServiceLevel1Code": {
+      "maxLength": 4,
+      "minLength": 1,
+      "enum": [
+        "SEPA",
+        "SRTP"
+      ],
+      "type": "string"
+    },
+    "ExternalServiceLevel1Code_Wrapper": {
+      "type": "object",
+      "properties": {
+        "Cd": {
+          "$ref": "#/$defs/ExternalServiceLevel1Code"
+        }
+      }
+    },
+    "ExternalStatusReason1Code": {
+      "maxLength": 4,
+      "minLength": 1,
+      "enum": [
+        "AC02",
+        "AM03",
+        "AM05",
+        "ATNS",
+        "BE16",
+        "EDTL",
+        "EDTR",
+        "FF01",
+        "FRAD",
+        "MS03",
+        "NRCH",
+        "PINS",
+        "RR04",
+        "RTNS",
+        "SPII"
+      ],
+      "type": "string"
+    },
+    "ExternalStatusReason1Code_II": {
+      "maxLength": 4,
+      "minLength": 1,
+      "enum": [
+        "AM03",
+        "AM05",
+        "AM09",
+        "IEDT",
+        "MS02",
+        "NOAR",
+        "UCRD"
+      ],
+      "type": "string"
+    },
+    "ExternalStatusReason1Code_II_Wrapper": {
+      "type": "object",
+      "properties": {
+        "Cd": {
+          "$ref": "#/$defs/ExternalStatusReason1Code_II"
+        }
+      }
+    },
+    "ExternalStatusReason1Code_Wrapper": {
+      "type": "object",
+      "properties": {
+        "Cd": {
+          "$ref": "#/$defs/ExternalStatusReason1Code"
+        }
+      }
+    },
+    "FinancialIdentificationSchemeName1Choice": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ExternalFinancialInstitutionIdentification1Code_Wrapper"
+        },
+        {
+          "$ref": "#/$defs/Max35Text_Wrapper"
+        }
+      ]
+    },
+    "FinancialInstitutionIdentification18_EPC259-22_V3.0_DS02": {
+      "type": "object",
+      "properties": {
+        "BICFI": {
+          "$ref": "#/$defs/BICFIDec2014Identifier"
+        },
+        "LEI": {
+          "$ref": "#/$defs/LEIIdentifier"
+        },
+        "Othr": {
+          "$ref": "#/$defs/GenericFinancialIdentification1"
+        }
+      }
+    },
+    "GenericAccountIdentification1_EPC259-22_V3.0_DS08N": {
+      "type": "object",
+      "properties": {
+        "Id": {
+          "$ref": "#/$defs/Max34Text"
+        },
+        "SchmeNm": {
+          "$ref": "#/$defs/AccountSchemeName1Choice_EPC259-22_V3.0_DS08N"
+        },
+        "Issr": {
+          "$ref": "#/$defs/Max35Text"
+        }
+      },
+      "required": [
+        "Id"
+      ]
+    },
+    "GenericAccountIdentification1_EPC259-22_V3.0_DS08N_Wrapper": {
+      "type": "object",
+      "properties": {
+        "Othr": {
+          "$ref": "#/$defs/GenericAccountIdentification1_EPC259-22_V3.0_DS08N"
+        }
+      }
+    },
+    "GenericFinancialIdentification1": {
+      "type": "object",
+      "properties": {
+        "Id": {
+          "$ref": "#/$defs/Max35Text"
+        },
+        "SchmeNm": {
+          "$ref": "#/$defs/FinancialIdentificationSchemeName1Choice"
+        },
+        "Issr": {
+          "$ref": "#/$defs/Max35Text"
+        }
+      },
+      "required": [
+        "Id"
+      ]
+    },
+    "GenericHalLink": {
+      "type": "object",
+      "properties": {
+        "href": {
+          "type": "string"
+        },
+        "templated": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "required": [
+        "href"
+      ]
+    },
+    "GenericOrganisationIdentification1_EPC259-22_V3.0_DS04b": {
+      "type": "object",
+      "properties": {
+        "Id": {
+          "$ref": "#/$defs/Max35Text"
+        },
+        "SchmeNm": {
+          "$ref": "#/$defs/OrganisationIdentificationSchemeName1Choice_EPC259-22_V3.0_DS04b"
+        },
+        "Issr": {
+          "$ref": "#/$defs/Max35Text"
+        }
+      },
+      "required": [
+        "Id"
+      ]
+    },
+    "GenericOrganisationIdentification1_EPC259-22_V3.0_DS04b_2": {
+      "type": "object",
+      "properties": {
+        "Id": {
+          "$ref": "#/$defs/Max35Text"
+        },
+        "SchmeNm": {
+          "$ref": "#/$defs/OrganisationIdentificationSchemeName1Choice_EPC259-22_V3.0_DS04b_2"
+        }
+      },
+      "required": [
+        "Id",
+        "SchmeNm"
+      ]
+    },
+    "GenericPersonIdentification1_II": {
+      "type": "object",
+      "properties": {
+        "Id": {
+          "$ref": "#/$defs/Max35Text"
+        },
+        "SchmeNm": {
+          "$ref": "#/$defs/PersonIdentificationSchemeName1Choice_II"
+        },
+        "Issr": {
+          "$ref": "#/$defs/Max35Text"
+        }
+      },
+      "required": [
+        "Id"
+      ]
+    },
+    "GenericPersonIdentification1_IV": {
+      "type": "object",
+      "properties": {
+        "Id": {
+          "$ref": "#/$defs/Max35Text"
+        },
+        "SchmeNm": {
+          "$ref": "#/$defs/PersonIdentificationSchemeName1Choice_IV"
+        }
+      },
+      "required": [
+        "Id",
+        "SchmeNm"
+      ]
+    },
+    "GroupHeader87": {
+      "type": "object",
+      "properties": {
+        "MsgId": {
+          "$ref": "#/$defs/Max35Text"
+        },
+        "CreDtTm": {
+          "$ref": "#/$defs/ISODateTime"
+        },
+        "InitgPty": {
+          "$ref": "#/$defs/PartyIdentification135"
+        }
+      },
+      "required": [
+        "MsgId",
+        "CreDtTm",
+        "InitgPty"
+      ]
+    },
+    "GroupHeader87_EPC259-22_V3.0_DS04b": {
+      "type": "object",
+      "properties": {
+        "MsgId": {
+          "$ref": "#/$defs/Max35Text"
+        },
+        "CreDtTm": {
+          "$ref": "#/$defs/ISODateTime"
+        },
+        "InitgPty": {
+          "$ref": "#/$defs/PartyIdentification135_EPC259-22_V3.0_DS04b"
+        }
+      },
+      "required": [
+        "MsgId",
+        "CreDtTm",
+        "InitgPty"
+      ]
+    },
+    "GroupHeader87_EPC259-22_V3.0_DS08N": {
+      "type": "object",
+      "properties": {
+        "MsgId": {
+          "$ref": "#/$defs/Max35Text"
+        },
+        "CreDtTm": {
+          "$ref": "#/$defs/ISODateTime"
+        },
+        "InitgPty": {
+          "$ref": "#/$defs/PartyIdentification135_EPC259-22_V3.0_DS08N"
+        }
+      },
+      "required": [
+        "MsgId",
+        "CreDtTm",
+        "InitgPty"
+      ]
+    },
+    "IBAN2007Identifier": {
+      "pattern": "[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}",
+      "type": "string"
+    },
+    "IBAN2007Identifier_Wrapper": {
+      "type": "object",
+      "properties": {
+        "IBAN": {
+          "$ref": "#/$defs/IBAN2007Identifier"
+        }
+      }
+    },
+    "ISODate": {
+      "type": "string"
+    },
+    "ISODateTime": {
+      "type": "string"
+    },
+    "ISODateTime_Wrapper": {
+      "type": "object",
+      "properties": {
+        "DtTm": {
+          "$ref": "#/$defs/ISODateTime"
+        }
+      }
+    },
+    "ISODate_Wrapper": {
+      "type": "object",
+      "properties": {
+        "Dt": {
+          "$ref": "#/$defs/ISODate"
+        }
+      }
+    },
+    "LEIIdentifier": {
+      "pattern": "[A-Z0-9]{18,18}[0-9]{2,2}",
+      "type": "string"
+    },
+    "LocalInstrument2Choice": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ExternalLocalInstrument1Code_Wrapper"
+        },
+        {
+          "$ref": "#/$defs/Max35Text_Wrapper"
+        }
+      ]
+    },
+    "Max105Text": {
+      "maxLength": 105,
+      "minLength": 1,
+      "type": "string"
+    },
+    "Max140Text": {
+      "maxLength": 140,
+      "minLength": 1,
+      "type": "string"
+    },
+    "Max140Text_EPC259-22_V3.0_DS02": {
+      "maxLength": 70,
+      "minLength": 1,
+      "type": "string"
+    },
+    "Max2048Text": {
+      "maxLength": 2048,
+      "minLength": 1,
+      "type": "string"
+    },
+    "Max34Text": {
+      "maxLength": 34,
+      "minLength": 1,
+      "type": "string"
+    },
+    "Max35Text": {
+      "maxLength": 35,
+      "minLength": 1,
+      "type": "string"
+    },
+    "Max35Text_Wrapper": {
+      "type": "object",
+      "properties": {
+        "Prtry": {
+          "$ref": "#/$defs/Max35Text"
+        }
+      }
+    },
+    "Max70Text": {
+      "maxLength": 70,
+      "minLength": 1,
+      "type": "string"
+    },
+    "NegativeSepaRequestToPayResponse_DS08N": {
+      "type": "object",
+      "properties": {
+        "Document": {
+          "$ref": "#/$defs/Document_EPC259-22_V3.0_DS08N"
+        }
+      }
+    },
+    "OrganisationIdentification29_EPC259-22_V3.0_DS04b": {
+      "type": "object",
+      "properties": {
+        "AnyBIC": {
+          "$ref": "#/$defs/AnyBICDec2014Identifier"
+        },
+        "LEI": {
+          "$ref": "#/$defs/LEIIdentifier"
+        },
+        "Othr": {
+          "$ref": "#/$defs/GenericOrganisationIdentification1_EPC259-22_V3.0_DS04b"
+        }
+      }
+    },
+    "OrganisationIdentification29_EPC259-22_V3.0_DS04b_2": {
+      "type": "object",
+      "properties": {
+        "AnyBIC": {
+          "$ref": "#/$defs/AnyBICDec2014Identifier"
+        },
+        "LEI": {
+          "$ref": "#/$defs/LEIIdentifier"
+        },
+        "Othr": {
+          "$ref": "#/$defs/GenericOrganisationIdentification1_EPC259-22_V3.0_DS04b_2"
+        }
+      }
+    },
+    "OrganisationIdentification29_EPC259-22_V3.0_DS04b_2_Wrapper": {
+      "type": "object",
+      "properties": {
+        "OrgId": {
+          "$ref": "#/$defs/OrganisationIdentification29_EPC259-22_V3.0_DS04b_2"
+        }
+      }
+    },
+    "OrganisationIdentification29_EPC259-22_V3.0_DS04b_Wrapper": {
+      "type": "object",
+      "properties": {
+        "OrgId": {
+          "$ref": "#/$defs/OrganisationIdentification29_EPC259-22_V3.0_DS04b"
+        }
+      }
+    },
+    "OrganisationIdentification29_II": {
+      "type": "object",
+      "properties": {
+        "AnyBIC": {
+          "$ref": "#/$defs/AnyBICDec2014Identifier"
+        },
+        "LEI": {
+          "$ref": "#/$defs/LEIIdentifier"
+        },
+        "Othr": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/GenericOrganisationIdentification1_EPC259-22_V3.0_DS04b"
+          }
+        }
+      }
+    },
+    "OrganisationIdentification29_II_Wrapper": {
+      "type": "object",
+      "properties": {
+        "OrgId": {
+          "$ref": "#/$defs/OrganisationIdentification29_II"
+        }
+      }
+    },
+    "OrganisationIdentificationSchemeName1Choice_EPC259-22_V3.0_DS04b": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ExternalOrganisationIdentification1Code_II_Wrapper"
+        },
+        {
+          "$ref": "#/$defs/Max35Text_Wrapper"
+        }
+      ]
+    },
+    "OrganisationIdentificationSchemeName1Choice_EPC259-22_V3.0_DS04b_2": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ExternalOrganisationIdentification1Code_EPC259-22_V3.0_DS02_Wrapper"
+        }
+      ]
+    },
+    "OriginalGroupInformation30_EPC259-22_V3.0_DS04b": {
+      "type": "object",
+      "properties": {
+        "OrgnlMsgId": {
+          "$ref": "#/$defs/Max35Text"
+        },
+        "OrgnlMsgNmId": {
+          "$ref": "#/$defs/Max35Text"
+        },
+        "OrgnlCreDtTm": {
+          "$ref": "#/$defs/ISODateTime"
+        }
+      },
+      "required": [
+        "OrgnlMsgId",
+        "OrgnlMsgNmId",
+        "OrgnlCreDtTm"
+      ]
+    },
+    "OriginalPaymentInstruction31": {
+      "type": "object",
+      "properties": {
+        "OrgnlPmtInfId": {
+          "$ref": "#/$defs/Max35Text"
+        },
+        "TxInfAndSts": {
+          "$ref": "#/$defs/PaymentTransaction104"
+        }
+      },
+      "required": [
+        "OrgnlPmtInfId",
+        "TxInfAndSts"
+      ]
+    },
+    "OriginalPaymentInstruction31_EPC259-22_V3.0_DS05": {
+      "type": "object",
+      "properties": {
+        "OrgnlPmtInfId": {
+          "$ref": "#/$defs/Max35Text"
+        },
+        "TxInfAndSts": {
+          "$ref": "#/$defs/PaymentTransaction104_EPC259-22_V3.0_DS05"
+        }
+      },
+      "required": [
+        "OrgnlPmtInfId",
+        "TxInfAndSts"
+      ]
+    },
+    "OriginalPaymentInstruction31_EPC259-22_V3.0_DS08N": {
+      "type": "object",
+      "properties": {
+        "OrgnlPmtInfId": {
+          "$ref": "#/$defs/Max35Text"
+        },
+        "TxInfAndSts": {
+          "$ref": "#/$defs/PaymentTransaction104_EPC259-22_V3.0_DS08N"
+        }
+      },
+      "required": [
+        "OrgnlPmtInfId",
+        "TxInfAndSts"
+      ]
+    },
+    "OriginalPaymentInstruction31_EPC259-22_V3.0_DS08P": {
+      "type": "object",
+      "properties": {
+        "OrgnlPmtInfId": {
+          "$ref": "#/$defs/Max35Text"
+        },
+        "TxInfAndSts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/PaymentTransaction104_EPC259-22_V3.0_DS08P"
+          }
+        }
+      },
+      "required": [
+        "OrgnlPmtInfId"
+      ]
+    },
+    "OriginalPaymentInstruction31_EPC259-22_V3.0_REDIRECT": {
+      "type": "object",
+      "properties": {
+        "OrgnlPmtInfId": {
+          "$ref": "#/$defs/Max35Text"
+        },
+        "TxInfAndSts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/PaymentTransaction104_EPC259-22_V3.0_REDIRECT"
+          }
+        }
+      },
+      "required": [
+        "OrgnlPmtInfId"
+      ]
+    },
+    "OriginalTransactionReference29": {
+      "type": "object",
+      "properties": {
+        "Amt": {
+          "$ref": "#/$defs/AmountType4Choice_EPC259-22_V3.0_DS02"
+        },
+        "ReqdExctnDt": {
+          "$ref": "#/$defs/DateAndDateTime2Choice_EPC259-22_V3.0_DS02"
+        },
+        "XpryDt": {
+          "$ref": "#/$defs/DateAndDateTime2Choice_EPC259-22_V3.0_DS02"
+        },
+        "PmtTpInf": {
+          "$ref": "#/$defs/PaymentTypeInformation26_EPC259-22_V3.0_DS04b"
+        },
+        "RmtInf": {
+          "$ref": "#/$defs/RemittanceInformation16"
+        },
+        "DbtrAgt": {
+          "$ref": "#/$defs/BranchAndFinancialInstitutionIdentification6_EPC259-22_V3.0_DS02"
+        },
+        "CdtrAgt": {
+          "$ref": "#/$defs/BranchAndFinancialInstitutionIdentification6_EPC259-22_V3.0_DS02"
+        },
+        "Cdtr": {
+          "$ref": "#/$defs/PartyIdentification135"
+        },
+        "CdtrAcct": {
+          "$ref": "#/$defs/CashAccount38"
+        }
+      },
+      "required": [
+        "Amt",
+        "ReqdExctnDt",
+        "XpryDt",
+        "PmtTpInf",
+        "DbtrAgt",
+        "CdtrAgt",
+        "Cdtr",
+        "CdtrAcct"
+      ]
+    },
+    "OriginalTransactionReference29_EPC259-22_V3.0_DS04b": {
+      "type": "object",
+      "properties": {
+        "Amt": {
+          "$ref": "#/$defs/AmountType4Choice_EPC259-22_V3.0_DS02"
+        },
+        "ReqdExctnDt": {
+          "$ref": "#/$defs/DateAndDateTime2Choice_EPC259-22_V3.0_DS02"
+        },
+        "XpryDt": {
+          "$ref": "#/$defs/DateAndDateTime2Choice_EPC259-22_V3.0_DS02"
+        },
+        "PmtTpInf": {
+          "$ref": "#/$defs/PaymentTypeInformation26_EPC259-22_V3.0_DS04b"
+        },
+        "RmtInf": {
+          "$ref": "#/$defs/RemittanceInformation16_EPC259-22_V3.0_DS04b"
+        },
+        "DbtrAgt": {
+          "$ref": "#/$defs/BranchAndFinancialInstitutionIdentification6_EPC259-22_V3.0_DS02"
+        },
+        "CdtrAgt": {
+          "$ref": "#/$defs/BranchAndFinancialInstitutionIdentification6_EPC259-22_V3.0_DS02"
+        },
+        "Cdtr": {
+          "$ref": "#/$defs/PartyIdentification135_EPC259-22_V3.0_DS04b_3"
+        },
+        "CdtrAcct": {
+          "$ref": "#/$defs/CashAccount38"
+        }
+      },
+      "required": [
+        "Amt",
+        "ReqdExctnDt",
+        "XpryDt",
+        "PmtTpInf",
+        "DbtrAgt",
+        "CdtrAgt",
+        "Cdtr",
+        "CdtrAcct"
+      ]
+    },
+    "OriginalTransactionReference29_EPC259-22_V3.0_DS08N": {
+      "type": "object",
+      "properties": {
+        "Amt": {
+          "$ref": "#/$defs/AmountType4Choice_EPC259-22_V3.0_DS02"
+        },
+        "ReqdExctnDt": {
+          "$ref": "#/$defs/DateAndDateTime2Choice_EPC259-22_V3.0_DS02"
+        },
+        "XpryDt": {
+          "$ref": "#/$defs/DateAndDateTime2Choice_EPC259-22_V3.0_DS02"
+        },
+        "PmtTpInf": {
+          "$ref": "#/$defs/PaymentTypeInformation26_EPC259-22_V3.0_DS04b"
+        },
+        "RmtInf": {
+          "$ref": "#/$defs/RemittanceInformation16_EPC259-22_V3.0_DS04b"
+        },
+        "Dbtr": {
+          "$ref": "#/$defs/PartyIdentification135_EPC259-22_V3.0_DS08N_2"
+        },
+        "DbtrAcct": {
+          "$ref": "#/$defs/CashAccount38_EPC259-22_V3.0_DS08N"
+        },
+        "DbtrAgt": {
+          "$ref": "#/$defs/BranchAndFinancialInstitutionIdentification6_EPC259-22_V3.0_DS02"
+        },
+        "CdtrAgt": {
+          "$ref": "#/$defs/BranchAndFinancialInstitutionIdentification6_EPC259-22_V3.0_DS02"
+        },
+        "Cdtr": {
+          "$ref": "#/$defs/PartyIdentification135_EPC259-22_V3.0_DS04b_3"
+        },
+        "CdtrAcct": {
+          "$ref": "#/$defs/CashAccount38"
+        }
+      },
+      "required": [
+        "Amt",
+        "ReqdExctnDt",
+        "XpryDt",
+        "PmtTpInf",
+        "DbtrAgt",
+        "CdtrAgt",
+        "Cdtr",
+        "CdtrAcct"
+      ]
+    },
+    "Party38Choice_EPC259-22_V3.0_DS04b": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/OrganisationIdentification29_EPC259-22_V3.0_DS04b_Wrapper"
+        }
+      ]
+    },
+    "Party38Choice_EPC259-22_V3.0_DS04b_2": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/OrganisationIdentification29_EPC259-22_V3.0_DS04b_2_Wrapper"
+        },
+        {
+          "$ref": "#/$defs/PersonIdentification13_IV_Wrapper"
+        }
+      ]
+    },
+    "Party38Choice_II": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/OrganisationIdentification29_II_Wrapper"
+        },
+        {
+          "$ref": "#/$defs/PersonIdentification13_II_Wrapper"
+        }
+      ]
+    },
+    "Party38Choice_IV": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/OrganisationIdentification29_EPC259-22_V3.0_DS04b_Wrapper"
+        },
+        {
+          "$ref": "#/$defs/PersonIdentification13_IV_Wrapper"
+        }
+      ]
+    },
+    "PartyIdentification135": {
+      "type": "object",
+      "properties": {
+        "Nm": {
+          "$ref": "#/$defs/Max140Text"
+        },
+        "Id": {
+          "$ref": "#/$defs/Party38Choice_IV"
+        }
+      },
+      "required": [
+        "Id"
+      ]
+    },
+    "PartyIdentification135_EPC259-22_V3.0_DS04b": {
+      "type": "object",
+      "properties": {
+        "Id": {
+          "$ref": "#/$defs/Party38Choice_EPC259-22_V3.0_DS04b"
+        }
+      },
+      "required": [
+        "Id"
+      ]
+    },
+    "PartyIdentification135_EPC259-22_V3.0_DS04b_3": {
+      "type": "object",
+      "properties": {
+        "Nm": {
+          "$ref": "#/$defs/Max140Text_EPC259-22_V3.0_DS02"
+        },
+        "Id": {
+          "$ref": "#/$defs/Party38Choice_EPC259-22_V3.0_DS04b_2"
+        }
+      },
+      "required": [
+        "Nm",
+        "Id"
+      ]
+    },
+    "PartyIdentification135_EPC259-22_V3.0_DS08N": {
+      "type": "object",
+      "properties": {
+        "Nm": {
+          "$ref": "#/$defs/Max140Text_EPC259-22_V3.0_DS02"
+        },
+        "Id": {
+          "$ref": "#/$defs/Party38Choice_II"
+        }
+      }
+    },
+    "PartyIdentification135_EPC259-22_V3.0_DS08N_2": {
+      "type": "object",
+      "properties": {
+        "Id": {
+          "$ref": "#/$defs/Party38Choice_EPC259-22_V3.0_DS04b_2"
+        }
+      },
+      "required": [
+        "Id"
+      ]
+    },
+    "PaymentConditionStatus1_EPC259-22_V3.0_DS08P": {
+      "type": "object",
+      "properties": {
+        "AccptdAmt": {
+          "$ref": "#/$defs/ActiveCurrencyAndAmount_EPC259-22_V3.0_DS08P"
+        },
+        "GrntedPmt": {
+          "$ref": "#/$defs/TrueFalseIndicator"
+        },
+        "EarlyPmt": {
+          "$ref": "#/$defs/TrueFalseIndicator"
+        }
+      },
+      "required": [
+        "GrntedPmt",
+        "EarlyPmt"
+      ]
+    },
+    "PaymentTransaction104": {
+      "type": "object",
+      "properties": {
+        "StsId": {
+          "$ref": "#/$defs/Max35Text"
+        },
+        "OrgnlInstrId": {
+          "$ref": "#/$defs/Max35Text"
+        },
+        "OrgnlEndToEndId": {
+          "$ref": "#/$defs/Max35Text"
+        },
+        "TxSts": {
+          "$ref": "#/$defs/ExternalPaymentTransactionStatus1Code"
+        },
+        "StsRsnInf": {
+          "$ref": "#/$defs/StatusReasonInformation12"
+        },
+        "ChrgsInf": {
+          "$ref": "#/$defs/Charges7"
+        },
+        "OrgnlTxRef": {
+          "$ref": "#/$defs/OriginalTransactionReference29"
+        }
+      },
+      "required": [
+        "StsId",
+        "OrgnlInstrId",
+        "OrgnlEndToEndId",
+        "TxSts",
+        "StsRsnInf",
+        "OrgnlTxRef"
+      ]
+    },
+    "PaymentTransaction104_EPC259-22_V3.0_DS05": {
+      "type": "object",
+      "properties": {
+        "StsId": {
+          "$ref": "#/$defs/Max35Text"
+        },
+        "OrgnlInstrId": {
+          "$ref": "#/$defs/Max35Text"
+        },
+        "OrgnlEndToEndId": {
+          "$ref": "#/$defs/Max35Text"
+        },
+        "TxSts": {
+          "$ref": "#/$defs/ExternalPaymentTransactionStatus1Code_II"
+        },
+        "StsRsnInf": {
+          "$ref": "#/$defs/StatusReasonInformation12_EPC259-22_V3.0_DS05"
+        },
+        "OrgnlTxRef": {
+          "$ref": "#/$defs/OriginalTransactionReference29_EPC259-22_V3.0_DS04b"
+        }
+      },
+      "required": [
+        "StsId",
+        "OrgnlInstrId",
+        "OrgnlEndToEndId",
+        "TxSts",
+        "StsRsnInf",
+        "OrgnlTxRef"
+      ]
+    },
+    "PaymentTransaction104_EPC259-22_V3.0_DS08N": {
+      "type": "object",
+      "properties": {
+        "StsId": {
+          "$ref": "#/$defs/Max35Text"
+        },
+        "OrgnlInstrId": {
+          "$ref": "#/$defs/Max35Text"
+        },
+        "OrgnlEndToEndId": {
+          "$ref": "#/$defs/Max35Text"
+        },
+        "TxSts": {
+          "$ref": "#/$defs/ExternalPaymentTransactionStatus1Code"
+        },
+        "StsRsnInf": {
+          "$ref": "#/$defs/StatusReasonInformation12_EPC259-22_V3.0_DS08N"
+        },
+        "ChrgsInf": {
+          "$ref": "#/$defs/Charges7_EPC259-22_V3.0_DS04b"
+        },
+        "DbtrDcsnDtTm": {
+          "$ref": "#/$defs/ISODateTime"
+        },
+        "OrgnlTxRef": {
+          "$ref": "#/$defs/OriginalTransactionReference29_EPC259-22_V3.0_DS08N"
+        }
+      },
+      "required": [
+        "OrgnlInstrId",
+        "OrgnlEndToEndId",
+        "TxSts",
+        "StsRsnInf",
+        "DbtrDcsnDtTm",
+        "OrgnlTxRef"
+      ]
+    },
+    "PaymentTransaction104_EPC259-22_V3.0_DS08P": {
+      "type": "object",
+      "properties": {
+        "StsId": {
+          "$ref": "#/$defs/Max35Text"
+        },
+        "OrgnlInstrId": {
+          "$ref": "#/$defs/Max35Text"
+        },
+        "OrgnlEndToEndId": {
+          "$ref": "#/$defs/Max35Text"
+        },
+        "TxSts": {
+          "$ref": "#/$defs/ExternalPaymentTransactionStatus1Code_IV"
+        },
+        "StsRsnInf": {
+          "$ref": "#/$defs/StatusReasonInformation12_EPC259-22_V3.0_DS08P"
+        },
+        "PmtCondSts": {
+          "$ref": "#/$defs/PaymentConditionStatus1_EPC259-22_V3.0_DS08P"
+        },
+        "ChrgsInf": {
+          "$ref": "#/$defs/Charges7_EPC259-22_V3.0_DS04b"
+        },
+        "DbtrDcsnDtTm": {
+          "$ref": "#/$defs/ISODateTime"
+        },
+        "AccptncDtTm": {
+          "$ref": "#/$defs/ISODateTime"
+        },
+        "OrgnlTxRef": {
+          "$ref": "#/$defs/OriginalTransactionReference29_EPC259-22_V3.0_DS08N"
+        }
+      },
+      "required": [
+        "OrgnlInstrId",
+        "OrgnlEndToEndId",
+        "TxSts",
+        "StsRsnInf",
+        "DbtrDcsnDtTm",
+        "OrgnlTxRef"
+      ]
+    },
+    "PaymentTransaction104_EPC259-22_V3.0_REDIRECT": {
+      "type": "object",
+      "properties": {
+        "StsId": {
+          "$ref": "#/$defs/Max35Text"
+        },
+        "OrgnlInstrId": {
+          "$ref": "#/$defs/Max35Text"
+        },
+        "OrgnlEndToEndId": {
+          "$ref": "#/$defs/Max35Text"
+        },
+        "TxSts": {
+          "$ref": "#/$defs/ExternalPaymentTransactionStatus1Code_EPC259-22_V3.0_REDIRECT"
+        },
+        "StsRsnInf": {
+          "$ref": "#/$defs/StatusReasonInformation12_EPC259-22_V3.0_REDIRECT"
+        },
+        "OrgnlTxRef": {
+          "$ref": "#/$defs/OriginalTransactionReference29_EPC259-22_V3.0_DS04b"
+        }
+      },
+      "required": [
+        "StsId",
+        "OrgnlInstrId",
+        "OrgnlEndToEndId",
+        "TxSts",
+        "StsRsnInf",
+        "OrgnlTxRef"
+      ]
+    },
+    "PaymentTypeInformation26_EPC259-22_V3.0_DS04b": {
+      "type": "object",
+      "properties": {
+        "SvcLvl": {
+          "$ref": "#/$defs/ServiceLevel8Choice"
+        },
+        "LclInstrm": {
+          "$ref": "#/$defs/LocalInstrument2Choice"
+        }
+      },
+      "required": [
+        "SvcLvl",
+        "LclInstrm"
+      ]
+    },
+    "PersonIdentification13_II": {
+      "type": "object",
+      "properties": {
+        "DtAndPlcOfBirth": {
+          "$ref": "#/$defs/DateAndPlaceOfBirth1"
+        },
+        "Othr": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/GenericPersonIdentification1_II"
+          }
+        }
+      }
+    },
+    "PersonIdentification13_II_Wrapper": {
+      "type": "object",
+      "properties": {
+        "PrvtId": {
+          "$ref": "#/$defs/PersonIdentification13_II"
+        }
+      }
+    },
+    "PersonIdentification13_IV": {
+      "type": "object",
+      "properties": {
+        "Othr": {
+          "$ref": "#/$defs/GenericPersonIdentification1_IV"
+        }
+      },
+      "required": [
+        "Othr"
+      ]
+    },
+    "PersonIdentification13_IV_Wrapper": {
+      "type": "object",
+      "properties": {
+        "PrvtId": {
+          "$ref": "#/$defs/PersonIdentification13_IV"
+        }
+      }
+    },
+    "PersonIdentificationSchemeName1Choice_II": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ExternalPersonIdentification1Code_II_Wrapper"
+        },
+        {
+          "$ref": "#/$defs/Max35Text_Wrapper"
+        }
+      ]
+    },
+    "PersonIdentificationSchemeName1Choice_IV": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ExternalPersonIdentification1Code_EPC259-22_V3.0_DS02_Wrapper"
+        }
+      ]
+    },
+    "PositiveSepaRequestToPayResponseResource_DS05": {
+      "type": "object",
+      "properties": {
+        "resourceId": {
+          "$ref": "#/$defs/ResourceId"
+        },
+        "Document": {
+          "$ref": "#/$defs/Document_EPC259-22_V3.0_DS05"
+        },
+        "_links": {
+          "type": "object",
+          "properties": {
+            "initialSepaRequestToPayUri": {
+              "$ref": "#/$defs/GenericHalLink"
+            }
+          },
+          "required": [
+            "initialSepaRequestToPayUri"
+          ]
+        }
+      }
+    },
+    "PositiveSepaRequestToPayResponse_DS08P": {
+      "type": "object",
+      "properties": {
+        "Document": {
+          "$ref": "#/$defs/Document_EPC259-22_V3.0_DS08P"
+        }
+      }
+    },
+    "ProxyAccountIdentification1_EPC259-22_V3.0_DS08N": {
+      "type": "object",
+      "properties": {
+        "Tp": {
+          "$ref": "#/$defs/ProxyAccountType1Choice_EPC259-22_V3.0_DS08N"
+        },
+        "Id": {
+          "$ref": "#/$defs/Max2048Text"
+        }
+      },
+      "required": [
+        "Id"
+      ]
+    },
+    "ProxyAccountType1Choice_EPC259-22_V3.0_DS08N": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ExternalProxyAccountType1Code_II_Wrapper"
+        },
+        {
+          "$ref": "#/$defs/Max35Text_Wrapper"
+        }
+      ]
+    },
+    "RedirectSepaRequestToPayResponseResource_DS05b": {
+      "type": "object",
+      "properties": {
+        "resourceId": {
+          "$ref": "#/$defs/ResourceId"
+        },
+        "Document": {
+          "$ref": "#/$defs/Document_EPC259-22_V3.0_REDIRECT"
+        },
+        "_links": {
+          "type": "object",
+          "properties": {
+            "initialSepaRequestToPayUri": {
+              "$ref": "#/$defs/GenericHalLink"
+            }
+          },
+          "required": [
+            "initialSepaRequestToPayUri"
+          ]
+        }
+      }
+    },
+    "RemittanceAmount2": {
+      "type": "object",
+      "properties": {
+        "CdtNoteAmt": {
+          "$ref": "#/$defs/ActiveOrHistoricCurrencyAndAmount_EPC259-22_V3.0_DS02"
+        }
+      }
+    },
+    "RemittanceAmount2_EPC259-22_V3.0_DS02": {
+      "type": "object",
+      "properties": {
+        "CdtNoteAmt": {
+          "$ref": "#/$defs/ActiveOrHistoricCurrencyAndAmount_EPC259-22_V3.0_DS02_2"
+        }
+      }
+    },
+    "RemittanceInformation16": {
+      "type": "object",
+      "properties": {
+        "Ustrd": {
+          "$ref": "#/$defs/Max140Text"
+        },
+        "Strd": {
+          "$ref": "#/$defs/StructuredRemittanceInformation16"
+        }
+      }
+    },
+    "RemittanceInformation16_EPC259-22_V3.0_DS04b": {
+      "type": "object",
+      "properties": {
+        "Ustrd": {
+          "$ref": "#/$defs/Max140Text"
+        },
+        "Strd": {
+          "$ref": "#/$defs/StructuredRemittanceInformation16_EPC259-22_V3.0_DS04b"
+        }
+      }
+    },
+    "ResourceId": {
+      "type": "string"
+    },
+    "ServiceLevel8Choice": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ExternalServiceLevel1Code_Wrapper"
+        }
+      ]
+    },
+    "StatusReason6Choice_EPC259-22_V3.0_DS04b": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ExternalStatusReason1Code_Wrapper"
+        },
+        {
+          "$ref": "#/$defs/Max35Text_Wrapper"
+        }
+      ]
+    },
+    "StatusReason6Choice_EPC259-22_V3.0_DS08N": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ExternalStatusReason1Code_II_Wrapper"
+        }
+      ]
+    },
+    "StatusReasonInformation12": {
+      "type": "object",
+      "properties": {
+        "Orgtr": {
+          "$ref": "#/$defs/PartyIdentification135"
+        },
+        "Rsn": {
+          "$ref": "#/$defs/StatusReason6Choice_EPC259-22_V3.0_DS04b"
+        }
+      },
+      "required": [
+        "Orgtr",
+        "Rsn"
+      ]
+    },
+    "StatusReasonInformation12_EPC259-22_V3.0_DS05": {
+      "type": "object",
+      "properties": {
+        "Orgtr": {
+          "$ref": "#/$defs/PartyIdentification135_EPC259-22_V3.0_DS04b"
+        }
+      },
+      "required": [
+        "Orgtr"
+      ]
+    },
+    "StatusReasonInformation12_EPC259-22_V3.0_DS08N": {
+      "type": "object",
+      "properties": {
+        "Orgtr": {
+          "$ref": "#/$defs/PartyIdentification135_EPC259-22_V3.0_DS08N_2"
+        },
+        "Rsn": {
+          "$ref": "#/$defs/StatusReason6Choice_EPC259-22_V3.0_DS08N"
+        }
+      },
+      "required": [
+        "Orgtr",
+        "Rsn"
+      ]
+    },
+    "StatusReasonInformation12_EPC259-22_V3.0_DS08P": {
+      "type": "object",
+      "properties": {
+        "Orgtr": {
+          "$ref": "#/$defs/PartyIdentification135_EPC259-22_V3.0_DS08N_2"
+        },
+        "AddtlInf": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Max105Text"
+          },
+          "maxItems": 3
+        }
+      },
+      "required": [
+        "Orgtr"
+      ]
+    },
+    "StatusReasonInformation12_EPC259-22_V3.0_REDIRECT": {
+      "type": "object",
+      "properties": {
+        "Orgtr": {
+          "$ref": "#/$defs/PartyIdentification135_EPC259-22_V3.0_DS04b"
+        },
+        "AddtlInf": {
+          "$ref": "#/$defs/Max105Text"
+        }
+      },
+      "required": [
+        "Orgtr",
+        "AddtlInf"
+      ]
+    },
+    "StructuredRemittanceInformation16": {
+      "type": "object",
+      "properties": {
+        "RfrdDocAmt": {
+          "$ref": "#/$defs/RemittanceAmount2"
+        },
+        "CdtrRefInf": {
+          "$ref": "#/$defs/CreditorReferenceInformation2_EPC259-22_V3.0_DS02"
+        }
+      }
+    },
+    "StructuredRemittanceInformation16_EPC259-22_V3.0_DS04b": {
+      "type": "object",
+      "properties": {
+        "RfrdDocAmt": {
+          "$ref": "#/$defs/RemittanceAmount2_EPC259-22_V3.0_DS02"
+        },
+        "CdtrRefInf": {
+          "$ref": "#/$defs/CreditorReferenceInformation2_EPC259-22_V3.0_DS02"
+        }
+      }
+    },
+    "TrueFalseIndicator": {
+      "type": "boolean"
+    }
+  }
+}

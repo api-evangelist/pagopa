@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/pagopa/main/json-schema/pagopa-get-cart-response-schema.json",
+  "title": "GetCartResponse",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/pagopa-marca-da-bollo-v1-openapi.yml#/components/schemas/GetCartResponse",
+  "type": "object",
+  "properties": {
+    "checkoutRedirectUrl": {
+      "type": "string",
+      "description": "Redirect URL to Checkout page."
+    },
+    "mbdDownloadLink": {
+      "type": "string",
+      "description": "URL to download MBD receipt."
+    },
+    "nav": {
+      "type": "string",
+      "description": "Notice number, used to download MBD receipt."
+    }
+  }
+}

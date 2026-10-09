@@ -1,0 +1,3584 @@
+openapi: 3.2.0
+info:
+  title: Pagopa Eservices API
+  contact:
+    name: API Support
+    url: https://github.com/pagopa/pdnd-interop-frontend/issues
+  termsOfService: https://selfcare.interop.pagopa.it/ui/it/termini-di-servizio
+  x-summary: PDND Interoperability API
+  version: '1.0'
+  description: 'Operations tagged eservices across 3 of this provider''s published API definitions: interop-api-v3.yaml, pagopa-pdnd-interop-v2-openapi.yml, pagopa-pdnd-interop-v3-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.interop.pagopa.it/v3
+  description: Production environment
+- url: https://api.interop.pagopa.it/v2
+  description: PROD environment
+tags:
+- name: eservices
+  description: E-Services routes
+paths:
+  /eservices:
+    get:
+      tags:
+      - eservices
+      summary: List E-Services
+      description: Retrieve a list of E-Services based on filters
+      operationId: getEServices
+      parameters:
+      - in: query
+        name: producerIds
+        description: Filter E-Services by producer IDs. If not specified, return E-Services for any producer
+        schema:
+          type: array
+          items:
+            type: string
+            format: uuid
+          default: []
+        explode: false
+      - $ref: '#/components/parameters/TemplateIdsParam'
+      - in: query
+        name: name
+        description: Filter E-Services by name
+        schema:
+          type: string
+      - in: query
+        name: technology
+        description: Filter E-Services by technology
+        schema:
+          $ref: '#/components/schemas/EServiceTechnology'
+      - in: query
+        name: mode
+        description: Filter E-Services by mode
+        schema:
+          $ref: '#/components/schemas/EServiceMode'
+      - in: query
+        name: isSignalHubEnabled
+        description: Filter E-Services by Signal Hub enabled status
+        schema:
+          type: boolean
+      - in: query
+        name: isConsumerDelegable
+        description: Filter E-Services by consumer delegable status
+        schema:
+          type: boolean
+      - in: query
+        name: isClientAccessDelegable
+        description: Filter E-Services by client access delegable status
+        schema:
+          type: boolean
+      - $ref: '#/components/parameters/OffsetParam'
+      - $ref: '#/components/parameters/LimitParam'
+      responses:
+        '200':
+          description: E-Services retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EServices'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    post:
+      tags:
+      - eservices
+      summary: Create a new E-Service
+      operationId: createEService
+      description: Create a new E-Service in Draft state
+      requestBody:
+        description: An E-Service seed
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EServiceSeed'
+        required: true
+      responses:
+        '201':
+          description: E-Service created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EService'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /eservices/{eserviceId}:
+    parameters:
+    - name: eserviceId
+      in: path
+      description: The E-Service ID
+      required: true
+      schema:
+        $ref: '#/components/schemas/EServiceId'
+    get:
+      tags:
+      - eservices
+      summary: Retrieve an E-Service
+      operationId: getEService
+      responses:
+        '200':
+          description: E-Service retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EService'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    patch:
+      tags:
+      - eservices
+      summary: Update a Draft E-Service
+      description: Update an E-Service in Draft state
+      operationId: updateDraftEService
+      requestBody:
+        content:
+          application/merge-patch+json:
+            schema:
+              $ref: '#/components/schemas/EServiceDraftUpdateSeed'
+        required: true
+      responses:
+        '200':
+          description: Draft E-Service updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EService'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    delete:
+      tags:
+      - eservices
+      summary: Delete an E-Service
+      operationId: deleteEService
+      description: Delete an E-Service in Draft state
+      responses:
+        '200':
+          description: E-Service deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VoidObject'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /eservices/{eserviceId}/delegation:
+    parameters:
+    - name: eserviceId
+      in: path
+      description: The E-Service ID
+      required: true
+      schema:
+        $ref: '#/components/schemas/EServiceId'
+    patch:
+      tags:
+      - eservices
+      summary: Update the delegation configurations of an E-Service after its publication
+      description: Update the delegation configurations of an E-Service in Published, Suspended, or Deprecated state
+      operationId: updatePublishedEServiceDelegation
+      requestBody:
+        required: true
+        content:
+          application/merge-patch+json:
+            schema:
+              $ref: '#/components/schemas/EServiceDelegationUpdateSeed'
+      responses:
+        '200':
+          description: E-Service delegation configurations updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EService'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /eservices/{eserviceId}/description:
+    parameters:
+    - name: eserviceId
+      in: path
+      description: The E-Service ID
+      required: true
+      schema:
+        $ref: '#/components/schemas/EServiceId'
+    patch:
+      tags:
+      - eservices
+      summary: Update the description of an E-Service after its publication
+      description: Update the description of an E-Service in Published, Suspended, or Deprecated state
+      operationId: updatePublishedEServiceDescription
+      requestBody:
+        required: true
+        content:
+          application/merge-patch+json:
+            schema:
+              $ref: '#/components/schemas/EServiceDescriptionUpdateSeed'
+      responses:
+        '200':
+          description: E-Service description updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EService'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /eservices/{eserviceId}/name:
+    parameters:
+    - name: eserviceId
+      in: path
+      description: The E-Service ID
+      required: true
+      schema:
+        $ref: '#/components/schemas/EServiceId'
+    patch:
+      tags:
+      - eservices
+      summary: Update the name of an E-Service after its publication
+      description: Update the name of an E-Service in Published, Suspended, or Deprecated state
+      operationId: updatePublishedEServiceName
+      requestBody:
+        required: true
+        content:
+          application/merge-patch+json:
+            schema:
+              $ref: '#/components/schemas/EServiceNameUpdateSeed'
+      responses:
+        '200':
+          description: E-Service name updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EService'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /eservices/{eserviceId}/signalHub:
+    parameters:
+    - name: eserviceId
+      in: path
+      description: The E-Service ID
+      required: true
+      schema:
+        $ref: '#/components/schemas/EServiceId'
+    patch:
+      tags:
+      - eservices
+      summary: Update the flag to enable Signal Hub for an E-Service after its publication
+      description: Update the flag to enable Signal Hub for an E-Service in Published, Suspended, or Deprecated state
+      operationId: updatePublishedEServiceSignalHub
+      requestBody:
+        required: true
+        content:
+          application/merge-patch+json:
+            schema:
+              $ref: '#/components/schemas/EServiceSignalHubUpdateSeed'
+      responses:
+        '200':
+          description: E-Service Signal Hub flag updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EService'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /eservices/{eserviceId}/personalDataFlag:
+    parameters:
+    - name: eserviceId
+      in: path
+      description: The E-Service ID
+      required: true
+      schema:
+        $ref: '#/components/schemas/EServiceId'
+    post:
+      tags:
+      - eservices
+      summary: Set personalData flag for an E-Service after its publication
+      description: Set personalData flag for an E-Service in Published, Suspended, or Deprecated state. The flag can only be set once.
+      operationId: updateEServicePersonalDataFlag
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EServicePersonalDataFlagUpdateSeed'
+      responses:
+        '200':
+          description: E-Service personalData flag updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EService'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /eservices/{eserviceId}/descriptors:
+    parameters:
+    - name: eserviceId
+      in: path
+      description: The E-Service ID of the Descriptors to retrieve
+      required: true
+      schema:
+        $ref: '#/components/schemas/EServiceId'
+    get:
+      tags:
+      - eservices
+      summary: List E-Service Descriptors
+      description: Retrieve a list of E-Service Descriptors based on filters
+      operationId: getEServiceDescriptors
+      parameters:
+      - name: state
+        in: query
+        description: Filter Descriptors by states. If not specified, return Descriptors in any state
+        schema:
+          $ref: '#/components/schemas/EServiceDescriptorState'
+      - $ref: '#/components/parameters/OffsetParam'
+      - $ref: '#/components/parameters/LimitParam'
+      responses:
+        '200':
+          description: E-Service Descriptors retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EServiceDescriptors'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    post:
+      tags:
+      - eservices
+      summary: Create a new E-Service Descriptor
+      operationId: createDescriptor
+      description: 'Create a new E-Service Descriptor.
+
+        This E-Service must not already have a descriptor in a Draft state.'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EServiceDescriptorSeed'
+      responses:
+        '201':
+          description: E-Service Descriptor created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EServiceDescriptor'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /eservices/{eserviceId}/descriptors/{descriptorId}:
+    parameters:
+    - name: eserviceId
+      in: path
+      description: The E-Service ID of the Descriptor
+      required: true
+      schema:
+        $ref: '#/components/schemas/EServiceId'
+    - name: descriptorId
+      in: path
+      description: The ID of the Descriptor
+      required: true
+      schema:
+        $ref: '#/components/schemas/DescriptorId'
+    get:
+      tags:
+      - eservices
+      summary: Retrieve an E-Service Descriptor
+      operationId: getEServiceDescriptor
+      responses:
+        '200':
+          description: E-Service Descriptor retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EServiceDescriptor'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    patch:
+      tags:
+      - eservices
+      summary: Update a Draft E-Service Descriptor
+      description: Update an E-Service Descriptor in Draft state
+      operationId: updateDraftEServiceDescriptor
+      requestBody:
+        content:
+          application/merge-patch+json:
+            schema:
+              $ref: '#/components/schemas/EServiceDescriptorDraftUpdateSeed'
+        required: true
+      responses:
+        '200':
+          description: Draft E-Service Descriptor updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EServiceDescriptor'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    delete:
+      tags:
+      - eservices
+      summary: Delete an E-Service Descriptor
+      operationId: deleteDraftEServiceDescriptor
+      description: 'Delete an E-Service Descriptor in Draft state.
+
+        It is not possible to delete the last remaining Descriptor for an E-Service.'
+      responses:
+        '200':
+          description: E-Service Descriptor deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VoidObject'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /eservices/{eserviceId}/descriptors/{descriptorId}/quotas:
+    parameters:
+    - name: eserviceId
+      in: path
+      description: The E-Service ID of the Descriptor
+      required: true
+      schema:
+        $ref: '#/components/schemas/EServiceId'
+    - name: descriptorId
+      in: path
+      description: The ID of the Descriptor
+      required: true
+      schema:
+        $ref: '#/components/schemas/DescriptorId'
+    patch:
+      tags:
+      - eservices
+      summary: Update the quotas of an E-Service Descriptor after its publication
+      description: Update the quotas of an E-Service Descriptor in Published, Suspended, or Deprecated state
+      operationId: updatePublishedEServiceDescriptorQuotas
+      requestBody:
+        required: true
+        content:
+          application/merge-patch+json:
+            schema:
+              $ref: '#/components/schemas/EServiceDescriptorQuotasUpdateSeed'
+      responses:
+        '200':
+          description: E-Service Descriptor quotas updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EServiceDescriptor'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /eservices/{eserviceId}/descriptors/{descriptorId}/documents:
+    parameters:
+    - name: eserviceId
+      in: path
+      description: The E-Service ID of the Descriptor
+      required: true
+      schema:
+        $ref: '#/components/schemas/EServiceId'
+    - name: descriptorId
+      in: path
+      description: The ID of the Descriptor
+      required: true
+      schema:
+        $ref: '#/components/schemas/DescriptorId'
+    get:
+      tags:
+      - eservices
+      summary: List E-Service Descriptor Documents
+      description: Retrieve a list of documents for the specified E-Service Descriptor
+      operationId: getEServiceDescriptorDocuments
+      parameters:
+      - $ref: '#/components/parameters/OffsetParam'
+      - $ref: '#/components/parameters/LimitParam'
+      responses:
+        '200':
+          description: E-Service Descriptor Documents retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Documents'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    post:
+      tags:
+      - eservices
+      summary: Upload an E-Service Descriptor Document
+      description: Upload a Document for the specified E-Service Descriptor
+      operationId: uploadEServiceDescriptorDocument
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FileUploadMultipart'
+        required: true
+      responses:
+        '201':
+          description: Descriptor Document uploaded successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Document'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /eservices/{eserviceId}/descriptors/{descriptorId}/documents/{documentId}:
+    parameters:
+    - name: eserviceId
+      in: path
+      description: The E-Service ID of the Descriptor
+      required: true
+      schema:
+        $ref: '#/components/schemas/EServiceId'
+    - name: descriptorId
+      in: path
+      description: The ID of the Descriptor
+      required: true
+      schema:
+        $ref: '#/components/schemas/DescriptorId'
+    - name: documentId
+      in: path
+      description: The ID of the Document to retrieve or delete
+      required: true
+      schema:
+        type: string
+        format: uuid
+    get:
+      tags:
+      - eservices
+      summary: Download an E-Service Descriptor Document
+      description: Download a specific Document for the specified E-Service Descriptor
+      operationId: downloadEServiceDescriptorDocument
+      responses:
+        '200':
+          description: E-Service Descriptor Document retrieved, a multipart containing the file and its metadata
+          content:
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/FileDownloadMultipart'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    delete:
+      tags:
+      - eservices
+      summary: Delete an E-Service Descriptor Document
+      description: Delete a specific Document for the specified E-Service Descriptor
+      operationId: deleteEServiceDescriptorDocument
+      responses:
+        '200':
+          description: E-Service Descriptor Document deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VoidObject'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /eservices/{eserviceId}/descriptors/{descriptorId}/interface:
+    parameters:
+    - name: eserviceId
+      in: path
+      description: The E-Service ID of the Descriptor
+      required: true
+      schema:
+        $ref: '#/components/schemas/EServiceId'
+    - name: descriptorId
+      in: path
+      description: The ID of the Descriptor for which to download the interface
+      required: true
+      schema:
+        type: string
+        format: uuid
+    get:
+      tags:
+      - eservices
+      summary: Download an E-Service Descriptor interface
+      description: Download the interface document of an E-Service Descriptor
+      operationId: downloadEServiceDescriptorInterface
+      responses:
+        '200':
+          description: E-Service Descriptor interface retrieved, a multipart containing the file and its metadata
+          content:
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/FileDownloadMultipart'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    post:
+      tags:
+      - eservices
+      summary: Upload a E-Service Descriptor interface
+      description: 'Upload an interface document for the specified E-Service Descriptor.
+
+        If the Descriptor already has an interface, it should be first deleted before uploading a new one.
+
+        The Descriptor must be in Draft state.'
+      operationId: uploadEServiceDescriptorInterface
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FileUploadMultipart'
+        required: true
+      responses:
+        '201':
+          description: E-Service Descriptor interface uploaded successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Document'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    delete:
+      tags:
+      - eservices
+      summary: Delete an E-Service Descriptor interface
+      description: 'Delete the interface document of an E-Service Descriptor.
+
+        The Descriptor must be in Draft state.'
+      operationId: deleteEServiceDescriptorInterface
+      responses:
+        '200':
+          description: E-Service Descriptor interface deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VoidObject'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /eservices/{eserviceId}/descriptors/{descriptorId}/suspend:
+    post:
+      tags:
+      - eservices
+      summary: Suspend an E-Service Descriptor in Published or Deprecated state
+      operationId: suspendDescriptor
+      description: Suspend an E-Service Descriptor that is in Published or Deprecated state, transitioning it to Suspended state
+      parameters:
+      - name: eserviceId
+        in: path
+        description: The E-Service ID of the Descriptor
+        required: true
+        schema:
+          $ref: '#/components/schemas/EServiceId'
+      - name: descriptorId
+        in: path
+        description: The ID of the Descriptor to suspend
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: E-Service Descriptor suspended
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EServiceDescriptor'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /eservices/{eserviceId}/descriptors/{descriptorId}/unsuspend:
+    post:
+      tags:
+      - eservices
+      summary: Unsuspend an E-Service Descriptor in Suspended state
+      description: Unsuspend an E-Service Descriptor that is in Suspended state, transitioning it to Active or Deprecated state
+      operationId: unsuspendDescriptor
+      parameters:
+      - name: eserviceId
+        in: path
+        description: The E-Service ID of the Descriptor
+        required: true
+        schema:
+          $ref: '#/components/schemas/EServiceId'
+      - name: descriptorId
+        in: path
+        description: The ID of the Descriptor to unsuspend
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: E-Service Descriptor unsuspended
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EServiceDescriptor'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /eservices/{eserviceId}/descriptors/{descriptorId}/publish:
+    post:
+      tags:
+      - eservices
+      summary: Publish an E-Service Descriptor in Draft state
+      operationId: publishDescriptor
+      description: Publish an E-Service Descriptor that is in Draft state
+      parameters:
+      - name: eserviceId
+        in: path
+        description: The E-Service ID of the Descriptor
+        required: true
+        schema:
+          $ref: '#/components/schemas/EServiceId'
+      - name: descriptorId
+        in: path
+        description: The ID of the Descriptor to publish
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: E-Service Descriptor published
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EServiceDescriptor'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /eservices/{eserviceId}/descriptors/{descriptorId}/approve:
+    post:
+      tags:
+      - eservices
+      summary: Approve a delegated E-Service Descriptor in Waiting for Approval state
+      operationId: approveDelegatedEServiceDescriptor
+      description: Approve a delegated E-Service Descriptor that is in Waiting for Approval state
+      parameters:
+      - name: eserviceId
+        in: path
+        description: The E-Service ID of the Descriptor
+        required: true
+        schema:
+          $ref: '#/components/schemas/EServiceId'
+      - name: descriptorId
+        in: path
+        description: The ID of the Descriptor to approve
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: E-Service Descriptor approved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EServiceDescriptor'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /eservices/{eserviceId}/descriptors/{descriptorId}/reject:
+    post:
+      tags:
+      - eservices
+      summary: Reject a delegated E-Service Descriptor in Waiting for Approval state
+      operationId: rejectDelegatedEServiceDescriptor
+      description: Reject a delegated E-Service Descriptor that is in Waiting for Approval state
+      requestBody:
+        description: Payload containing the reason of the rejection
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RejectDelegatedEServiceDescriptorSeed'
+        required: true
+      parameters:
+      - name: eserviceId
+        in: path
+        description: The E-Service ID of the Descriptor
+        required: true
+        schema:
+          $ref: '#/components/schemas/EServiceId'
+      - name: descriptorId
+        in: path
+        description: The ID of the Descriptor to reject
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: E-Service Descriptor rejected
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EServiceDescriptor'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /eservices/{eserviceId}/riskAnalyses:
+    parameters:
+    - name: eserviceId
+      in: path
+      description: The E-Service ID for which to create a risk analysis
+      required: true
+      schema:
+        $ref: '#/components/schemas/EServiceId'
+    post:
+      tags:
+      - eservices
+      summary: Create a new Risk Analysis
+      description: 'Create a Risk Analysis for an E-Service.
+
+        The E-Service must be in Draft state and in Receive mode.'
+      operationId: createEServiceRiskAnalysis
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EServiceRiskAnalysisSeed'
+      responses:
+        '201':
+          description: Risk Analysis created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EServiceRiskAnalysis'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    get:
+      tags:
+      - eservices
+      summary: List E-Service Risk Analyses
+      description: Retrieve a list of Risk Analyses for a specific E-Service
+      operationId: getEServiceRiskAnalyses
+      parameters:
+      - $ref: '#/components/parameters/OffsetParam'
+      - $ref: '#/components/parameters/LimitParam'
+      responses:
+        '200':
+          description: E-Service Risk Analyses retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EServiceRiskAnalyses'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /eservices/{eserviceId}/riskAnalyses/{riskAnalysisId}:
+    parameters:
+    - name: eserviceId
+      in: path
+      description: The E-Service id
+      required: true
+      schema:
+        $ref: '#/components/schemas/EServiceId'
+    - name: riskAnalysisId
+      in: path
+      description: The Risk Analysis id
+      required: true
+      schema:
+        type: string
+        format: uuid
+    get:
+      tags:
+      - eservices
+      summary: Retrieve an E-Service Risk Analysis
+      description: Retrieve a Risk Analysis for an E-Service
+      operationId: getEServiceRiskAnalysis
+      responses:
+        '200':
+          description: E-Service Risk Analysis retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EServiceRiskAnalysis'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    delete:
+      tags:
+      - eservices
+      summary: Delete an E-Service Risk Analysis
+      description: 'Delete a Risk Analysis for an E-Service.
+
+        The E-Service must be in Draft state and in Receive mode.'
+      operationId: deleteEServiceRiskAnalysis
+      responses:
+        '200':
+          description: E-Service Risk Analysis deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VoidObject'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /eservices/{eserviceId}/descriptors/{descriptorId}/certifiedAttributes:
+    parameters:
+    - name: eserviceId
+      in: path
+      description: The E-Service ID of the Descriptor
+      required: true
+      schema:
+        $ref: '#/components/schemas/EServiceId'
+    - name: descriptorId
+      in: path
+      description: The ID of the Descriptor
+      required: true
+      schema:
+        $ref: '#/components/schemas/DescriptorId'
+    get:
+      tags:
+      - eservices
+      summary: List E-Service Descriptor Certified Attributes
+      description: Retrieve a list of E-Service Descriptor Certified Attributes
+      operationId: getEServiceDescriptorCertifiedAttributes
+      parameters:
+      - $ref: '#/components/parameters/OffsetParam'
+      - $ref: '#/components/parameters/LimitParam'
+      responses:
+        '200':
+          description: E-Service Descriptors Certified Attributes retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EServiceDescriptorCertifiedAttributes'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /eservices/{eserviceId}/descriptors/{descriptorId}/declaredAttributes:
+    parameters:
+    - name: eserviceId
+      in: path
+      description: The E-Service ID of the Descriptor
+      required: true
+      schema:
+        $ref: '#/components/schemas/EServiceId'
+    - name: descriptorId
+      in: path
+      description: The ID of the Descriptor
+      required: true
+      schema:
+        $ref: '#/components/schemas/DescriptorId'
+    get:
+      tags:
+      - eservices
+      summary: List E-Service Descriptor Declared Attributes
+      description: Retrieve a list of E-Service Descriptor Declared Attributes
+      operationId: getEServiceDescriptorDeclaredAttributes
+      parameters:
+      - $ref: '#/components/parameters/OffsetParam'
+      - $ref: '#/components/parameters/LimitParam'
+      responses:
+        '200':
+          description: E-Service Descriptors Declared Attributes retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EServiceDescriptorDeclaredAttributes'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /eservices/{eserviceId}/descriptors/{descriptorId}/verifiedAttributes:
+    parameters:
+    - name: eserviceId
+      in: path
+      description: The E-Service ID of the Descriptor
+      required: true
+      schema:
+        $ref: '#/components/schemas/EServiceId'
+    - name: descriptorId
+      in: path
+      description: The ID of the Descriptor
+      required: true
+      schema:
+        $ref: '#/components/schemas/DescriptorId'
+    get:
+      tags:
+      - eservices
+      summary: List E-Service Descriptor Verified Attributes
+      description: Retrieve a list of E-Service Descriptor Verified Attributes
+      operationId: getEServiceDescriptorVerifiedAttributes
+      parameters:
+      - $ref: '#/components/parameters/OffsetParam'
+      - $ref: '#/components/parameters/LimitParam'
+      responses:
+        '200':
+          description: E-Service Descriptors Verified Attributes retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EServiceDescriptorVerifiedAttributes'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /eservices/{eserviceId}/descriptors/{descriptorId}/certifiedAttributes/groups/{groupIndex}/attributes:
+    parameters:
+    - name: eserviceId
+      in: path
+      description: The E-Service ID of the Descriptor
+      required: true
+      schema:
+        $ref: '#/components/schemas/EServiceId'
+    - name: descriptorId
+      in: path
+      description: The ID of the Descriptor
+      required: true
+      schema:
+        $ref: '#/components/schemas/DescriptorId'
+    - name: groupIndex
+      in: path
+      description: The index of the group of attributes
+      required: true
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+    post:
+      tags:
+      - eservices
+      summary: Assign E-Service Descriptor Certified Attributes to a specific Attribute Group
+      description: Assign a set of Certified Attributes to the indicated Attribute Group (identified by groupIndex) of an E-Service Descriptor
+      operationId: assignEServiceDescriptorCertifiedAttributesToGroup
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EServiceDescriptorAttributesGroupSeed'
+      responses:
+        '200':
+          description: E-Service Descriptor Certified Attribute assigned to the Attribute Group
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VoidObject'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /eservices/{eserviceId}/descriptors/{descriptorId}/declaredAttributes/groups/{groupIndex}/attributes:
+    parameters:
+    - name: eserviceId
+      in: path
+      description: The E-Service ID of the Descriptor
+      required: true
+      schema:
+        $ref: '#/components/schemas/EServiceId'
+    - name: descriptorId
+      in: path
+      description: The ID of the Descriptor
+      required: true
+      schema:
+        $ref: '#/components/schemas/DescriptorId'
+    - name: groupIndex
+      in: path
+      description: The index of the group of attributes
+      required: true
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+    post:
+      tags:
+      - eservices
+      summary: Assign E-Service Descriptor Declared Attributes to a specific Attribute Group
+      description: Assign a set of Declared Attributes to the indicated Attribute Group (identified by groupIndex) of an E-Service Descriptor
+      operationId: assignEServiceDescriptorDeclaredAttributesToGroup
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EServiceDescriptorAttributesGroupSeed'
+      responses:
+        '200':
+          description: E-Service Descriptor Declared Attribute assigned to the Attribute Group
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VoidObject'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /eservices/{eserviceId}/descriptors/{descriptorId}/verifiedAttributes/groups/{groupIndex}/attributes:
+    parameters:
+    - name: eserviceId
+      in: path
+      description: The E-Service ID of the Descriptor
+      required: true
+      schema:
+        $ref: '#/components/schemas/EServiceId'
+    - name: descriptorId
+      in: path
+      description: The ID of the Descriptor
+      required: true
+      schema:
+        $ref: '#/components/schemas/DescriptorId'
+    - name: groupIndex
+      in: path
+      description: The index of the group of attributes
+      required: true
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+    post:
+      tags:
+      - eservices
+      summary: Assign E-Service Descriptor Verified Attributes to a specific Attribute Group
+      description: Assign a set of Verified Attributes to the indicated Attribute Group (identified by groupIndex) of an E-Service Descriptor
+      operationId: assignEServiceDescriptorVerifiedAttributesToGroup
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EServiceDescriptorAttributesGroupSeed'
+      responses:
+        '200':
+          description: E-Service Descriptor Verified Attribute assigned to the Attribute Group
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VoidObject'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /eservices/{eserviceId}/descriptors/{descriptorId}/certifiedAttributes/groups/{groupIndex}/attributes/{attributeId}:
+    parameters:
+    - name: eserviceId
+      in: path
+      description: The E-Service ID of the Descriptor
+      required: true
+      schema:
+        $ref: '#/components/schemas/EServiceId'
+    - name: descriptorId
+      in: path
+      description: The ID of the Descriptor
+      required: true
+      schema:
+        $ref: '#/components/schemas/DescriptorId'
+    - name: groupIndex
+      in: path
+      description: The index of the group to which the Attribute belongs
+      required: true
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+    - name: attributeId
+      in: path
+      description: The ID of the Certified Attribute
+      required: true
+      schema:
+        $ref: '#/components/schemas/AttributeId'
+    delete:
+      tags:
+      - eservices
+      summary: Delete an E-Service Descriptor Certified Attribute from a specific Attribute…
+      description: 'Delete a specific Certified Attribute from the indicated Attribute Group (identified by groupIndex) of an E-Service Descriptor.
+
+        If the deleted attribute is the last one in the group, the entire group will be removed.'
+      operationId: deleteEServiceDescriptorCertifiedAttributeFromGroup
+      responses:
+        '200':
+          description: E-Service Descriptor Certified Attribute deleted from Attribute Group
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VoidObject'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /eservices/{eserviceId}/descriptors/{descriptorId}/verifiedAttributes/groups/{groupIndex}/attributes/{attributeId}:
+    parameters:
+    - name: eserviceId
+      in: path
+      description: The E-Service ID of the Descriptor
+      required: true
+      schema:
+        $ref: '#/components/schemas/EServiceId'
+    - name: descriptorId
+      in: path
+      description: The ID of the Descriptor
+      required: true
+      schema:
+        $ref: '#/components/schemas/DescriptorId'
+    - name: groupIndex
+      in: path
+      description: The index of the group to which the Attribute belongs
+      required: true
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+    - name: attributeId
+      in: path
+      description: The ID of the Verified Attribute
+      required: true
+      schema:
+        $ref: '#/components/schemas/AttributeId'
+    delete:
+      tags:
+      - eservices
+      summary: Delete an E-Service Descriptor Verified Attribute from a specific Attribute…
+      description: 'Delete a specific Verified Attribute from the indicated Attribute Group (identified by groupIndex) of an E-Service Descriptor.
+
+        If the deleted attribute is the last one in the group, the entire group will be removed.'
+      operationId: deleteEServiceDescriptorVerifiedAttributeFromGroup
+      responses:
+        '200':
+          description: E-Service Descriptor Verified Attribute deleted from Attribute Group
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VoidObject'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /eservices/{eserviceId}/descriptors/{descriptorId}/declaredAttributes/groups/{groupIndex}/attributes/{attributeId}:
+    parameters:
+    - name: eserviceId
+      in: path
+      description: The E-Service ID of the Descriptor
+      required: true
+      schema:
+        $ref: '#/components/schemas/EServiceId'
+    - name: descriptorId
+      in: path
+      description: The ID of the Descriptor
+      required: true
+      schema:
+        $ref: '#/components/schemas/DescriptorId'
+    - name: groupIndex
+      in: path
+      description: The index of the group to which the Attribute belongs
+      required: true
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+    - name: attributeId
+      in: path
+      description: The ID of the Declared Attribute
+      required: true
+      schema:
+        $ref: '#/components/schemas/AttributeId'
+    delete:
+      tags:
+      - eservices
+      summary: Delete an E-Service Descriptor Declared Attribute from a specific Attribute…
+      description: 'Delete a specific Declared Attribute from the indicated Attribute Group (identified by groupIndex) of an E-Service Descriptor.
+
+        If the deleted attribute is the last one in the group, the entire group will be removed.'
+      operationId: deleteEServiceDescriptorDeclaredAttributeFromGroup
+      responses:
+        '200':
+          description: E-Service Descriptor Declared Attribute deleted from Attribute Group
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VoidObject'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /eservices/{eserviceId}/descriptors/{descriptorId}/certifiedAttributes/groups:
+    parameters:
+    - name: eserviceId
+      in: path
+      description: The E-Service ID of the Descriptor
+      required: true
+      schema:
+        $ref: '#/components/schemas/EServiceId'
+    - name: descriptorId
+      in: path
+      description: The ID of the Descriptor
+      required: true
+      schema:
+        $ref: '#/components/schemas/DescriptorId'
+    post:
+      tags:
+      - eservices
+      summary: Create a Certified Attributes Group for an E-Service Descriptor
+      description: Create a new group of Certified Attributes for an E-Service Descriptor in Draft state
+      operationId: createEServiceDescriptorCertifiedAttributesGroup
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EServiceDescriptorAttributesGroupSeed'
+      responses:
+        '201':
+          description: Certified Attributes Group created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EServiceDescriptorCertifiedAttributesGroup'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /eservices/{eserviceId}/descriptors/{descriptorId}/declaredAttributes/groups:
+    parameters:
+    - name: eserviceId
+      in: path
+      description: The E-Service ID of the Descriptor
+      required: true
+      schema:
+        $ref: '#/components/schemas/EServiceId'
+    - name: descriptorId
+      in: path
+      description: The ID of the Descriptor
+      required: true
+      schema:
+        $ref: '#/components/schemas/DescriptorId'
+    post:
+      tags:
+      - eservices
+      summary: Create a Declared Attributes Group for an E-Service Descriptor
+      description: Create a new group of Declared Attributes for an E-Service Descriptor in Draft state
+      operationId: createEServiceDescriptorDeclaredAttributesGroup
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EServiceDescriptorAttributesGroupSeed'
+      responses:
+        '201':
+          description: Declared Attributes Group created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EServiceDescriptorDeclaredAttributesGroup'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /eservices/{eserviceId}/descriptors/{descriptorId}/verifiedAttributes/groups:
+    parameters:
+    - name: eserviceId
+      in: path
+      description: The E-Service ID of the Descriptor
+      required: true
+      schema:
+        $ref: '#/components/schemas/EServiceId'
+    - name: descriptorId
+      in: path
+      description: The ID of the Descriptor
+      required: true
+      schema:
+        $ref: '#/components/schemas/DescriptorId'
+    post:
+      tags:
+      - eservices
+      summary: Create a Verified Attributes Group for an E-Service Descriptor
+      description: Create a new group of Verified Attributes for an E-Service Descriptor in Draft state
+      operationId: createEServiceDescriptorVerifiedAttributesGroup
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EServiceDescriptorAttributesGroupSeed'
+      responses:
+        '201':
+          description: Verified Attributes Group created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EServiceDescriptorVerifiedAttributesGroup'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+components:
+  schemas:
+    RiskAnalysisFormSeed:
+      type: object
+      additionalProperties: false
+      properties:
+        version:
+          type: string
+          minLength: 1
+          maxLength: 250
+        answers:
+          description: 'Key-value pairs of risk analysis form answers.
+
+            Key: question ID; value: array of answers.
+
+            '
+          additionalProperties:
+            type: array
+            items:
+              type: string
+              minLength: 1
+              maxLength: 2000
+      required:
+      - version
+      - answers
+    EServiceDescriptorQuotasUpdateSeed:
+      type: object
+      additionalProperties: false
+      properties:
+        voucherLifespan:
+          type: integer
+          format: int32
+          minimum: 60
+          maximum: 86400
+        dailyCallsPerConsumer:
+          description: Maximum number of daily calls that this descriptor can afford per consumer
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 1000000000
+        dailyCallsTotal:
+          description: Total daily calls available for this E-Service
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 1000000000
+    EServiceDelegationUpdateSeed:
+      type: object
+      additionalProperties: false
+      properties:
+        isConsumerDelegable:
+          type: boolean
+        isClientAccessDelegable:
+          type: boolean
+    EServiceDescriptorCertifiedAttributes:
+      type: object
+      additionalProperties: false
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/EServiceDescriptorCertifiedAttribute'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+      required:
+      - results
+      - pagination
+    DeclaredAttribute:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          format: uuid
+        description:
+          type: string
+        name:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+      - id
+      - name
+      - description
+      - createdAt
+    Documents:
+      type: object
+      additionalProperties: false
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Document'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+      required:
+      - results
+      - pagination
+    EServiceDescriptorSeed:
+      type: object
+      additionalProperties: false
+      properties:
+        description:
+          type: string
+          minLength: 10
+          maxLength: 250
+        audience:
+          type: array
+          minItems: 1
+          maxItems: 1
+          items:
+            type: string
+            minLength: 0
+            maxLength: 250
+        voucherLifespan:
+          type: integer
+          format: int32
+          minimum: 60
+          maximum: 86400
+        dailyCallsPerConsumer:
+          description: Maximum number of daily calls that this descriptor can afford per consumer
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 1000000000
+        dailyCallsTotal:
+          description: Total daily calls available for this E-Service
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 1000000000
+        agreementApprovalPolicy:
+          $ref: '#/components/schemas/AgreementApprovalPolicy'
+      required:
+      - audience
+      - voucherLifespan
+      - dailyCallsPerConsumer
+      - dailyCallsTotal
+      - agreementApprovalPolicy
+    Problem:
+      properties:
+        type:
+          description: URI reference of type definition
+          type: string
+        status:
+          description: The HTTP status code generated by the origin server for this occurrence of the problem
+          example: 503
+          format: int32
+          minimum: 100
+          type: integer
+          exclusiveMaximum: 600
+        title:
+          description: A short, summary of the problem type. Written in english and readable
+          example: Service Unavailable
+          maxLength: 64
+          pattern: ^[ -~]{0,64}$
+          type: string
+        correlationId:
+          description: Unique identifier of the request
+          example: 53af4f2d-0c87-41ef-a645-b726a821852b
+          maxLength: 64
+          type: string
+        detail:
+          description: A human readable explanation of the problem
+          example: Request took too long to complete
+          maxLength: 4096
+          pattern: ^.{0,1024}$
+          type: string
+        errors:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/ProblemError'
+      additionalProperties: false
+      required:
+      - type
+      - status
+      - title
+    ProblemError:
+      properties:
+        code:
+          description: Internal code of the error
+          example: 123-4567
+          minLength: 8
+          maxLength: 8
+          pattern: ^[0-9]{3}-[0-9]{4}$
+          type: string
+        detail:
+          description: A human readable explanation specific to this occurrence of the problem
+          example: Parameter not valid
+          maxLength: 4096
+          pattern: ^.{0,1024}$
+          type: string
+      required:
+      - code
+      - detail
+    EServiceDescriptorVerifiedAttributesGroup:
+      type: object
+      additionalProperties: false
+      properties:
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/EServiceDescriptorVerifiedAttribute'
+      required:
+      - attributes
+    VerifiedAttribute:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          format: uuid
+        description:
+          type: string
+        name:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+      - id
+      - name
+      - description
+      - createdAt
+    EServiceDescriptorCertifiedAttributesGroup:
+      type: object
+      additionalProperties: false
+      properties:
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/EServiceDescriptorCertifiedAttribute'
+      required:
+      - attributes
+    EServiceDescriptors:
+      type: object
+      additionalProperties: false
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/EServiceDescriptor'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+      required:
+      - results
+      - pagination
+    EServiceDescriptorState:
+      type: string
+      description: E-Service Descriptor State
+      enum:
+      - DRAFT
+      - PUBLISHED
+      - DEPRECATED
+      - SUSPENDED
+      - ARCHIVED
+      - WAITING_FOR_APPROVAL
+    EServiceTechnology:
+      type: string
+      description: API Technology
+      enum:
+      - REST
+      - SOAP
+    EServiceDraftUpdateSeed:
+      type: object
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+          minLength: 5
+          maxLength: 60
+        description:
+          type: string
+          minLength: 10
+          maxLength: 400
+        technology:
+          $ref: '#/components/schemas/EServiceTechnology'
+        mode:
+          $ref: '#/components/schemas/EServiceMode'
+        isSignalHubEnabled:
+          type: boolean
+        isConsumerDelegable:
+          type: boolean
+        isClientAccessDelegable:
+          type: boolean
+        personalData:
+          type:
+          - boolean
+          - 'null'
+    EServiceDescriptorVerifiedAttribute:
+      type: object
+      description: Represents an E-Service Descriptor Verified attribute with the index of its attribute group.
+      properties:
+        groupIndex:
+          type: integer
+          format: int32
+          minimum: 0
+          description: The index of the group to which the attribute belongs.
+        attribute:
+          $ref: '#/components/schemas/VerifiedAttribute'
+      required:
+      - groupIndex
+      - attribute
+    RejectDelegatedEServiceDescriptorSeed:
+      type: object
+      additionalProperties: false
+      properties:
+        rejectionReason:
+          type: string
+      required:
+      - rejectionReason
+    EServices:
+      type: object
+      additionalProperties: false
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/EService'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+      required:
+      - results
+      - pagination
+    EServiceRiskAnalysisSeed:
+      type: object
+      additionalProperties: false
+      required:
+      - name
+      - riskAnalysisForm
+      properties:
+        name:
+          type: string
+        riskAnalysisForm:
+          $ref: '#/components/schemas/RiskAnalysisFormSeed'
+    DescriptorId:
+      type: string
+      format: uuid
+      description: The unique identifier of the Descriptor
+    EServiceDescriptorVerifiedAttributes:
+      type: object
+      additionalProperties: false
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/EServiceDescriptorVerifiedAttribute'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+      required:
+      - results
+      - pagination
+    EServiceDescriptionUpdateSeed:
+      type: object
+      additionalProperties: false
+      required:
+      - description
+      properties:
+        description:
+          type: string
+          minLength: 10
+          maxLength: 400
+    EServiceDescriptorDeclaredAttribute:
+      type: object
+      description: Represents an E-Service Descriptor Declared attribute with the index of its attribute group.
+      properties:
+        groupIndex:
+          type: integer
+          format: int32
+          minimum: 0
+          description: The index of the group to which the attribute belongs.
+        attribute:
+          $ref: '#/components/schemas/DeclaredAttribute'
+      required:
+      - groupIndex
+      - attribute
+    RiskAnalysisForm:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          format: uuid
+        version:
+          type: string
+          minLength: 1
+          maxLength: 250
+        answers:
+          description: 'Key-value pairs of risk analysis form answers.
+
+            Key: question ID; value: array of answers
+
+            '
+          additionalProperties:
+            type: array
+            items:
+              type: string
+              minLength: 1
+              maxLength: 2000
+      required:
+      - version
+      - answers
+    Document:
+      type: object
+      additionalProperties: false
+      required:
+      - id
+      - name
+      - prettyName
+      - contentType
+      - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier of the file
+        name:
+          type: string
+          description: The name of the file
+        prettyName:
+          type: string
+          description: A human-readable name for the file
+        contentType:
+          type: string
+          description: The content type of the file
+        createdAt:
+          type: string
+          format: date-time
+          description: The date and time when the file was uploaded
+    AttributeId:
+      type: string
+      format: uuid
+      description: The unique identifier of the Attribute
+    EServiceDescriptorDeclaredAttributesGroup:
+      type: object
+      additionalProperties: false
+      properties:
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/EServiceDescriptorDeclaredAttribute'
+      required:
+      - attributes
+    EServicePersonalDataFlagUpdateSeed:
+      type: object
+      additionalProperties: false
+      required:
+      - personalData
+      properties:
+        personalData:
+          type: boolean
+    VoidObject:
+      type: object
+      additionalProperties: false
+      description: An empty object
+    TemplateId:
+      type: string
+      format: uuid
+      description: The unique identifier of the Template
+    EServiceMode:
+      type: string
+      description: Indicates if the E-Service is intended for receiving or delivering data
+      enum:
+      - RECEIVE
+      - DELIVER
+    EServiceRiskAnalyses:
+      type: object
+      additionalProperties: false
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/EServiceRiskAnalysis'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+      required:
+      - results
+      - pagination
+    CertifiedAttribute:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          format: uuid
+        code:
+          type: string
+          description: The identifier of the attribute on the source registry
+        description:
+          type: string
+        origin:
+          type: string
+          description: Identifier of the origin of this attribute, e.g. "IPA"
+        name:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+      - id
+      - name
+      - description
+      - code
+      - origin
+      - createdAt
+    DescriptorSeedForEServiceCreation:
+      required:
+      - audience
+      - voucherLifespan
+      - dailyCallsPerConsumer
+      - dailyCallsTotal
+      - agreementApprovalPolicy
+      type: object
+      additionalProperties: false
+      properties:
+        description:
+          type: string
+          minLength: 10
+          maxLength: 250
+        audience:
+          type: array
+          minItems: 1
+          maxItems: 1
+          items:
+            type: string
+            minLength: 0
+            maxLength: 250
+        voucherLifespan:
+          type: integer
+          format: int32
+          minimum: 60
+          maximum: 86400
+        dailyCallsPerConsumer:
+          description: Maximum number of daily calls that this descriptor can afford
+          type: integer
+          format: int32
+          minimum: 1
+        dailyCallsTotal:
+          description: Total daily calls available for this e-service
+          type: integer
+          format: int32
+          minimum: 1
+        agreementApprovalPolicy:
+          $ref: '#/components/schemas/AgreementApprovalPolicy'
+    EServiceDescriptorDraftUpdateSeed:
+      type: object
+      additionalProperties: false
+      properties:
+        description:
+          type: string
+          minLength: 10
+          maxLength: 250
+        audience:
+          type: array
+          minItems: 1
+          maxItems: 1
+          items:
+            type: string
+            minLength: 1
+            maxLength: 250
+        voucherLifespan:
+          type: integer
+          format: int32
+          minimum: 60
+          maximum: 86400
+        dailyCallsPerConsumer:
+          description: Maximum number of daily calls that this Descriptor can afford
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 1000000000
+        dailyCallsTotal:
+          description: Total daily calls available for this E-Service
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 1000000000
+        agreementApprovalPolicy:
+          $ref: '#/components/schemas/AgreementApprovalPolicy'
+    EServiceRiskAnalysis:
+      type: object
+      additionalProperties: false
+      required:
+      - id
+      - name
+      - riskAnalysisForm
+      - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        riskAnalysisForm:
+          $ref: '#/components/schemas/RiskAnalysisForm'
+        createdAt:
+          type: string
+          format: date-time
+    EServiceId:
+      type: string
+      format: uuid
+      description: The unique identifier of the E-Service
+    EServiceDescriptor:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          format: uuid
+        version:
+          type: string
+        description:
+          type: string
+        audience:
+          type: array
+          items:
+            type: string
+        voucherLifespan:
+          type: integer
+          format: int32
+        dailyCallsPerConsumer:
+          description: Maximum number of daily calls that this descriptor can afford per consumer
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 1000000000
+        dailyCallsTotal:
+          description: Total daily calls available for this E-Service
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 1000000000
+        state:
+          $ref: '#/components/schemas/EServiceDescriptorState'
+        agreementApprovalPolicy:
+          $ref: '#/components/schemas/AgreementApprovalPolicy'
+        serverUrls:
+          type: array
+          items:
+            type: string
+        publishedAt:
+          type: string
+          format: date-time
+        suspendedAt:
+          type: string
+          format: date-time
+        deprecatedAt:
+          type: string
+          format: date-time
+        archivedAt:
+          type: string
+          format: date-time
+        templateVersionId:
+          type: string
+          format: uuid
+      required:
+      - id
+      - version
+      - docs
+      - state
+      - creationDate
+      - audience
+      - voucherLifespan
+      - dailyCallsPerConsumer
+      - dailyCallsTotal
+      - agreementApprovalPolicy
+      - serverUrls
+    EServiceDescriptorAttributesGroupSeed:
+      type: object
+      additionalProperties: false
+      properties:
+        attributeIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+      required:
+      - attributeIds
+    EServiceDescriptorCertifiedAttribute:
+      type: object
+      description: Represents an E-Service Descriptor Certified attribute with the index of its attribute group.
+      properties:
+        groupIndex:
+          type: integer
+          format: int32
+          minimum: 0
+          description: The index of the group to which the attribute belongs.
+        attribute:
+          $ref: '#/components/schemas/CertifiedAttribute'
+      required:
+      - groupIndex
+      - attribute
+    EServiceSeed:
+      type: object
+      additionalProperties: false
+      required:
+      - name
+      - description
+      - technology
+      - mode
+      - descriptor
+      properties:
+        name:
+          type: string
+          minLength: 5
+          maxLength: 60
+        description:
+          type: string
+          minLength: 10
+          maxLength: 400
+        technology:
+          $ref: '#/components/schemas/EServiceTechnology'
+        mode:
+          $ref: '#/components/schemas/EServiceMode'
+        descriptor:
+          $ref: '#/components/schemas/DescriptorSeedForEServiceCreation'
+        isSignalHubEnabled:
+          type: boolean
+        isConsumerDelegable:
+          type: boolean
+        isClientAccessDelegable:
+          type: boolean
+        personalData:
+          type: boolean
+    AgreementApprovalPolicy:
+      type: string
+      description: E-Service Descriptor policy for new Agreements approval
+      enum:
+      - AUTOMATIC
+      - MANUAL
+    FileUploadMultipart:
+      type: object
+      additionalProperties: false
+      required:
+      - file
+      - prettyName
+      properties:
+        file:
+          type: string
+          format: binary
+          description: The file to upload
+        prettyName:
+          type: string
+          description: A human-readable name for the file
+    EService:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          format: uuid
+        producerId:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        technology:
+          $ref: '#/components/schemas/EServiceTechnology'
+        mode:
+          $ref: '#/components/schemas/EServiceMode'
+        isSignalHubEnabled:
+          type: boolean
+        isConsumerDelegable:
+          type: boolean
+        isClientAccessDelegable:
+          type: boolean
+        templateId:
+          $ref: '#/components/schemas/TemplateId'
+        personalData:
+          type: boolean
+      required:
+      - id
+      - producerId
+      - name
+      - description
+      - technology
+      - descriptors
+      - mode
+    FileDownloadMultipart:
+      type: object
+      additionalProperties: false
+      required:
+      - file
+      - filename
+      - contentType
+      - id
+      properties:
+        file:
+          type: string
+          format: binary
+          description: The file to download
+        filename:
+          type: string
+          description: The name of the file
+        contentType:
+          type: string
+          description: The content type of the file
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier of the file
+        prettyName:
+          type: string
+          description: A human-readable name for the file
+    EServiceSignalHubUpdateSeed:
+      type: object
+      additionalProperties: false
+      required:
+      - isSignalHubEnabled
+      properties:
+        isSignalHubEnabled:
+          type: boolean
+    Pagination:
+      type: object
+      additionalProperties: false
+      properties:
+        offset:
+          type: integer
+          format: int32
+          minimum: 0
+        limit:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 50
+        totalCount:
+          type: integer
+          format: int32
+          minimum: 0
+      required:
+      - offset
+      - limit
+      - totalCount
+    EServiceNameUpdateSeed:
+      type: object
+      additionalProperties: false
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          minLength: 5
+          maxLength: 60
+    EServiceDescriptorDeclaredAttributes:
+      type: object
+      additionalProperties: false
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/EServiceDescriptorDeclaredAttribute'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+      required:
+      - results
+      - pagination
+    EServiceDraftUpdateSeed_2:
+      type: object
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+          minLength: 5
+          maxLength: 60
+        description:
+          type: string
+          minLength: 10
+          maxLength: 250
+        technology:
+          $ref: '#/components/schemas/EServiceTechnology'
+        mode:
+          $ref: '#/components/schemas/EServiceMode'
+        isSignalHubEnabled:
+          type: boolean
+        isConsumerDelegable:
+          type: boolean
+        isClientAccessDelegable:
+          type: boolean
+        personalData:
+          type:
+          - boolean
+          - 'null'
+    EServiceDescriptionUpdateSeed_2:
+      type: object
+      additionalProperties: false
+      required:
+      - description
+      properties:
+        description:
+          type: string
+          minLength: 10
+          maxLength: 250
+    EServiceSeed_2:
+      type: object
+      additionalProperties: false
+      required:
+      - name
+      - description
+      - technology
+      - mode
+      - descriptor
+      properties:
+        name:
+          type: string
+          minLength: 5
+          maxLength: 60
+        description:
+          type: string
+          minLength: 10
+          maxLength: 250
+        technology:
+          $ref: '#/components/schemas/EServiceTechnology'
+        mode:
+          $ref: '#/components/schemas/EServiceMode'
+        descriptor:
+          $ref: '#/components/schemas/DescriptorSeedForEServiceCreation'
+        isSignalHubEnabled:
+          type: boolean
+        isConsumerDelegable:
+          type: boolean
+        isClientAccessDelegable:
+          type: boolean
+        personalData:
+          type: boolean
+    EService_2:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          format: uuid
+        producerId:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        technology:
+          $ref: '#/components/schemas/EServiceTechnology'
+        mode:
+          $ref: '#/components/schemas/EServiceMode'
+        isSignalHubEnabled:
+          type: boolean
+        isConsumerDelegable:
+          type: boolean
+        isClientAccessDelegable:
+          type: boolean
+        templateId:
+          type: string
+          format: uuid
+        personalData:
+          type: boolean
+      required:
+      - id
+      - producerId
+      - name
+      - description
+      - technology
+      - descriptors
+      - mode
+  headers:
+    IntegrityRest02AgidJwtSignatureHeader:
+      description: 'The `Agid-JWT-Signature` header contains a JSON Web Signature (JWS) signed with the PDND API private key.
+
+        It ensures payload integrity and non-repudiation across all responses (both success and error), in compliance with: 1) Linee Guida sull''interoperabilità tecnica delle Pubbliche Amministrazioni - Pattern di sicurezza,  2) RFC 7515 and 3) RFC 7519.
+
+        '
+      schema:
+        type: string
+    RateLimitRemainingHeader:
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+      description: Remaining requests within time interval
+    RateLimitIntervalHeader:
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+      description: Time interval in milliseconds. Allowed requests will be constantly replenished during the interval. At the end of the interval the max allowed requests will be available
+    RateLimitLimitHeader:
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+      description: Max allowed requests within time interval
+    IntegrityRest02DigestHeader:
+      schema:
+        type: string
+        pattern: ^SHA-256=[a-zA-Z0-9+/]{43}=$
+      description: 'Digest of the body using the canonical JSON representation of the response body.
+
+        The digest is calculated using the SHA-256 algorithm on the response body
+
+        exactly as it is sent to the client, encoded in Base64 as per RFC 3230
+
+        '
+  parameters:
+    TemplateIdsParam:
+      in: query
+      name: templateIds
+      description: Filter E-Services by template IDs. If not specified, return E-Services for any template, and E-Services without a template
+      required: false
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+          format: uuid
+        default: []
+    LimitParam:
+      in: query
+      name: limit
+      description: Maximum number of results to return
+      required: true
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+        maximum: 50
+    OffsetParam:
+      in: query
+      name: offset
+      description: Pagination starting position
+      required: true
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+  responses:
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+      headers:
+        X-Rate-Limit-Limit:
+          $ref: '#/components/headers/RateLimitLimitHeader'
+        X-Rate-Limit-Remaining:
+          $ref: '#/components/headers/RateLimitRemainingHeader'
+        X-Rate-Limit-Interval:
+          $ref: '#/components/headers/RateLimitIntervalHeader'
+        Digest:
+          $ref: '#/components/headers/IntegrityRest02DigestHeader'
+        Agid-JWT-Signature:
+          $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+    Conflict:
+      description: Conflict
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+      headers:
+        X-Rate-Limit-Limit:
+          $ref: '#/components/headers/RateLimitLimitHeader'
+        X-Rate-Limit-Remaining:
+          $ref: '#/components/headers/RateLimitRemainingHeader'
+        X-Rate-Limit-Interval:
+          $ref: '#/components/headers/RateLimitIntervalHeader'
+        Digest:
+          $ref: '#/components/headers/IntegrityRest02DigestHeader'
+        Agid-JWT-Signature:
+          $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+      headers:
+        X-Rate-Limit-Limit:
+          $ref: '#/components/headers/RateLimitLimitHeader'
+        X-Rate-Limit-Remaining:
+          $ref: '#/components/headers/RateLimitRemainingHeader'
+        X-Rate-Limit-Interval:
+          $ref: '#/components/headers/RateLimitIntervalHeader'
+        Digest:
+          $ref: '#/components/headers/IntegrityRest02DigestHeader'
+        Agid-JWT-Signature:
+          $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+    BadRequest:
+      description: Bad Request
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+      headers:
+        X-Rate-Limit-Limit:
+          $ref: '#/components/headers/RateLimitLimitHeader'
+        X-Rate-Limit-Remaining:
+          $ref: '#/components/headers/RateLimitRemainingHeader'
+        X-Rate-Limit-Interval:
+          $ref: '#/components/headers/RateLimitIntervalHeader'
+        Digest:
+          $ref: '#/components/headers/IntegrityRest02DigestHeader'
+        Agid-JWT-Signature:
+          $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+      headers:
+        X-Rate-Limit-Limit:
+          $ref: '#/components/headers/RateLimitLimitHeader'
+        X-Rate-Limit-Remaining:
+          $ref: '#/components/headers/RateLimitRemainingHeader'
+        X-Rate-Limit-Interval:
+          $ref: '#/components/headers/RateLimitIntervalHeader'
+        Digest:
+          $ref: '#/components/headers/IntegrityRest02DigestHeader'
+        Agid-JWT-Signature:
+          $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+    TooManyRequests:
+      description: Too Many Requests
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+      headers:
+        X-Rate-Limit-Limit:
+          $ref: '#/components/headers/RateLimitLimitHeader'
+        X-Rate-Limit-Remaining:
+          $ref: '#/components/headers/RateLimitRemainingHeader'
+        X-Rate-Limit-Interval:
+          $ref: '#/components/headers/RateLimitIntervalHeader'
+        Digest:
+          $ref: '#/components/headers/IntegrityRest02DigestHeader'
+        Agid-JWT-Signature:
+          $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+  securitySchemes:
+    DPoPAuth:
+      type: http
+      scheme: DPoP
+      description: 'This Authorization header must be used alongside the DPoP Proof JWT.
+
+        Use:
+
+        Authorization: DPoP <access_token>
+
+
+        The access token generated must also have a cnf field.
+
+        '
+    DPoPProofHeader:
+      type: apiKey
+      in: header
+      name: DPoP
+      description: 'DPoP proof JWT for sender-constrained access. Must accompany the DPoP Authorization header.
+
+        '
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-refined-from:
+- interop-api-v3.yaml
+- pagopa-pdnd-interop-v2-openapi.yml
+- pagopa-pdnd-interop-v3-openapi.yml

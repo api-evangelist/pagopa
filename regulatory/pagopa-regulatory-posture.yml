@@ -1,0 +1,101 @@
+generated: '2026-10-09'
+method: searched
+source:
+- https://developer.pagopa.it/it/privacy-policy
+- https://www.pagopa.it/it/privacy-policy/
+- https://developer.pagopa.it/it/terms-of-service
+- https://www.pagopa.it/it/certificazioni/
+- https://www.pagopa.it/it/responsible-disclosure-policy/
+language: it
+note: >-
+  All pages are in Italian; quotes are verbatim Italian. The DevPortal privacy notice (developer.pagopa.it) is an
+  art. 13 GDPR notice for the developer portal and its registered-user services (webinars, chatbot). PagoPA S.p.A.
+  is an Italian state-owned company; regulator named is the Garante per la protezione dei dati personali.
+signals:
+  data_subject_request:
+    url: https://developer.pagopa.it/it/privacy-policy
+    section: Diritti degli interessati
+    note: >-
+      Establishes GDPR rights of access, rectification, erasure, restriction, objection and portability, exercised
+      via a OneTrust web form (https://privacyportal-de.onetrust.com/webform/77f17844-04c3-4969-a11d-462ee77acbe1/9ab6533d-be4a-482e-929a-0d8d2ab29df8)
+      linked as "Diritto alla protezione dei dati personali"; a DPO is reachable at dpo@pagopa.it.
+    evidence:
+    - source: https://developer.pagopa.it/it/privacy-policy
+      http_status: 200
+      fetched: '2026-10-09'
+      quote: "Gli interessati hanno il diritto di ottenere, nei casi previsti, l’accesso ai propri dati personali e la rettifica o la cancellazione degli stessi nelle forme e nei limiti previsti dal Regolamento negli artt. 15 e ss."
+    - source: https://developer.pagopa.it/it/privacy-policy
+      http_status: 200
+      fetched: '2026-10-09'
+      quote: "Inoltre, gli interessati, laddove ricorrano i presupposti, hanno diritto alla limitazione del trattamento che li riguarda o di opporsi al trattamento, oltre al diritto alla portabilità dei dati (artt. 18 e 21 del Regolamento)."
+    - source: https://developer.pagopa.it/it/privacy-policy
+      http_status: 200
+      fetched: '2026-10-09'
+      quote: "Tali richieste potranno essere indirizzate al Titolare, tramite il presente form di contatto."
+  subprocessors:
+    url: https://developer.pagopa.it/it/privacy-policy
+    section: Responsabile del trattamento dei dati
+    note: >-
+      No published subprocessor list. Processors are appointed under art. 28 GDPR and the full list is available
+      ON REQUEST only, via the contact form. Same position on the corporate privacy policy.
+    evidence:
+    - source: https://developer.pagopa.it/it/privacy-policy
+      http_status: 200
+      fetched: '2026-10-09'
+      quote: "L’elenco completo dei responsabili del trattamento può essere richiesto alla Società scrivendo sul form di contatto presente nella sezione “Diritto alla protezione dei dati personali” del sito web della Società."
+    - source: https://developer.pagopa.it/it/privacy-policy
+      http_status: 200
+      fetched: '2026-10-09'
+      quote: "In ogni momento, l’interessato può chiedere al Titolare la lista completa dei Responsabili di volta in volta nominati coinvolti nel trattamento dei dati per le finalità"
+  data_residency:
+    url: https://developer.pagopa.it/it/privacy-policy
+    section: Trasferimenti verso paesi terzi
+    note: >-
+      No EU-only residency commitment: the provider states it uses European and non-European vendors, including in
+      the USA, with transfers covered by the EU-US Data Privacy Framework and EU Standard Contractual Clauses.
+    evidence:
+    - source: https://developer.pagopa.it/it/privacy-policy
+      http_status: 200
+      fetched: '2026-10-09'
+      quote: "La Società si avvale di fornitori europei e non per l’erogazione dei propri servizi. Abbiamo concluso con tali fornitori accordi di servizio ai sensi dell’art. 28 del Regolamento."
+    - source: https://developer.pagopa.it/it/privacy-policy
+      http_status: 200
+      fetched: '2026-10-09'
+      quote: "In particolare, ancor di più, i fornitori che risiedono al di fuori dello Spazio Economico Europeo (SEE), compresi negli USA, sono stati adeguatamente selezionati e oltre ad esser nominati ai sensi dell’art. 28 GDPR, e nel rispetto degli articoli 46, 47 e 49 del GDPR, hanno stipulato le Clausole Contrattuali Standard della Commissione Europea per garantire adeguati livelli di tutela"
+  data_retention:
+    url: https://developer.pagopa.it/it/privacy-policy
+    section: Periodo di conservazione
+    note: >-
+      Purpose-bound retention in general; one concrete period: DevPortal chatbot questions are kept at most six
+      months then auto-deleted, and users can delete them at any time. Cookies retained no more than 6 months.
+    evidence:
+    - source: https://developer.pagopa.it/it/privacy-policy
+      http_status: 200
+      fetched: '2026-10-09'
+      quote: "I dati personali acquisiti tramite il presente Sito sono conservati per il tempo necessario: i) per il corretto svolgimento del Servizio richiesto, ii) per motivi di interesse pubblico, e iii) per l’adempimento degli obblighi legali connessi."
+    - source: https://developer.pagopa.it/it/privacy-policy
+      http_status: 200
+      fetched: '2026-10-09'
+      quote: "Nello specifico le domande effettuate dall’Utente al chatbot sono conservate per un periodo massimo di sei mesi, trascorso il quale vengono cancellate automaticamente, l'Utente in ogni caso può eliminare in qualsiasi momento le stesse."
+    - source: https://developer.pagopa.it/it/privacy-policy
+      http_status: 200
+      fetched: '2026-10-09'
+      quote: "I cookie vengono conservati per un periodo non superiore a 6 mesi dal momento della raccolta, salvo che la loro ulteriore conservazione non si renda necessaria per l’accertamento di reati."
+probed_absent:
+- signal: accessibility_conformance
+  urls:
+  - {url: 'https://form.agid.gov.it/view/cfd55420-978e-11f0-abc8-b1ac0be216f1', status: 200}
+  - {url: 'https://form.agid.gov.it/view/5de36b80-97b7-11f0-b1d3-cb68959f3505', status: 200}
+  - {url: 'https://www.pagopa.it/it/dichiarazione-di-accessibilita/', status: 404}
+  note: >-
+    Both www.pagopa.it ("Dichiarazione di accessibilità") and developer.pagopa.it ("Accessibilità") link to an
+    accessibility declaration hosted on AgID's form service, as Italian law requires. Both URLs return 200 but plain
+    and headless-browser fetches produced only an AgID redirect shell ("Recupero delle informazioni in corso"), so the
+    conformance level could not be read or quoted. A declaration exists; its content is unverified.
+- signal: ai_transparency
+  note: >-
+    The DevPortal privacy notice describes a chatbot for registered users (questions and negative feedback are
+    processed and anonymised, retention above) but makes no AI transparency statement (model, provider, or
+    AI-generated-content disclosure). Not recorded as the signal.
+- signal: incident_notification
+  note: No breach-notification commitment on the ToS, privacy or responsible-disclosure pages read; no public DPA found.

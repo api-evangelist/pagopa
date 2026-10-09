@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/pagopa/main/json-schema/pagopa-already-paid-payment-option-model-schema.json",
+  "title": "AlreadyPaidPaymentOptionModel",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/pagopa-gpd-aca-openapi.yml#/components/schemas/AlreadyPaidPaymentOptionModel",
+  "type": "object",
+  "properties": {
+    "paymentDate": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

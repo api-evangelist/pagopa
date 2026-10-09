@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/pagopa/main/json-schema/pagopa-eservice-template-version-schema.json",
+  "title": "EServiceTemplateVersion",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/pagopa-pdnd-interop-v2-openapi.yml#/components/schemas/EServiceTemplateVersion",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "version": {
+      "type": "integer",
+      "format": "int32"
+    },
+    "description": {
+      "type": "string"
+    },
+    "voucherLifespan": {
+      "type": "integer",
+      "format": "int32"
+    },
+    "dailyCallsPerConsumer": {
+      "description": "Maximum number of daily calls that this descriptor can afford per consumer",
+      "type": "integer",
+      "format": "int32",
+      "minimum": 1,
+      "maximum": 1000000000
+    },
+    "dailyCallsTotal": {
+      "description": "Total daily calls available for this E-Service",
+      "type": "integer",
+      "format": "int32",
+      "minimum": 1,
+      "maximum": 1000000000
+    },
+    "state": {
+      "$ref": "#/$defs/EServiceTemplateVersionState"
+    },
+    "agreementApprovalPolicy": {
+      "$ref": "#/$defs/AgreementApprovalPolicy"
+    },
+    "publishedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "suspendedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "deprecatedAt": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "id",
+    "version",
+    "state",
+    "creationDate",
+    "voucherLifespan"
+  ],
+  "$defs": {
+    "AgreementApprovalPolicy": {
+      "type": "string",
+      "description": "E-Service Descriptor policy for new Agreements approval",
+      "enum": [
+        "AUTOMATIC",
+        "MANUAL"
+      ]
+    },
+    "EServiceTemplateVersionState": {
+      "type": "string",
+      "description": "E-Service Template Version State",
+      "enum": [
+        "DRAFT",
+        "PUBLISHED",
+        "DEPRECATED",
+        "SUSPENDED"
+      ]
+    }
+  }
+}

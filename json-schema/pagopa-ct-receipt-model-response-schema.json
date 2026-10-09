@@ -1,0 +1,265 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/pagopa/main/json-schema/pagopa-ct-receipt-model-response-schema.json",
+  "title": "CtReceiptModelResponse",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/pagopa-biz-events-openapi.yml#/components/schemas/CtReceiptModelResponse",
+  "required": [
+    "companyName",
+    "creditorReferenceId",
+    "debtor",
+    "description",
+    "fiscalCode",
+    "idChannel",
+    "idPSP",
+    "noticeNumber",
+    "outcome",
+    "paymentAmount",
+    "pspCompanyName",
+    "receiptId",
+    "transferList"
+  ],
+  "type": "object",
+  "properties": {
+    "receiptId": {
+      "type": "string"
+    },
+    "noticeNumber": {
+      "type": "string"
+    },
+    "fiscalCode": {
+      "type": "string"
+    },
+    "outcome": {
+      "type": "string"
+    },
+    "creditorReferenceId": {
+      "type": "string"
+    },
+    "paymentAmount": {
+      "type": "number"
+    },
+    "description": {
+      "type": "string"
+    },
+    "companyName": {
+      "type": "string"
+    },
+    "officeName": {
+      "type": "string"
+    },
+    "debtor": {
+      "$ref": "#/$defs/Debtor"
+    },
+    "transferList": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/TransferPA"
+      }
+    },
+    "idPSP": {
+      "type": "string"
+    },
+    "pspFiscalCode": {
+      "type": "string"
+    },
+    "pspPartitaIVA": {
+      "type": "string"
+    },
+    "pspCompanyName": {
+      "type": "string"
+    },
+    "idChannel": {
+      "type": "string"
+    },
+    "channelDescription": {
+      "type": "string"
+    },
+    "payer": {
+      "$ref": "#/$defs/Payer"
+    },
+    "paymentMethod": {
+      "type": "string"
+    },
+    "fee": {
+      "type": "number"
+    },
+    "primaryCiIncurredFee": {
+      "type": "number"
+    },
+    "idBundle": {
+      "type": "string"
+    },
+    "idCiBundle": {
+      "type": "string"
+    },
+    "paymentDateTime": {
+      "type": "string",
+      "format": "date"
+    },
+    "paymentDateTimeFormatted": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "applicationDate": {
+      "type": "string",
+      "format": "date"
+    },
+    "transferDate": {
+      "type": "string",
+      "format": "date"
+    },
+    "metadata": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/MapEntry"
+      }
+    }
+  },
+  "$defs": {
+    "Debtor": {
+      "required": [
+        "entityUniqueIdentifierType",
+        "entityUniqueIdentifierValue",
+        "fullName"
+      ],
+      "type": "object",
+      "properties": {
+        "entityUniqueIdentifierType": {
+          "enum": [
+            "F",
+            "G"
+          ],
+          "type": "string"
+        },
+        "entityUniqueIdentifierValue": {
+          "type": "string"
+        },
+        "fullName": {
+          "type": "string"
+        },
+        "streetName": {
+          "type": "string"
+        },
+        "civicNumber": {
+          "type": "string"
+        },
+        "postalCode": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "stateProvinceRegion": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        }
+      }
+    },
+    "MapEntry": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "Payer": {
+      "required": [
+        "entityUniqueIdentifierType",
+        "entityUniqueIdentifierValue",
+        "fullName"
+      ],
+      "type": "object",
+      "properties": {
+        "entityUniqueIdentifierType": {
+          "enum": [
+            "F",
+            "G"
+          ],
+          "type": "string"
+        },
+        "entityUniqueIdentifierValue": {
+          "type": "string"
+        },
+        "fullName": {
+          "type": "string"
+        },
+        "streetName": {
+          "type": "string"
+        },
+        "civicNumber": {
+          "type": "string"
+        },
+        "postalCode": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "stateProvinceRegion": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        }
+      }
+    },
+    "TransferPA": {
+      "required": [
+        "fiscalCodePA",
+        "iban",
+        "mbdAttachment",
+        "remittanceInformation",
+        "transferAmount",
+        "transferCategory"
+      ],
+      "type": "object",
+      "properties": {
+        "idTransfer": {
+          "maximum": 5.0,
+          "minimum": 1.0,
+          "type": "integer",
+          "format": "int32"
+        },
+        "transferAmount": {
+          "type": "number"
+        },
+        "fiscalCodePA": {
+          "type": "string"
+        },
+        "iban": {
+          "type": "string"
+        },
+        "mbdAttachment": {
+          "type": "string"
+        },
+        "remittanceInformation": {
+          "type": "string"
+        },
+        "transferCategory": {
+          "type": "string"
+        },
+        "metadata": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/MapEntry"
+          }
+        }
+      }
+    }
+  }
+}

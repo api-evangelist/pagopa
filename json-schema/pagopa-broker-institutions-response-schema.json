@@ -1,0 +1,173 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/pagopa/main/json-schema/pagopa-broker-institutions-response-schema.json",
+  "title": "BrokerInstitutionsResponse",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/pagopa-backoffice-external-ec-openapi.yml#/components/schemas/BrokerInstitutionsResponse",
+  "required": [
+    "creditorInstitutions",
+    "pageInfo"
+  ],
+  "type": "object",
+  "properties": {
+    "creditorInstitutions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/BrokerInstitutionResource"
+      },
+      "description": "List of creditor institutions"
+    },
+    "pageInfo": {
+      "$ref": "#/$defs/PageInfo"
+    }
+  },
+  "$defs": {
+    "BrokerInstitutionResource": {
+      "required": [
+        "auxDigit",
+        "brokerCompanyName",
+        "brokerTaxCode",
+        "ciStatus",
+        "companyName",
+        "intermediated",
+        "model",
+        "stationState",
+        "taxCode",
+        "version"
+      ],
+      "type": "object",
+      "properties": {
+        "aca": {
+          "type": "boolean",
+          "description": "True if ACA archive will be populated"
+        },
+        "activationDate": {
+          "type": "string",
+          "description": "Activation date",
+          "format": "date-time"
+        },
+        "applicationCode": {
+          "type": "string",
+          "description": "Application code of the relation station-ec (unique per auxdigit)"
+        },
+        "auxDigit": {
+          "type": "string",
+          "description": "Aux digit number (0,1,2,3, 0/3)"
+        },
+        "broadcast": {
+          "type": "boolean",
+          "description": "True if the station is for broadcast"
+        },
+        "brokerCompanyName": {
+          "type": "string",
+          "description": "Broker name"
+        },
+        "brokerTaxCode": {
+          "type": "string",
+          "description": "Broker tax code"
+        },
+        "cbillCode": {
+          "type": "string",
+          "description": "CBILL code"
+        },
+        "ciStatus": {
+          "type": "boolean",
+          "description": "True if the CI is enabled"
+        },
+        "companyName": {
+          "type": "string",
+          "description": "Creditor Institution name"
+        },
+        "endpointMU": {
+          "type": "string",
+          "description": "Endpoint for Modello Unico"
+        },
+        "endpointRT": {
+          "type": "string",
+          "description": "Endpoint for Ricevuta Telematica"
+        },
+        "endpointRedirect": {
+          "type": "string",
+          "description": "Endpoint for Redirect"
+        },
+        "intermediated": {
+          "type": "boolean",
+          "description": "True if the EC has a broker"
+        },
+        "model": {
+          "type": "integer",
+          "description": "Model of the station",
+          "format": "int32"
+        },
+        "primitiveVersion": {
+          "type": "integer",
+          "description": "Version of the primitive",
+          "format": "int32"
+        },
+        "pspPayment": {
+          "type": "boolean",
+          "description": "True if allows payments by the psp"
+        },
+        "segregationCode": {
+          "type": "string",
+          "description": "Segregation code of the relation station-ec (unique per auxdigit)"
+        },
+        "standIn": {
+          "type": "boolean",
+          "description": "True if the debt positions can be paid in Stan In"
+        },
+        "stationId": {
+          "type": "string",
+          "description": "Station code"
+        },
+        "stationState": {
+          "type": "string",
+          "description": "Station state"
+        },
+        "taxCode": {
+          "type": "string",
+          "description": "Creditor Institution tax code"
+        },
+        "version": {
+          "type": "string",
+          "description": "Station version"
+        }
+      },
+      "description": "List of creditor institutions"
+    },
+    "PageInfo": {
+      "required": [
+        "limit",
+        "page",
+        "totalElements",
+        "totalPages"
+      ],
+      "type": "object",
+      "properties": {
+        "limit": {
+          "type": "integer",
+          "description": "number of elements per page",
+          "format": "int32"
+        },
+        "page": {
+          "type": "integer",
+          "description": "page number (0 is the first page)",
+          "format": "int32"
+        },
+        "totalElements": {
+          "type": "integer",
+          "description": "total found elements",
+          "format": "int64"
+        },
+        "totalPages": {
+          "type": "integer",
+          "description": "total number of pages",
+          "format": "int64"
+        }
+      },
+      "description": "Information about the pagination"
+    }
+  }
+}

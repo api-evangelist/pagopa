@@ -1,0 +1,73 @@
+generated: '2026-10-09'
+method: derived
+source: openapi/*.yml (43 contracts, 697 operations, 384 writes)
+authentication:
+  style: 'Mostly Azure API Management subscription keys: header Ocp-Apim-Subscription-Key or query subscription-key (pagoPA platform APIs). SEND
+    uses an x-api-key style ApiKeyAuth; PDND v2 uses bearer vouchers and v3 adds DPoP; SRTP and MdC use OAuth2 client credentials; PARI uses a
+    Bearer token.'
+  see: authentication/pagopa-authentication.yml
+idempotency:
+  coverage: partial
+  scope:
+  - SEND B2B PA sendNewNotification / sendNewNotificationV21..V25 (body idempotenceToken + paProtocolNumber; retrieveNotificationRequestStatus*
+    looks requests up by that pair)
+  - print-payment-notices generateNoticeMassiveRequest (Idempotency-Key header)
+  note: 'FdR operation descriptions carry an "Idempotency" row: Y on GET operations and N on all FdR write operations. The SRTP callback contract
+    defines a mandatory Idempotency-key header component but no operation references it, so it is not counted.'
+  header: Idempotency-Key
+  mechanism: request header / body token declared in the OpenAPI
+  evidence: Idempotency-Key on 1 of 384 mutating operations
+  verified: derived
+reversibility:
+  grade: documented
+  note: Reversal operations exist in the contracts; no reversal window was found stated in the specs or the docs pages read.
+  paths:
+  - surface: GPD debt positions
+    operations:
+    - invalidatePosition
+    - deletePosition
+    window: null
+  - surface: SEND notifications
+    operations:
+    - notificationCancellation
+    window: null
+  - surface: PARI transactions
+    operations:
+    - reversalTransaction
+    - reversalTransactionInvoiced
+    - deleteTransaction
+    window: null
+  - surface: PDND agreements
+    operations:
+    - suspendAgreement
+    - unsuspendAgreement
+    - archiveAgreement
+    - deleteAgreement
+    window: null
+  - surface: SRTP activations
+    operations:
+    - deleteActivation
+    window: null
+  - surface: FdR flows (before publish)
+    operations:
+    - IPspsController_deleteExistingFlow
+    - IPspsController_deletePaymentFromExistingFlow
+    window: null
+pagination:
+  styles:
+  - offset/limit (query offset + limit; 42/51 operations, PDND)
+  - page/size (query page + size; GPD, FdR)
+  - continuation token (x-continuation-token header, continuationToken query; biz-events, SEND)
+request_tracing:
+  header: X-Request-Id
+  note: Request parameter on 40 operations and response header on 252 responses.
+versioning:
+  style: URI path version per API (/v1, /v2, /v3; SEND per-operation /delivery/v2.1 ... /v2.6)
+  see: lifecycle/pagopa-lifecycle.yml
+error_envelope:
+  note: application/problem+json used by PDND Interoperabilità, PDND attestation/Signal Hub and SEND contracts; pagoPA platform APIs use custom
+    JSON error bodies.
+  see: errors/pagopa-problem-types.yml
+rate_limit_signaling:
+  status: 429
+  see: rate-limits/pagopa-rate-limits.yml

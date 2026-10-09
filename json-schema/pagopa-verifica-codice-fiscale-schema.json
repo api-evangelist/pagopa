@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/pagopa/main/json-schema/pagopa-verifica-codice-fiscale-schema.json",
+  "title": "VerificaCodiceFiscale",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/pagopa-pdnd-attestation-subject-id-openapi.yml#/components/schemas/VerificaCodiceFiscale",
+  "type": "object",
+  "properties": {
+    "idSubject": {
+      "$ref": "#/$defs/CodiceFiscale"
+    },
+    "valid": {
+      "type": "boolean"
+    },
+    "message": {
+      "type": "string",
+      "description": "messaggio congurente con il serivizio a libero accesso di verifica codice fiscale sul sito istituzionale"
+    }
+  },
+  "$defs": {
+    "CodiceFiscale": {
+      "type": "string",
+      "minLength": 11,
+      "maxLength": 16,
+      "pattern": "^[0-9]{11}|(?:^(?:[A-Z][AEIOU][AEIOUX]|[B-DF-HJ-NP-TV-Z]{2}[A-Z]){2}(?:[\\dLMNP-V]{2}(?:[A-EHLMPR-T](?:[04LQ][1-9MNP-V]|[15MR][\\dLMNP-V]|[26NS][0-8LMNP-U])|[DHPS][37PT][0L]|[ACELMRT][37PT][01LM]|[AC-EHLMPR-T][26NS][9V])|(?:[02468LNQSU][048LQU]|[13579MPRTV][26NS])B[26NS][9V])(?:[A-MZ][1-9MNP-V][\\dLMNP-V]{2}|[A-M][0L](?:[1-9MNP-V][\\dLMNP-V]|[0L][1-9MNP-V]))[A-Z]$)",
+      "description": "it can take on an alphanumeric value of length 16 or a numeric value of length 11 (i.e. 06363391001)"
+    }
+  }
+}

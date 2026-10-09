@@ -1,0 +1,98 @@
+generated: '2026-10-09'
+method: derived
+source: openapi/pagopa-mdc-citizen-consent-openapi.yml, openapi/pagopa-mdc-payment-openapi.yml,
+  openapi/pagopa-mdc-tpp-testing-openapi.yml, openapi/pagopa-pari-ecommerce-openapi.yml, openapi/pagopa-srtp-activation-openapi.yml,
+  openapi/pagopa-srtp-payees-openapi.yml, openapi/pagopa-srtp-service-providers-openapi.yml
+schemes:
+- name: oAuth2
+  source: openapi/pagopa-mdc-citizen-consent-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: /token
+  description: |-
+    A bearer token in the format of a JWS and conforms to the specifications
+    included in RFC8725.
+- name: oAuth2
+  source: openapi/pagopa-mdc-payment-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: /token
+  description: |-
+    A bearer token in the format of a JWS and conforms to the specifications
+    included in RFC8725.
+- name: oAuth2
+  source: openapi/pagopa-mdc-tpp-testing-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: /token
+  description: |-
+    A bearer token in the format of a JWS and conforms to the specifications
+    included in RFC8725.
+- name: Bearer
+  source: openapi/pagopa-pari-ecommerce-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: https://api-mcshared.cstar.pagopa.it/auth-itn/realms/merchant-operator/protocol/openid-connect/token
+  description: A bearer token in the format of a JWS and conforms to the specifications included
+    in RFC8725.
+- name: oAuth2
+  source: openapi/pagopa-srtp-activation-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: https://api-mcshared.cstar.pagopa.it/auth-itn/realms/srtp/protocol/openid-connect/token
+  description: |-
+    A bearer token in the format of a JWS and conforms to the specifications
+    included in RFC8725.
+- name: oAuth2
+  source: openapi/pagopa-srtp-payees-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: https://api-mcshared.cstar.pagopa.it/auth-itn/realms/srtp/protocol/openid-connect/token
+  description: Authentication is handled via OAuth2 Client Credentials flow. Clients must obtain
+    a Bearer token (JWT), which conforms to RFC8725, and include it in the `Authorization` header
+    of their requests.
+- name: oAuth2
+  source: openapi/pagopa-srtp-service-providers-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: https://api-mcshared.cstar.pagopa.it/auth-itn/realms/srtp/protocol/openid-connect/token
+  description: Authentication is handled via OAuth2 Client Credentials flow. Clients must obtain
+    a Bearer token (JWT), which conforms to RFC8725, and include it in the `Authorization` header
+    of their requests.
+scopes:
+- scope: admin_rtp_activations
+  description: Grants full administrative access to all activations.
+  flows:
+  - clientCredentials
+  sources:
+  - openapi/pagopa-srtp-activation-openapi.yml
+- scope: read_rtp_activations
+  description: Read RTP activation belonging to the requesting subject.
+  flows:
+  - clientCredentials
+  sources:
+  - openapi/pagopa-srtp-activation-openapi.yml
+- scope: read_rtp_all
+  description: Read all RTP activations.
+  flows:
+  - clientCredentials
+  sources:
+  - openapi/pagopa-srtp-activation-openapi.yml
+- scope: read_rtp_payees
+  description: Grants permission to read the RTP Payees registry.
+  flows:
+  - clientCredentials
+  sources:
+  - openapi/pagopa-srtp-payees-openapi.yml
+- scope: read_rtp_service_providers
+  description: Grants permission to read the list of RTP service providers.
+  flows:
+  - clientCredentials
+  sources:
+  - openapi/pagopa-srtp-service-providers-openapi.yml
+- scope: write_rtp_activations
+  description: Grants permission to create, update, or delete activations.
+  flows:
+  - clientCredentials
+  sources:
+  - openapi/pagopa-srtp-activation-openapi.yml

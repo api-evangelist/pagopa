@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/pagopa/main/json-schema/pagopa-receipts-info-schema.json",
+  "title": "ReceiptsInfo",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/pagopa-gpd-payments-openapi.yml#/components/schemas/ReceiptsInfo",
+  "required": [
+    "receipts_list"
+  ],
+  "type": "object",
+  "properties": {
+    "receipts_list": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/ReceiptModelResponse"
+      }
+    }
+  },
+  "$defs": {
+    "ReceiptModelResponse": {
+      "type": "object",
+      "properties": {
+        "organizationFiscalCode": {
+          "type": "string"
+        },
+        "iuv": {
+          "type": "string"
+        },
+        "debtor": {
+          "type": "string"
+        },
+        "paymentDateTime": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

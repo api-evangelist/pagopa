@@ -1,0 +1,375 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/pagopa/main/json-schema/pagopa-signature-request-detail-view-schema.json",
+  "title": "SignatureRequestDetailView",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/pagopa-firma-con-io-issuer-openapi.yml#/components/schemas/SignatureRequestDetailView",
+  "type": "object",
+  "properties": {
+    "id": {
+      "$ref": "#/$defs/Id"
+    },
+    "status": {
+      "$ref": "#/$defs/SignatureRequestStatus"
+    },
+    "dossier_id": {
+      "$ref": "#/$defs/Id"
+    },
+    "signer_id": {
+      "$ref": "#/$defs/Id"
+    },
+    "expires_at": {
+      "$ref": "#/$defs/Timestamp"
+    },
+    "documents": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/DocumentDetailView"
+      }
+    },
+    "notification": {
+      "$ref": "#/$defs/NotificationDetailView"
+    },
+    "created_at": {
+      "$ref": "#/$defs/Timestamp"
+    },
+    "updated_at": {
+      "$ref": "#/$defs/Timestamp"
+    },
+    "signed_at": {
+      "$ref": "#/$defs/Timestamp"
+    },
+    "rejected_at": {
+      "$ref": "#/$defs/Timestamp"
+    },
+    "reject_reason": {
+      "type": "string"
+    },
+    "qr_code_url": {
+      "type": "string",
+      "format": "uri"
+    },
+    "cancelled_at": {
+      "$ref": "#/$defs/Timestamp"
+    }
+  },
+  "required": [
+    "id",
+    "status",
+    "dossier_id",
+    "signer_id",
+    "expires_at",
+    "documents",
+    "created_at",
+    "updated_at"
+  ],
+  "$defs": {
+    "Clause": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 80
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "REQUIRED",
+            "UNFAIR",
+            "OPTIONAL"
+          ]
+        }
+      },
+      "required": [
+        "title",
+        "type"
+      ]
+    },
+    "Document": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "metadata": {
+          "$ref": "#/$defs/DocumentMetadata"
+        },
+        "created_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/Timestamp"
+        }
+      },
+      "required": [
+        "id",
+        "metadata",
+        "created_at",
+        "updated_at"
+      ]
+    },
+    "DocumentDetailView": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/DocumentToBeUploaded"
+        },
+        {
+          "$ref": "#/$defs/DocumentToBeValidated"
+        },
+        {
+          "$ref": "#/$defs/DocumentReady"
+        },
+        {
+          "$ref": "#/$defs/DocumentRejected"
+        }
+      ]
+    },
+    "DocumentMetadata": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 60
+        },
+        "signature_fields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SignatureField"
+          }
+        }
+      },
+      "required": [
+        "title"
+      ]
+    },
+    "DocumentReady": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/Document"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": [
+                "READY"
+              ]
+            },
+            "uploaded_at": {
+              "$ref": "#/$defs/Timestamp"
+            },
+            "url": {
+              "type": "string",
+              "format": "uri"
+            }
+          },
+          "required": [
+            "status",
+            "uploaded_at",
+            "url"
+          ]
+        }
+      ]
+    },
+    "DocumentRejected": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/Document"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": [
+                "REJECTED"
+              ]
+            },
+            "uploaded_at": {
+              "$ref": "#/$defs/Timestamp"
+            },
+            "rejected_at": {
+              "$ref": "#/$defs/Timestamp"
+            },
+            "reject_reason": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "status",
+            "uploaded_at",
+            "rejected_at",
+            "reject_reason"
+          ]
+        }
+      ]
+    },
+    "DocumentToBeUploaded": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/Document"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": [
+                "WAIT_FOR_UPLOAD"
+              ]
+            }
+          },
+          "required": [
+            "status"
+          ]
+        }
+      ]
+    },
+    "DocumentToBeValidated": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/Document"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": [
+                "WAIT_FOR_VALIDATION"
+              ]
+            },
+            "uploaded_at": {
+              "$ref": "#/$defs/Timestamp"
+            }
+          },
+          "required": [
+            "status",
+            "uploaded_at"
+          ]
+        }
+      ]
+    },
+    "ExistingSignatureFieldAttrs": {
+      "type": "object",
+      "properties": {
+        "unique_name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "unique_name"
+      ]
+    },
+    "Id": {
+      "type": "string",
+      "description": "Entity Id",
+      "format": "NonEmptyString",
+      "x-import": "@pagopa/ts-commons/lib/strings"
+    },
+    "NotificationDetailView": {
+      "type": "object",
+      "properties": {
+        "io_message_id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "io_message_id"
+      ]
+    },
+    "SignatureField": {
+      "type": "object",
+      "properties": {
+        "attrs": {
+          "$ref": "#/$defs/SignatureFieldAttrs"
+        },
+        "clause": {
+          "$ref": "#/$defs/Clause"
+        }
+      },
+      "required": [
+        "attrs",
+        "clause"
+      ]
+    },
+    "SignatureFieldAttrs": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ExistingSignatureFieldAttrs"
+        },
+        {
+          "$ref": "#/$defs/SignatureFieldToBeCreatedAttrs"
+        }
+      ]
+    },
+    "SignatureFieldToBeCreatedAttrs": {
+      "type": "object",
+      "properties": {
+        "coordinates": {
+          "type": "object",
+          "properties": {
+            "x": {
+              "type": "number"
+            },
+            "y": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "x",
+            "y"
+          ]
+        },
+        "page": {
+          "type": "number",
+          "minimum": 0
+        },
+        "size": {
+          "type": "object",
+          "properties": {
+            "w": {
+              "type": "number",
+              "minimum": 0
+            },
+            "h": {
+              "type": "number",
+              "minimum": 0
+            }
+          },
+          "required": [
+            "w",
+            "h"
+          ]
+        }
+      },
+      "required": [
+        "coordinates",
+        "page",
+        "size"
+      ]
+    },
+    "SignatureRequestStatus": {
+      "type": "string",
+      "x-extensible-enum": [
+        "DRAFT",
+        "READY",
+        "WAIT_FOR_SIGNATURE",
+        "SIGNED",
+        "REJECTED",
+        "CANCELLED"
+      ]
+    },
+    "Timestamp": {
+      "type": "string",
+      "format": "UTCISODateFromString",
+      "description": "A date-time field in ISO-8601 format and UTC timezone.",
+      "x-import": "@pagopa/ts-commons/lib/dates"
+    }
+  }
+}

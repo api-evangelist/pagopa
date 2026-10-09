@@ -1,0 +1,16 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for RTP Activation API.
+  version: 1.0.0
+extends: ../openapi/_original/pagopa-srtp-activation-openapi.yml
+x-apievangelist:
+  generated: '2026-10-09'
+  method: generated
+  source: openapi/pagopa-srtp-activation-openapi.yml
+actions:
+- target: $.info
+  update:
+    x-apievangelist-profile: https://apievangelist.com/
+    x-apievangelist-reviewed: '2026-10-09'
+    x-apievangelist-provider: PagoPA S.p.A.
+    x-apievangelist-operation-count: 7

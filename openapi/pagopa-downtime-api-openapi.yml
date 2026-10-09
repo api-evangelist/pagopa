@@ -1,0 +1,140 @@
+openapi: 3.2.0
+info:
+  title: Pagopa Downtime API
+  version: 1.0.0
+  contact:
+    email: pn@pagopa.it
+  license:
+    name: Licenza di SEND
+    url: https://da-definire/
+  termsOfService: https://termofservice.it
+  x-summary: Stato della piattaforma SEND
+  description: 'Operations tagged Downtime across 2 of this provider''s published API definitions: send-downtime-logs.yaml, pagopa-send-platform-status-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.notifichedigitali.it
+  description: Ambiente di produzione
+- url: https://api.uat.notifichedigitali.it
+  description: Ambiente di test
+- url: https://api.dev.notifichedigitali.it
+  description: Ambiente di sviluppo
+tags:
+- name: Downtime
+  description: Invocazioni per recupero dei disservizi di SEND
+paths:
+  /downtime/v1/resolved:
+    get:
+      summary: Recupero disservizi
+      description: Metodo che restituisce l'elenco dei disservizi risolti per l'anno e il mese selezionato.
+      tags:
+      - Downtime
+      operationId: getResolved
+      x-api-cachekey-parameters:
+      - method.request.querystring.year
+      - method.request.querystring.month
+      parameters:
+      - $ref: '#/components/parameters/queryYear'
+      - $ref: '#/components/parameters/queryMonth'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: ./schemas-pn-components-v1.yaml#/components/schemas/PnDowntimeHistoryResponse
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: ./schemas-pn-errors-v1.yaml#/components/schemas/Problem
+    servers:
+    - url: https://api.notifichedigitali.it
+      description: Ambiente di produzione
+    - url: https://api.uat.notifichedigitali.it
+      description: Ambiente di test
+    - url: https://api.dev.notifichedigitali.it
+      description: Ambiente di sviluppo
+  /downtime/v1/legal-facts/{legalFactId}:
+    get:
+      summary: Ottieni atto opponibile a terzi
+      description: Fornisce le informazioni per scaricare un atto opponibile a terzi o, se tale atto va recuperato dagli archivi, fornisce una stima per eccesso di quanti secondi bisogna attendere.
+      tags:
+      - Downtime
+      operationId: getLegalFact
+      x-api-cachekey-parameters:
+      - method.request.path.legalFactId
+      x-api-permissions:
+      - api-key-read
+      - log-downtime-read
+      parameters:
+      - name: legalFactId
+        in: path
+        required: true
+        description: Identificativo dell'atto opponibile a terzi che si vuole scaricare
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: ./schemas-pn-components-v1.yaml#/components/schemas/LegalFactDownloadMetadataResponse
+              examples:
+                hot:
+                  summary: File disponibile
+                  value:
+                    filename: downtime_NEW_NOTIFICATION_20221204.pdf
+                    contentLength: 32423
+                    url: https://s3............com/presigned-url
+                cold:
+                  summary: File archiviato
+                  value:
+                    filename: downtime_NEW_NOTIFICATION_20221204.pdf
+                    contentLength: 32423
+                    retryAfter: 7200
+        '204':
+          description: Not signed
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: ./schemas-pn-errors-v1.yaml#/components/schemas/Problem
+        '404':
+          description: Not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: ./schemas-pn-errors-v1.yaml#/components/schemas/Problem
+    servers:
+    - url: https://api.notifichedigitali.it
+      description: Ambiente di produzione
+    - url: https://api.uat.notifichedigitali.it
+      description: Ambiente di test
+    - url: https://api.dev.notifichedigitali.it
+      description: Ambiente di sviluppo
+components:
+  parameters:
+    queryYear:
+      name: year
+      in: query
+      required: false
+      description: anno di ricerca dei disservizi risolti. Se non presente si intende l'anno corrente.
+      schema:
+        type: integer
+        minimum: 2023
+      example: 2024
+    queryMonth:
+      name: month
+      in: query
+      required: false
+      description: mese di ricerca dei disservizi risolti. Se non presente si intende il mese corrente.
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 12
+      example: 3
+x-refined-from:
+- send-downtime-logs.yaml
+- pagopa-send-platform-status-openapi.yml

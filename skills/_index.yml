@@ -1,0 +1,22 @@
+generated: '2026-10-09'
+method: generated
+source: openapi/
+note: PagoPA publishes no Agent Skills. These are generated from the OpenAPI and use
+  real operationIds.
+skills:
+- name: pagopa-manage-debt-positions
+  file: skills/pagopa-manage-debt-positions.md
+  api: openapi/pagopa-gpd-v1-openapi.yml
+  operations: 6
+- name: pagopa-send-digital-notification
+  file: skills/pagopa-send-digital-notification.md
+  api: openapi/pagopa-send-b2b-pa-openapi.yml
+  operations: 7
+- name: pagopa-io-send-message
+  file: skills/pagopa-io-send-message.md
+  api: openapi/pagopa-io-services-openapi.yml
+  operations: 3
+- name: pagopa-print-payment-notices
+  file: skills/pagopa-print-payment-notices.md
+  api: openapi/pagopa-print-payment-notices-openapi.yml
+  operations: 6

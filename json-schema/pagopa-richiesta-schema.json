@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/pagopa/main/json-schema/pagopa-richiesta-schema.json",
+  "title": "Richiesta",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/pagopa-pdnd-attestation-organization-id-openapi.yml#/components/schemas/Richiesta",
+  "type": "object",
+  "properties": {
+    "organizationId": {
+      "$ref": "#/$defs/OrganizationId"
+    }
+  },
+  "$defs": {
+    "OrganizationId": {
+      "type": "string",
+      "maxLength": 11,
+      "minLength": 11,
+      "pattern": "^[0-9]+"
+    }
+  }
+}

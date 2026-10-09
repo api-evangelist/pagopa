@@ -1,0 +1,2036 @@
+openapi: 3.2.0
+info:
+  title: Pagopa Purposes API
+  contact:
+    name: API Support
+    url: https://github.com/pagopa/pdnd-interop-frontend/issues
+  termsOfService: https://selfcare.interop.pagopa.it/ui/it/termini-di-servizio
+  x-summary: PDND Interoperability API
+  version: '1.0'
+  description: 'Operations tagged purposes across 3 of this provider''s published API definitions: interop-api-v3.yaml, pagopa-pdnd-interop-v2-openapi.yml, pagopa-pdnd-interop-v3-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.interop.pagopa.it/v3
+  description: Production environment
+- url: https://api.interop.pagopa.it/v2
+  description: PROD environment
+tags:
+- name: Purposes
+  description: Purposes routes
+paths:
+  /purposes:
+    post:
+      tags:
+      - Purposes
+      summary: Create a new Purpose
+      description: Create a new Purpose in Draft state
+      operationId: createPurpose
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PurposeSeed'
+        required: true
+      responses:
+        '201':
+          description: Purpose created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Purpose'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    get:
+      tags:
+      - Purposes
+      summary: List Purposes
+      description: Retrieve a list of Purposes based on filters
+      operationId: getPurposes
+      parameters:
+      - $ref: '#/components/parameters/EserviceIdsParam'
+      - in: query
+        name: title
+        description: Filter Purposes by title. If not specified, return Purposes for any title
+        schema:
+          type: string
+      - in: query
+        name: consumerIds
+        description: Filter Purposes by consumer ids. If not specified, return Purposes for any consumer
+        schema:
+          type: array
+          items:
+            type: string
+            format: uuid
+          default: []
+        explode: false
+      - in: query
+        name: states
+        description: 'Filter Purposes by states. If not specified, return Purposes for any state. If "ARCHIVED" is included in the filter, only Purposes where all their versions are in the "ARCHIVED" state will be returned, excluding those that have versions in other states.
+
+          '
+        schema:
+          type: array
+          items:
+            $ref: '#/components/schemas/PurposeVersionState'
+          default: []
+        explode: false
+      - $ref: '#/components/parameters/OffsetParam'
+      - $ref: '#/components/parameters/LimitParam'
+      responses:
+        '200':
+          description: Purposes retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Purposes'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /purposes/{purposeId}:
+    parameters:
+    - name: purposeId
+      in: path
+      description: The ID of the Purpose to retrieve
+      required: true
+      schema:
+        $ref: '#/components/schemas/PurposeId'
+    get:
+      tags:
+      - Purposes
+      summary: Retrieve a Purpose
+      operationId: getPurpose
+      responses:
+        '200':
+          description: Purpose retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Purpose'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    delete:
+      tags:
+      - Purposes
+      summary: Delete Purpose
+      description: Delete Purpose. Only purposes with one version can be deleted. The version must be in Draft or WaitingForApproval state
+      operationId: deletePurpose
+      responses:
+        '200':
+          description: Purpose deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VoidObject'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    patch:
+      tags:
+      - Purposes
+      summary: Update a Draft Purpose
+      description: 'Update a Purpose in Draft state.
+
+        The Purpose must have a single version, and that version must be in Draft state.'
+      operationId: updateDraftPurpose
+      requestBody:
+        content:
+          application/merge-patch+json:
+            schema:
+              oneOf:
+              - $ref: '#/components/schemas/PurposeDraftUpdateSeed'
+              - $ref: '#/components/schemas/PurposeDraftFromTemplateUpdateSeed'
+        required: true
+      responses:
+        '200':
+          description: Purpose updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Purpose'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /purposes/{purposeId}/versions:
+    parameters:
+    - name: purposeId
+      in: path
+      description: The Purpose ID of the Versions to retrieve
+      required: true
+      schema:
+        $ref: '#/components/schemas/PurposeId'
+    get:
+      tags:
+      - Purposes
+      summary: List Purpose Versions
+      description: Retrieve a list of Purpose Versions based on filters
+      operationId: getPurposeVersions
+      parameters:
+      - name: state
+        in: query
+        description: Filter Versions by states. If not specified, return Versions in any state
+        schema:
+          $ref: '#/components/schemas/PurposeVersionState'
+      - $ref: '#/components/parameters/OffsetParam'
+      - $ref: '#/components/parameters/LimitParam'
+      responses:
+        '200':
+          description: Purpose Versions retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PurposeVersions'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    post:
+      tags:
+      - Purposes
+      summary: Create a new Purpose Version
+      description: 'Create a new Purpose Version to update daily calls
+
+        The new Version will be created in Active state if daily calls are under the E-Service threshold, in Waiting for Approval otherwise'
+      operationId: createPurposeVersion
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PurposeVersionSeed'
+        required: true
+      responses:
+        '201':
+          description: Purpose Version created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PurposeVersion'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /purposes/{purposeId}/versions/{versionId}:
+    parameters:
+    - name: purposeId
+      in: path
+      description: The Purpose ID of the Version
+      required: true
+      schema:
+        $ref: '#/components/schemas/PurposeId'
+    - name: versionId
+      in: path
+      description: The ID of the Version to retrieve
+      required: true
+      schema:
+        type: string
+        format: uuid
+    get:
+      tags:
+      - Purposes
+      summary: Retrieve a Purpose Version
+      operationId: getPurposeVersion
+      responses:
+        '200':
+          description: Purpose Version retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PurposeVersion'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    delete:
+      tags:
+      - Purposes
+      summary: Delete a Purpose Version
+      description: Delete a Purpose Version in waiting for approval or draft state
+      operationId: deletePurposeVersion
+      responses:
+        '200':
+          description: Purpose Version deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VoidObject'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /purposes/{purposeId}/activate:
+    parameters:
+    - name: purposeId
+      description: The ID of the Purpose to approve
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/PurposeId'
+    post:
+      tags:
+      - Purposes
+      summary: Activate a Purpose in Draft state
+      description: 'Activate a Purpose that is in Draft states
+
+        The new state will be Active if daily calls are under the E-Service threshold, Waiting for Approval otherwise'
+      operationId: activateDraftPurpose
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DelegationRef'
+      responses:
+        '200':
+          description: Purpose activated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Purpose'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /purposes/{purposeId}/archive:
+    parameters:
+    - name: purposeId
+      description: The ID of the Purpose to archive
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/PurposeId'
+    post:
+      tags:
+      - Purposes
+      summary: Archive a Purpose in Active or Suspended state
+      description: 'Archive a Purpose that is in Active or Suspended state, transitioning it to Archived state
+
+        Existing Waiting for Approval Versions will be deleted
+
+        The Archived state is not reversible'
+      operationId: archivePurpose
+      responses:
+        '200':
+          description: Purpose archived
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Purpose'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /purposes/{purposeId}/approve:
+    parameters:
+    - name: purposeId
+      description: The ID of the Purpose to approve
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/PurposeId'
+    post:
+      tags:
+      - Purposes
+      summary: Approve a Purpose in Waiting for Approval state
+      description: Approve a Purpose that is in Waiting for Approval state, transitioning it to Active state
+      operationId: approvePurpose
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DelegationRef'
+      responses:
+        '200':
+          description: Purpose approved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Purpose'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /purposes/{purposeId}/suspend:
+    parameters:
+    - name: purposeId
+      description: The ID of the Purpose to suspend
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/PurposeId'
+    post:
+      tags:
+      - Purposes
+      summary: Suspend a Purpose in Active or Suspended state
+      description: 'Suspend a Purpose that is in Active or Suspended state, transitioning it to Suspended state
+
+        A Purpose may already be in Suspended state when previously suspended by the consumer or the producer'
+      operationId: suspendPurpose
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DelegationRef'
+      responses:
+        '200':
+          description: Purpose suspended
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Purpose'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /purposes/{purposeId}/unsuspend:
+    parameters:
+    - name: purposeId
+      description: The ID of the Purpose to unsuspend
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/PurposeId'
+    post:
+      tags:
+      - Purposes
+      summary: Unsuspend a Purpose in Suspended state
+      description: 'Unsuspend a Purpose that is in Suspended state, transitioning it to Active or Suspended state
+
+        A Purpose may remain in Suspended state when suspended also by the consumer or the producer'
+      operationId: unsuspendPurpose
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DelegationRef'
+      responses:
+        '200':
+          description: Purpose unsuspended
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Purpose'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /reversePurposes:
+    post:
+      tags:
+      - Purposes
+      summary: Create a new reverse Purpose
+      description: Create a new Purpose for an E-Service in receive mode
+      operationId: createReversePurpose
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReversePurposeSeed'
+        required: true
+      responses:
+        '201':
+          description: Reverse Purpose created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Purpose'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /reversePurposes/{purposeId}:
+    parameters:
+    - name: purposeId
+      description: The ID of the reverse Purpose
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/PurposeId'
+    patch:
+      tags:
+      - Purposes
+      summary: Update a Draft reverse Purpose
+      description: 'Update a Purpose in Draft state for an E-Service in receive mode.
+
+        The Purpose must have a single version, and that version must be in Draft state.'
+      operationId: updateDraftReversePurpose
+      requestBody:
+        content:
+          application/merge-patch+json:
+            schema:
+              $ref: '#/components/schemas/ReversePurposeDraftUpdateSeed'
+        required: true
+      responses:
+        '200':
+          description: Purpose updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Purpose'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /purposes/{purposeId}/versions/{versionId}/riskAnalysisDocument:
+    parameters:
+    - name: purposeId
+      in: path
+      description: The ID of the Purpose
+      required: true
+      schema:
+        $ref: '#/components/schemas/PurposeId'
+    - name: versionId
+      in: path
+      description: The ID of the purpose Version to retrieve the document for
+      required: true
+      schema:
+        type: string
+        format: uuid
+    get:
+      tags:
+      - Purposes
+      summary: Download a Purpose Risk Analysis Document
+      description: Download the Risk Analysis Document for the specified Purpose version
+      operationId: downloadPurposeVersionRiskAnalysisDocument
+      responses:
+        '200':
+          description: Purpose version risk analysis document retrieved, a multipart containing the file and its metadata
+          content:
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/FileDownloadMultipart'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /purposes/{purposeId}/agreement:
+    parameters:
+    - name: purposeId
+      in: path
+      description: The ID of the Purpose to retrieve the agreement for
+      required: true
+      schema:
+        $ref: '#/components/schemas/PurposeId'
+    get:
+      tags:
+      - Purposes
+      summary: Retrieve a Purpose Agreement
+      description: Retrieve the Agreement associated to a Purpose
+      operationId: getPurposeAgreement
+      responses:
+        '200':
+          description: Agreement retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Agreement'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /purposes/{purposeId}/remainingDailyCalls:
+    parameters:
+    - name: purposeId
+      in: path
+      description: The ID of the Purpose to retrieve the remainingDailyCalls for
+      required: true
+      schema:
+        type: string
+        format: uuid
+    get:
+      tags:
+      - Purposes
+      operationId: getRemainingDailyCalls
+      summary: Retrieve remaining dailyCalls for a purpose
+      description: Retrieve remaining available daily calls for a purpose
+      responses:
+        '200':
+          description: Retrieve remaining daily calls
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RemainingDailyCallsResponse'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /purposeTemplates/{purposeTemplateId}/purposes:
+    parameters:
+    - name: purposeTemplateId
+      in: path
+      description: The Purpose Template ID
+      required: true
+      schema:
+        $ref: '#/components/schemas/PurposeTemplateId'
+    post:
+      tags:
+      - Purposes
+      summary: Create a new Purpose from a Purpose Template
+      description: Create a new Purpose in Draft state from a Purpose Template
+      operationId: createPurposeFromTemplate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PurposeFromTemplateSeed'
+        required: true
+      responses:
+        '201':
+          description: Purpose created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Purpose'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          description: Conflict
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+components:
+  schemas:
+    ReversePurposeSeed:
+      type: object
+      additionalProperties: false
+      description: contains the expected payload for reverse purpose creation
+      properties:
+        eserviceId:
+          $ref: '#/components/schemas/EServiceId'
+        delegationId:
+          description: 'Set it to create the Purpose for a Tenant for which you are the e-service consumer delegate.
+
+            If not set, the Purpose will be created for your Tenant.
+
+            '
+          type: string
+          format: uuid
+        riskAnalysisId:
+          type: string
+          format: uuid
+        title:
+          type: string
+          minLength: 5
+          maxLength: 60
+        description:
+          type: string
+          minLength: 10
+          maxLength: 250
+        isFreeOfCharge:
+          type: boolean
+        freeOfChargeReason:
+          type: string
+        dailyCalls:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 1000000000
+      required:
+      - eserviceId
+      - title
+      - riskAnalysisId
+      - description
+      - isFreeOfCharge
+      - dailyCalls
+    RiskAnalysisFormSeed:
+      type: object
+      additionalProperties: false
+      properties:
+        version:
+          type: string
+          minLength: 1
+          maxLength: 250
+        answers:
+          description: 'Key-value pairs of risk analysis form answers.
+
+            Key: question ID; value: array of answers.
+
+            '
+          additionalProperties:
+            type: array
+            items:
+              type: string
+              minLength: 1
+              maxLength: 2000
+      required:
+      - version
+      - answers
+    PurposeTemplateId:
+      type: string
+      format: uuid
+      description: The unique identifier of the Purpose Template
+    Problem:
+      properties:
+        type:
+          description: URI reference of type definition
+          type: string
+        status:
+          description: The HTTP status code generated by the origin server for this occurrence of the problem
+          example: 503
+          format: int32
+          minimum: 100
+          type: integer
+          exclusiveMaximum: 600
+        title:
+          description: A short, summary of the problem type. Written in english and readable
+          example: Service Unavailable
+          maxLength: 64
+          pattern: ^[ -~]{0,64}$
+          type: string
+        correlationId:
+          description: Unique identifier of the request
+          example: 53af4f2d-0c87-41ef-a645-b726a821852b
+          maxLength: 64
+          type: string
+        detail:
+          description: A human readable explanation of the problem
+          example: Request took too long to complete
+          maxLength: 4096
+          pattern: ^.{0,1024}$
+          type: string
+        errors:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/ProblemError'
+      additionalProperties: false
+      required:
+      - type
+      - status
+      - title
+    ProblemError:
+      properties:
+        code:
+          description: Internal code of the error
+          example: 123-4567
+          minLength: 8
+          maxLength: 8
+          pattern: ^[0-9]{3}-[0-9]{4}$
+          type: string
+        detail:
+          description: A human readable explanation specific to this occurrence of the problem
+          example: Parameter not valid
+          maxLength: 4096
+          pattern: ^.{0,1024}$
+          type: string
+      required:
+      - code
+      - detail
+    Pagination:
+      type: object
+      additionalProperties: false
+      properties:
+        offset:
+          type: integer
+          format: int32
+          minimum: 0
+        limit:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 50
+        totalCount:
+          type: integer
+          format: int32
+          minimum: 0
+      required:
+      - offset
+      - limit
+      - totalCount
+    PurposeId:
+      type: string
+      format: uuid
+      description: The unique identifier of the Purpose
+    PurposeDraftFromTemplateUpdateSeed:
+      type: object
+      additionalProperties: false
+      description: Contains the expected payload for purpose update of a purpose created from a purpose template
+      properties:
+        title:
+          type: string
+          minLength: 5
+          maxLength: 60
+        riskAnalysisForm:
+          $ref: '#/components/schemas/RiskAnalysisFormSeed'
+        dailyCalls:
+          description: Maximum number of daily calls that this version can perform.
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 1000000000
+    PurposeVersions:
+      type: object
+      additionalProperties: false
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/PurposeVersion'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+      required:
+      - results
+      - pagination
+    DescriptorId:
+      type: string
+      format: uuid
+      description: The unique identifier of the Descriptor
+    PurposeVersionSeed:
+      type: object
+      additionalProperties: false
+      required:
+      - dailyCalls
+      properties:
+        dailyCalls:
+          description: Maximum number of daily calls performed using this version
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 1000000000
+    PurposeVersionState:
+      type: string
+      description: Purpose State
+      enum:
+      - ACTIVE
+      - DRAFT
+      - SUSPENDED
+      - WAITING_FOR_APPROVAL
+      - ARCHIVED
+      - REJECTED
+    VoidObject:
+      type: object
+      additionalProperties: false
+      description: An empty object
+    Agreement:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          format: uuid
+        eserviceId:
+          $ref: '#/components/schemas/EServiceId'
+        descriptorId:
+          $ref: '#/components/schemas/DescriptorId'
+        producerId:
+          type: string
+          format: uuid
+        consumerId:
+          type: string
+          format: uuid
+        delegationId:
+          $ref: '#/components/schemas/DelegationId'
+        state:
+          $ref: '#/components/schemas/AgreementState'
+        suspendedByConsumer:
+          type: boolean
+        suspendedByProducer:
+          type: boolean
+        suspendedByPlatform:
+          type: boolean
+        consumerNotes:
+          type: string
+        rejectionReason:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        suspendedAt:
+          type: string
+          format: date-time
+      required:
+      - id
+      - eserviceId
+      - descriptorId
+      - producerId
+      - consumerId
+      - state
+      - createdAt
+    EServiceId:
+      type: string
+      format: uuid
+      description: The unique identifier of the E-Service
+    DelegationId:
+      type: string
+      format: uuid
+      description: The unique identifier of the Delegation
+    PurposeVersion:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          format: uuid
+        state:
+          $ref: '#/components/schemas/PurposeVersionState'
+        createdAt:
+          type: string
+          format: date-time
+        suspendedAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        firstActivationAt:
+          type: string
+          format: date-time
+        dailyCalls:
+          description: Maximum number of daily calls performed using this version
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 1000000000
+        rejectionReason:
+          type: string
+      required:
+      - id
+      - state
+      - dailyCalls
+      - createdAt
+      description: business representation of a purpose version
+    ReversePurposeDraftUpdateSeed:
+      type: object
+      additionalProperties: false
+      description: Contains the expected payload for purpose update
+      properties:
+        title:
+          type: string
+          minLength: 5
+          maxLength: 60
+        description:
+          type: string
+          minLength: 10
+          maxLength: 250
+        isFreeOfCharge:
+          type: boolean
+        freeOfChargeReason:
+          type:
+          - string
+          - 'null'
+        dailyCalls:
+          description: Maximum number of daily calls that this version can perform.
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 1000000000
+    RemainingDailyCallsResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        remainingDailyCallsPerConsumer:
+          type: integer
+          format: int32
+          minimum: 0
+        remainingDailyCallsTotal:
+          type: integer
+          format: int32
+          minimum: 0
+      required:
+      - remainingDailyCallsPerConsumer
+      - remainingDailyCallsTotal
+    DelegationRef:
+      type: object
+      additionalProperties: false
+      description: Set the delegation ID in order to operate as a delegate for an active producer or consumer delegation
+      properties:
+        delegationId:
+          $ref: '#/components/schemas/DelegationId'
+    PurposeSeed:
+      type: object
+      additionalProperties: false
+      description: contains the expected payload for purpose creation
+      properties:
+        eserviceId:
+          $ref: '#/components/schemas/EServiceId'
+        delegationId:
+          description: 'Set it to create the Purpose for a Tenant for which you are the e-service consumer delegate.
+
+            If not set, the Purpose will be created for your Tenant.
+
+            '
+          type: string
+          format: uuid
+        riskAnalysisForm:
+          $ref: '#/components/schemas/RiskAnalysisFormSeed'
+        title:
+          type: string
+          minLength: 5
+          maxLength: 60
+        description:
+          type: string
+          minLength: 10
+          maxLength: 250
+        isFreeOfCharge:
+          type: boolean
+        freeOfChargeReason:
+          type: string
+        dailyCalls:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 1000000000
+      required:
+      - eserviceId
+      - title
+      - description
+      - isFreeOfCharge
+      - dailyCalls
+    Purposes:
+      type: object
+      additionalProperties: false
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Purpose'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+      required:
+      - results
+      - pagination
+    AgreementState:
+      type: string
+      description: Agreement State
+      enum:
+      - DRAFT
+      - ACTIVE
+      - ARCHIVED
+      - PENDING
+      - SUSPENDED
+      - MISSING_CERTIFIED_ATTRIBUTES
+      - REJECTED
+    FileDownloadMultipart:
+      type: object
+      additionalProperties: false
+      required:
+      - file
+      - filename
+      - contentType
+      - id
+      properties:
+        file:
+          type: string
+          format: binary
+          description: The file to download
+        filename:
+          type: string
+          description: The name of the file
+        contentType:
+          type: string
+          description: The content type of the file
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier of the file
+        prettyName:
+          type: string
+          description: A human-readable name for the file
+    Purpose:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          format: uuid
+        eserviceId:
+          $ref: '#/components/schemas/EServiceId'
+        consumerId:
+          type: string
+          format: uuid
+        suspendedByConsumer:
+          type: boolean
+        suspendedByProducer:
+          type: boolean
+        title:
+          type: string
+        description:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        isFreeOfCharge:
+          type: boolean
+        freeOfChargeReason:
+          type: string
+        delegationId:
+          $ref: '#/components/schemas/DelegationId'
+        currentVersion:
+          $ref: '#/components/schemas/PurposeVersion'
+        waitingForApprovalVersion:
+          $ref: '#/components/schemas/PurposeVersion'
+        rejectedVersion:
+          $ref: '#/components/schemas/PurposeVersion'
+        purposeTemplateId:
+          $ref: '#/components/schemas/PurposeTemplateId'
+      required:
+      - id
+      - eserviceId
+      - consumerId
+      - title
+      - description
+      - createdAt
+      - isFreeOfCharge
+    PurposeFromTemplateSeed:
+      type: object
+      additionalProperties: false
+      description: contains the expected payload for purpose creation from a purpose template
+      properties:
+        eserviceId:
+          $ref: '#/components/schemas/EServiceId'
+        delegationId:
+          description: 'Set it to create the Purpose for a Tenant for which you are the e-service consumer delegate.
+
+            If not set, the Purpose will be created for your Tenant.
+
+            '
+          type: string
+          format: uuid
+        riskAnalysisForm:
+          $ref: '#/components/schemas/RiskAnalysisFormSeed'
+        title:
+          type: string
+        dailyCalls:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 1000000000
+      required:
+      - eserviceId
+      - title
+      - dailyCalls
+    PurposeDraftUpdateSeed:
+      type: object
+      additionalProperties: false
+      description: Contains the expected payload for purpose update of a purpose not created from a purpose template
+      properties:
+        title:
+          type: string
+          minLength: 5
+          maxLength: 60
+        description:
+          type: string
+          minLength: 10
+          maxLength: 250
+        isFreeOfCharge:
+          type: boolean
+        freeOfChargeReason:
+          type:
+          - string
+          - 'null'
+        riskAnalysisForm:
+          $ref: '#/components/schemas/RiskAnalysisFormSeed'
+        dailyCalls:
+          description: Maximum number of daily calls that this version can perform.
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 1000000000
+    ReversePurposeSeed_2:
+      type: object
+      additionalProperties: false
+      description: contains the expected payload for reverse purpose creation
+      properties:
+        eserviceId:
+          type: string
+          format: uuid
+        delegationId:
+          description: 'Set it to create the Purpose for a Tenant for which you are the e-service consumer delegate.
+
+            If not set, the Purpose will be created for your Tenant.
+
+            '
+          type: string
+          format: uuid
+        riskAnalysisId:
+          type: string
+          format: uuid
+        title:
+          type: string
+          minLength: 5
+          maxLength: 60
+        description:
+          type: string
+          minLength: 10
+          maxLength: 250
+        isFreeOfCharge:
+          type: boolean
+        freeOfChargeReason:
+          type: string
+        dailyCalls:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 1000000000
+      required:
+      - eserviceId
+      - title
+      - riskAnalysisId
+      - description
+      - isFreeOfCharge
+      - dailyCalls
+    Agreement_2:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          format: uuid
+        eserviceId:
+          type: string
+          format: uuid
+        descriptorId:
+          type: string
+          format: uuid
+        producerId:
+          type: string
+          format: uuid
+        consumerId:
+          type: string
+          format: uuid
+        delegationId:
+          type: string
+          format: uuid
+        state:
+          $ref: '#/components/schemas/AgreementState'
+        suspendedByConsumer:
+          type: boolean
+        suspendedByProducer:
+          type: boolean
+        suspendedByPlatform:
+          type: boolean
+        consumerNotes:
+          type: string
+        rejectionReason:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        suspendedAt:
+          type: string
+          format: date-time
+      required:
+      - id
+      - eserviceId
+      - descriptorId
+      - producerId
+      - consumerId
+      - state
+      - createdAt
+    PurposeSeed_2:
+      type: object
+      additionalProperties: false
+      description: contains the expected payload for purpose creation
+      properties:
+        eserviceId:
+          type: string
+          format: uuid
+        delegationId:
+          description: 'Set it to create the Purpose for a Tenant for which you are the e-service consumer delegate.
+
+            If not set, the Purpose will be created for your Tenant.
+
+            '
+          type: string
+          format: uuid
+        riskAnalysisForm:
+          $ref: '#/components/schemas/RiskAnalysisFormSeed'
+        title:
+          type: string
+          minLength: 5
+          maxLength: 60
+        description:
+          type: string
+          minLength: 10
+          maxLength: 250
+        isFreeOfCharge:
+          type: boolean
+        freeOfChargeReason:
+          type: string
+        dailyCalls:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 1000000000
+      required:
+      - eserviceId
+      - title
+      - description
+      - isFreeOfCharge
+      - dailyCalls
+    DelegationRef_2:
+      type: object
+      additionalProperties: false
+      description: Set the delegation ID in order to operate as a delegate for an active producer or consumer delegation
+      properties:
+        delegationId:
+          type: string
+          format: uuid
+    Purpose_2:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          format: uuid
+        eserviceId:
+          type: string
+          format: uuid
+        consumerId:
+          type: string
+          format: uuid
+        suspendedByConsumer:
+          type: boolean
+        suspendedByProducer:
+          type: boolean
+        title:
+          type: string
+        description:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        isRiskAnalysisValid:
+          type: boolean
+        isFreeOfCharge:
+          type: boolean
+        freeOfChargeReason:
+          type: string
+        delegationId:
+          type: string
+          format: uuid
+        currentVersion:
+          $ref: '#/components/schemas/PurposeVersion'
+        waitingForApprovalVersion:
+          $ref: '#/components/schemas/PurposeVersion'
+        rejectedVersion:
+          $ref: '#/components/schemas/PurposeVersion'
+        purposeTemplateId:
+          type: string
+          format: uuid
+      required:
+      - id
+      - eserviceId
+      - consumerId
+      - title
+      - description
+      - createdAt
+      - isRiskAnalysisValid
+      - isFreeOfCharge
+    PurposeFromTemplateSeed_2:
+      type: object
+      additionalProperties: false
+      description: contains the expected payload for purpose creation from a purpose template
+      properties:
+        eserviceId:
+          type: string
+          format: uuid
+        delegationId:
+          description: 'Set it to create the Purpose for a Tenant for which you are the e-service consumer delegate.
+
+            If not set, the Purpose will be created for your Tenant.
+
+            '
+          type: string
+          format: uuid
+        riskAnalysisForm:
+          $ref: '#/components/schemas/RiskAnalysisFormSeed'
+        title:
+          type: string
+        dailyCalls:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 1000000000
+      required:
+      - eserviceId
+      - title
+      - dailyCalls
+  headers:
+    IntegrityRest02AgidJwtSignatureHeader:
+      description: 'The `Agid-JWT-Signature` header contains a JSON Web Signature (JWS) signed with the PDND API private key.
+
+        It ensures payload integrity and non-repudiation across all responses (both success and error), in compliance with: 1) Linee Guida sull''interoperabilità tecnica delle Pubbliche Amministrazioni - Pattern di sicurezza,  2) RFC 7515 and 3) RFC 7519.
+
+        '
+      schema:
+        type: string
+    RateLimitRemainingHeader:
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+      description: Remaining requests within time interval
+    RateLimitIntervalHeader:
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+      description: Time interval in milliseconds. Allowed requests will be constantly replenished during the interval. At the end of the interval the max allowed requests will be available
+    RateLimitLimitHeader:
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+      description: Max allowed requests within time interval
+    IntegrityRest02DigestHeader:
+      schema:
+        type: string
+        pattern: ^SHA-256=[a-zA-Z0-9+/]{43}=$
+      description: 'Digest of the body using the canonical JSON representation of the response body.
+
+        The digest is calculated using the SHA-256 algorithm on the response body
+
+        exactly as it is sent to the client, encoded in Base64 as per RFC 3230
+
+        '
+  responses:
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+      headers:
+        X-Rate-Limit-Limit:
+          $ref: '#/components/headers/RateLimitLimitHeader'
+        X-Rate-Limit-Remaining:
+          $ref: '#/components/headers/RateLimitRemainingHeader'
+        X-Rate-Limit-Interval:
+          $ref: '#/components/headers/RateLimitIntervalHeader'
+        Digest:
+          $ref: '#/components/headers/IntegrityRest02DigestHeader'
+        Agid-JWT-Signature:
+          $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+    Conflict:
+      description: Conflict
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+      headers:
+        X-Rate-Limit-Limit:
+          $ref: '#/components/headers/RateLimitLimitHeader'
+        X-Rate-Limit-Remaining:
+          $ref: '#/components/headers/RateLimitRemainingHeader'
+        X-Rate-Limit-Interval:
+          $ref: '#/components/headers/RateLimitIntervalHeader'
+        Digest:
+          $ref: '#/components/headers/IntegrityRest02DigestHeader'
+        Agid-JWT-Signature:
+          $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+      headers:
+        X-Rate-Limit-Limit:
+          $ref: '#/components/headers/RateLimitLimitHeader'
+        X-Rate-Limit-Remaining:
+          $ref: '#/components/headers/RateLimitRemainingHeader'
+        X-Rate-Limit-Interval:
+          $ref: '#/components/headers/RateLimitIntervalHeader'
+        Digest:
+          $ref: '#/components/headers/IntegrityRest02DigestHeader'
+        Agid-JWT-Signature:
+          $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+    BadRequest:
+      description: Bad Request
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+      headers:
+        X-Rate-Limit-Limit:
+          $ref: '#/components/headers/RateLimitLimitHeader'
+        X-Rate-Limit-Remaining:
+          $ref: '#/components/headers/RateLimitRemainingHeader'
+        X-Rate-Limit-Interval:
+          $ref: '#/components/headers/RateLimitIntervalHeader'
+        Digest:
+          $ref: '#/components/headers/IntegrityRest02DigestHeader'
+        Agid-JWT-Signature:
+          $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+      headers:
+        X-Rate-Limit-Limit:
+          $ref: '#/components/headers/RateLimitLimitHeader'
+        X-Rate-Limit-Remaining:
+          $ref: '#/components/headers/RateLimitRemainingHeader'
+        X-Rate-Limit-Interval:
+          $ref: '#/components/headers/RateLimitIntervalHeader'
+        Digest:
+          $ref: '#/components/headers/IntegrityRest02DigestHeader'
+        Agid-JWT-Signature:
+          $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+    TooManyRequests:
+      description: Too Many Requests
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+      headers:
+        X-Rate-Limit-Limit:
+          $ref: '#/components/headers/RateLimitLimitHeader'
+        X-Rate-Limit-Remaining:
+          $ref: '#/components/headers/RateLimitRemainingHeader'
+        X-Rate-Limit-Interval:
+          $ref: '#/components/headers/RateLimitIntervalHeader'
+        Digest:
+          $ref: '#/components/headers/IntegrityRest02DigestHeader'
+        Agid-JWT-Signature:
+          $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+  parameters:
+    LimitParam:
+      in: query
+      name: limit
+      description: Maximum number of results to return
+      required: true
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+        maximum: 50
+    EserviceIdsParam:
+      in: query
+      name: eserviceIds
+      description: Filter by E-Service IDs. If not specified, return results for any E-Service
+      required: false
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+          format: uuid
+        default: []
+    OffsetParam:
+      in: query
+      name: offset
+      description: Pagination starting position
+      required: true
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+  securitySchemes:
+    DPoPAuth:
+      type: http
+      scheme: DPoP
+      description: 'This Authorization header must be used alongside the DPoP Proof JWT.
+
+        Use:
+
+        Authorization: DPoP <access_token>
+
+
+        The access token generated must also have a cnf field.
+
+        '
+    DPoPProofHeader:
+      type: apiKey
+      in: header
+      name: DPoP
+      description: 'DPoP proof JWT for sender-constrained access. Must accompany the DPoP Authorization header.
+
+        '
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-refined-from:
+- interop-api-v3.yaml
+- pagopa-pdnd-interop-v2-openapi.yml
+- pagopa-pdnd-interop-v3-openapi.yml

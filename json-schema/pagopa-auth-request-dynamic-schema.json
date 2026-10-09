@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/pagopa/main/json-schema/pagopa-auth-request-dynamic-schema.json",
+  "title": "AuthRequestDynamic",
+  "description": "Credenziali dinamiche.",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/pagopa-mdc-tpp-message-openapi.yml#/components/schemas/AuthRequestDynamic",
+  "type": "object",
+  "additionalProperties": {
+    "type": "string"
+  }
+}

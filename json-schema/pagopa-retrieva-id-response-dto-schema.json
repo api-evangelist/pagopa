@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/pagopa/main/json-schema/pagopa-retrieva-id-response-dto-schema.json",
+  "title": "RetrievaIdResponseDTO",
+  "description": "Retrieval Response information",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/pagopa-mdc-payment-openapi.yml#/components/schemas/RetrievaIdResponseDTO",
+  "type": "object",
+  "required": [
+    "retrievalId"
+  ],
+  "properties": {
+    "retrievalId": {
+      "type": "string",
+      "description": "ENG: Unique ID that identify retrieval payload - IT: Identificativo univoco del retrieval payload",
+      "pattern": "^[ -~]{1,50}$",
+      "minLength": 50,
+      "maxLength": 50
+    }
+  }
+}

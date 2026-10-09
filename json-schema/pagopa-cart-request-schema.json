@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/pagopa/main/json-schema/pagopa-cart-request-schema.json",
+  "title": "CartRequest",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/pagopa-checkout-ec-v1-openapi.yml#/components/schemas/CartRequest",
+  "required": [
+    "paymentNotices",
+    "returnUrls"
+  ],
+  "type": "object",
+  "properties": {
+    "emailNotice": {
+      "type": "string",
+      "format": "email"
+    },
+    "paymentNotices": {
+      "maxItems": 5,
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/PaymentNotice"
+      }
+    },
+    "returnUrls": {
+      "required": [
+        "returnOkUrl",
+        "returnCancelUrl",
+        "returnErrorUrl"
+      ],
+      "type": "object",
+      "properties": {
+        "returnOkUrl": {
+          "type": "string",
+          "format": "uri"
+        },
+        "returnCancelUrl": {
+          "type": "string",
+          "format": "uri"
+        },
+        "returnErrorUrl": {
+          "type": "string",
+          "format": "uri"
+        }
+      }
+    },
+    "idCart": {
+      "type": "string"
+    },
+    "allCCP": {
+      "type": "boolean",
+      "description": "Flag that indicates that all transfers are associated with a postal IBAN"
+    }
+  },
+  "$defs": {
+    "PaymentNotice": {
+      "required": [
+        "noticeNumber",
+        "fiscalCode",
+        "amount",
+        "companyName",
+        "description"
+      ],
+      "type": "object",
+      "properties": {
+        "noticeNumber": {
+          "maxLength": 18,
+          "minLength": 18,
+          "type": "string",
+          "description": "notice number"
+        },
+        "fiscalCode": {
+          "maxLength": 11,
+          "minLength": 11,
+          "type": "string",
+          "description": "Public Administration tax code"
+        },
+        "amount": {
+          "minimum": 1.0,
+          "type": "integer",
+          "description": "amount (in euro cents) of the payment notice"
+        },
+        "companyName": {
+          "maxLength": 140,
+          "type": "string",
+          "description": "Public Administration company name"
+        },
+        "description": {
+          "maxLength": 140,
+          "type": "string",
+          "description": "subject of payment"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,123 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/pagopa/main/json-schema/pagopa-create-mbd-request-v2-schema.json",
+  "title": "CreateMbdRequestV2",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/pagopa-marca-da-bollo-v2-openapi.yml#/components/schemas/CreateMbdRequestV2",
+  "required": [
+    "returnUrls"
+  ],
+  "type": "object",
+  "properties": {
+    "paymentNotices": {
+      "maxItems": 1,
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/PaymentNoticeV2"
+      }
+    },
+    "returnUrls": {
+      "$ref": "#/$defs/ReturnUrlsV2"
+    }
+  },
+  "$defs": {
+    "Debtor": {
+      "required": [
+        "email",
+        "fullName"
+      ],
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "description": "Debtor mail."
+        },
+        "fullName": {
+          "type": "string",
+          "description": "Debtor full name."
+        },
+        "uniqueIdentifier": {
+          "$ref": "#/$defs/UniqueIdentifier"
+        }
+      }
+    },
+    "PaymentNoticeV2": {
+      "required": [
+        "amount",
+        "debtor",
+        "documentHash",
+        "province"
+      ],
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "integer",
+          "description": "MBD amount (Eurocents value).",
+          "format": "int64"
+        },
+        "debtor": {
+          "$ref": "#/$defs/Debtor"
+        },
+        "documentHash": {
+          "type": "string",
+          "description": "Document hash."
+        },
+        "province": {
+          "type": "string",
+          "description": "Organization province."
+        }
+      }
+    },
+    "ReturnUrlsV2": {
+      "required": [
+        "cancelUrl",
+        "errorUrl",
+        "successUrl",
+        "waitingUrl"
+      ],
+      "type": "object",
+      "properties": {
+        "cancelUrl": {
+          "type": "string",
+          "description": "Redirect cancel URL."
+        },
+        "errorUrl": {
+          "type": "string",
+          "description": "Redirect error URL."
+        },
+        "successUrl": {
+          "type": "string",
+          "description": "Redirect success URL."
+        },
+        "waitingUrl": {
+          "type": "string",
+          "description": "Redirect waiting URL."
+        }
+      }
+    },
+    "UniqueIdentifier": {
+      "required": [
+        "type",
+        "value"
+      ],
+      "type": "object",
+      "properties": {
+        "type": {
+          "enum": [
+            "F",
+            "G"
+          ],
+          "type": "string",
+          "description": "Describe if the debtor is a Natural Person (''F') or a Legal Entity ('G')."
+        },
+        "value": {
+          "type": "string",
+          "description": "Fiscal Code for Natural Persons ('F'), VAT number for Legal Entities ('G')"
+        }
+      }
+    }
+  }
+}

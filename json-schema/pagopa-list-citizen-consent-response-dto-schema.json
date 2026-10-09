@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/pagopa/main/json-schema/pagopa-list-citizen-consent-response-dto-schema.json",
+  "title": "ListCitizenConsentResponseDTO",
+  "description": "Lista di CitizenConsentResponseDTO",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/pagopa-mdc-citizen-consent-openapi.yml#/components/schemas/ListCitizenConsentResponseDTO",
+  "type": "array",
+  "maxItems": 1000000000,
+  "items": {
+    "$ref": "#/$defs/CitizenConsentResponseDTO"
+  },
+  "$defs": {
+    "CitizenConsentResponseDTO": {
+      "type": "object",
+      "description": "Schema di risposta che contiene lo stato e la data dei consensi",
+      "properties": {
+        "fiscalCode": {
+          "type": "string",
+          "description": "Codice fiscale del cittadino",
+          "pattern": "^[A-Za-z0-9]{11,16}$",
+          "minLength": 11,
+          "maxLength": 16
+        },
+        "consents": {
+          "type": "object",
+          "description": "Oggetto contenente consensi con chiavi dinamiche basate su tppId (UUID concatenati con timestamp)",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "tppState": {
+                "type": "boolean",
+                "description": "Stato del consenso TPP"
+              },
+              "tcDate": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Data e ora dell'ultimo aggiornamento del consenso",
+                "maxLength": 30,
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z$"
+              }
+            },
+            "required": [
+              "tppState",
+              "tcDate"
+            ]
+          }
+        }
+      },
+      "required": [
+        "fiscalCode",
+        "consents"
+      ]
+    }
+  }
+}

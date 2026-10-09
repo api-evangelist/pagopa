@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/pagopa/main/json-schema/pagopa-retrieval-request-dto-schema.json",
+  "title": "RetrievalRequestDTO",
+  "description": "Contiene le informazioni relative a una richiesta di recupero.",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/pagopa-mdc-payment-openapi.yml#/components/schemas/RetrievalRequestDTO",
+  "type": "object",
+  "required": [
+    "agent",
+    "originId"
+  ],
+  "properties": {
+    "agent": {
+      "type": "string",
+      "description": "Identificatore dell'agente proveniente dal sistema operativo sorgente (ad esempio, 'iOS', 'Android').",
+      "pattern": "^[a-zA-Z0-9_-]{2,50}$",
+      "minLength": 2,
+      "maxLength": 50
+    },
+    "originId": {
+      "type": "string",
+      "description": "Identificatore univoco del messaggio originale.",
+      "pattern": "^[a-zA-Z0-9-]{24,36}$",
+      "minLength": 24,
+      "maxLength": 36
+    },
+    "linkVersion": {
+      "type": "string",
+      "description": "Identificatore univoco della versione del deeplink. Non obbligatorio. Se non fornito, verrà utilizzata la versione predefinita in accordo con la TPP.",
+      "minLength": 1,
+      "maxLength": 50,
+      "pattern": "^[a-zA-Z0-9_-]{1,50}$"
+    }
+  }
+}

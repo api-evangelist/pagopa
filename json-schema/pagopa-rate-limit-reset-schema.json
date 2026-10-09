@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/pagopa/main/json-schema/pagopa-rate-limit-reset-schema.json",
+  "title": "RateLimitReset",
+  "description": "The number of seconds left in the current period",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/pagopa-mdc-citizen-consent-openapi.yml#/components/schemas/RateLimitReset",
+  "type": "integer",
+  "format": "int32",
+  "minimum": 1,
+  "maximum": 60
+}

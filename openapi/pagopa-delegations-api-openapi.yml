@@ -1,0 +1,1078 @@
+openapi: 3.2.0
+info:
+  title: Pagopa Delegations API
+  contact:
+    name: API Support
+    url: https://github.com/pagopa/pdnd-interop-frontend/issues
+  termsOfService: https://selfcare.interop.pagopa.it/ui/it/termini-di-servizio
+  x-summary: PDND Interoperability API
+  version: '1.0'
+  description: 'Operations tagged delegations across 3 of this provider''s published API definitions: interop-api-v3.yaml, pagopa-pdnd-interop-v2-openapi.yml, pagopa-pdnd-interop-v3-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.interop.pagopa.it/v3
+  description: Production environment
+- url: https://api.interop.pagopa.it/v2
+  description: PROD environment
+tags:
+- name: Delegations
+  description: Delegations routes
+paths:
+  /consumerDelegations:
+    get:
+      tags:
+      - Delegations
+      summary: List Consumer Delegations
+      description: Retrieve a list of Consumer Delegations based on filters
+      operationId: getConsumerDelegations
+      parameters:
+      - in: query
+        name: states
+        description: Filter Consumer Delegations by states. If not specified, return Consumer Delegations in any state
+        required: false
+        schema:
+          type: array
+          items:
+            $ref: '#/components/schemas/DelegationState'
+          default: []
+        explode: false
+      - $ref: '#/components/parameters/DelegatorIdsParam'
+      - $ref: '#/components/parameters/DelegateIdsParam'
+      - $ref: '#/components/parameters/EserviceIdsParam'
+      - $ref: '#/components/parameters/OffsetParam'
+      - $ref: '#/components/parameters/LimitParam'
+      responses:
+        '200':
+          description: Consumer Delegations retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConsumerDelegations'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    post:
+      tags:
+      - Delegations
+      summary: Create a new Consumer Delegation
+      description: Create a new Consumer Delegation in Waiting for Approval state
+      operationId: createConsumerDelegation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DelegationSeed'
+        required: true
+      responses:
+        '201':
+          description: Consumer Delegation created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConsumerDelegation'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /consumerDelegations/{delegationId}:
+    parameters:
+    - name: delegationId
+      in: path
+      description: The ID of the Consumer Delegation to retrieve
+      required: true
+      schema:
+        $ref: '#/components/schemas/DelegationId'
+    get:
+      tags:
+      - Delegations
+      summary: Retrieve a Consumer Delegation
+      description: Retrieve a specific Consumer Delegation by its ID
+      operationId: getConsumerDelegation
+      responses:
+        '200':
+          description: Consumer Delegation retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConsumerDelegation'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /consumerDelegations/{delegationId}/accept:
+    parameters:
+    - name: delegationId
+      in: path
+      description: The ID of the Consumer Delegation to accept
+      required: true
+      schema:
+        $ref: '#/components/schemas/DelegationId'
+    post:
+      tags:
+      - Delegations
+      summary: Accept a Consumer Delegation in Waiting for Approval state
+      description: Accept a Consumer Delegation that is in Waiting for Approval state, transitioning it to Active state
+      operationId: acceptConsumerDelegation
+      responses:
+        '200':
+          description: Consumer Delegation accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConsumerDelegation'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /producerDelegations:
+    get:
+      tags:
+      - Delegations
+      summary: List Producer Delegations
+      description: Retrieve a list of Producer Delegations based on filters
+      operationId: getProducerDelegations
+      parameters:
+      - in: query
+        name: states
+        description: Filter Producer Delegations by states. If not specified, return Producer Delegations in any state
+        required: false
+        schema:
+          type: array
+          items:
+            $ref: '#/components/schemas/DelegationState'
+          default: []
+        explode: false
+      - $ref: '#/components/parameters/DelegatorIdsParam'
+      - $ref: '#/components/parameters/DelegateIdsParam'
+      - $ref: '#/components/parameters/EserviceIdsParam'
+      - $ref: '#/components/parameters/OffsetParam'
+      - $ref: '#/components/parameters/LimitParam'
+      responses:
+        '200':
+          description: Producer Delegations retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProducerDelegations'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    post:
+      tags:
+      - Delegations
+      summary: Create a new Producer Delegation
+      description: Create a new Producer Delegation in Waiting for Approval state
+      operationId: createProducerDelegation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DelegationSeed'
+        required: true
+      responses:
+        '201':
+          description: Producer Delegation created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProducerDelegation'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /producerDelegations/{delegationId}:
+    parameters:
+    - name: delegationId
+      in: path
+      description: The ID of the Producer Delegation to retrieve
+      required: true
+      schema:
+        $ref: '#/components/schemas/DelegationId'
+    get:
+      tags:
+      - Delegations
+      summary: Retrieve a Producer Delegation
+      description: Retrieve a specific Producer Delegation by its ID
+      operationId: getProducerDelegation
+      responses:
+        '200':
+          description: Producer Delegation retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProducerDelegation'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /producerDelegations/{delegationId}/accept:
+    parameters:
+    - name: delegationId
+      in: path
+      description: The ID of the Producer Delegation to accept
+      required: true
+      schema:
+        $ref: '#/components/schemas/DelegationId'
+    post:
+      tags:
+      - Delegations
+      summary: Accept a Producer Delegation in Waiting for Approval state
+      description: Accept a Producer Delegation that is in Waiting for Approval state, transitioning it to Active state
+      operationId: acceptProducerDelegation
+      responses:
+        '200':
+          description: Producer Delegation accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProducerDelegation'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /producerDelegations/{delegationId}/reject:
+    parameters:
+    - name: delegationId
+      in: path
+      description: The ID of the Producer Delegation to reject
+      required: true
+      schema:
+        $ref: '#/components/schemas/DelegationId'
+    post:
+      tags:
+      - Delegations
+      summary: Reject a Producer Delegation in Waiting for Approval state
+      description: Reject a Producer Delegation that is in Waiting for Approval state, transitioning it to Rejected state
+      operationId: rejectProducerDelegation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DelegationRejection'
+        required: true
+        description: Payload for delegation rejection
+      responses:
+        '200':
+          description: Producer Delegation rejected
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProducerDelegation'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /consumerDelegations/{delegationId}/reject:
+    parameters:
+    - name: delegationId
+      in: path
+      description: The ID of the Consumer Delegation to reject
+      required: true
+      schema:
+        $ref: '#/components/schemas/DelegationId'
+    post:
+      tags:
+      - Delegations
+      summary: Reject a Consumer Delegation in Waiting for Approval state
+      description: Reject a Consumer Delegation that is in Waiting for Approval state, transitioning it to Rejected state
+      operationId: rejectConsumerDelegation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DelegationRejection'
+        required: true
+        description: Payload for delegation rejection
+      responses:
+        '200':
+          description: Consumer Delegation rejected
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConsumerDelegation'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+components:
+  schemas:
+    ProducerDelegation:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          format: uuid
+        delegatorId:
+          $ref: '#/components/schemas/DelegatorId'
+        delegateId:
+          $ref: '#/components/schemas/DelegateId'
+        eserviceId:
+          $ref: '#/components/schemas/EServiceId'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        rejectionReason:
+          type: string
+        revokedAt:
+          type: string
+          format: date-time
+        submittedAt:
+          type: string
+          format: date-time
+        activatedAt:
+          type: string
+          format: date-time
+        rejectedAt:
+          type: string
+          format: date-time
+        state:
+          $ref: '#/components/schemas/DelegationState'
+      required:
+      - id
+      - delegatorId
+      - delegateId
+      - eserviceId
+      - createdAt
+      - state
+      - submittedAt
+    ConsumerDelegations:
+      type: object
+      additionalProperties: false
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConsumerDelegation'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+      required:
+      - results
+      - pagination
+    ConsumerDelegation:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          format: uuid
+        delegatorId:
+          $ref: '#/components/schemas/DelegatorId'
+        delegateId:
+          $ref: '#/components/schemas/DelegateId'
+        eserviceId:
+          $ref: '#/components/schemas/EServiceId'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        rejectionReason:
+          type: string
+        revokedAt:
+          type: string
+          format: date-time
+        submittedAt:
+          type: string
+          format: date-time
+        activatedAt:
+          type: string
+          format: date-time
+        rejectedAt:
+          type: string
+          format: date-time
+        state:
+          $ref: '#/components/schemas/DelegationState'
+      required:
+      - id
+      - delegatorId
+      - delegateId
+      - eserviceId
+      - createdAt
+      - state
+      - submittedAt
+    Problem:
+      properties:
+        type:
+          description: URI reference of type definition
+          type: string
+        status:
+          description: The HTTP status code generated by the origin server for this occurrence of the problem
+          example: 503
+          format: int32
+          minimum: 100
+          type: integer
+          exclusiveMaximum: 600
+        title:
+          description: A short, summary of the problem type. Written in english and readable
+          example: Service Unavailable
+          maxLength: 64
+          pattern: ^[ -~]{0,64}$
+          type: string
+        correlationId:
+          description: Unique identifier of the request
+          example: 53af4f2d-0c87-41ef-a645-b726a821852b
+          maxLength: 64
+          type: string
+        detail:
+          description: A human readable explanation of the problem
+          example: Request took too long to complete
+          maxLength: 4096
+          pattern: ^.{0,1024}$
+          type: string
+        errors:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/ProblemError'
+      additionalProperties: false
+      required:
+      - type
+      - status
+      - title
+    ProblemError:
+      properties:
+        code:
+          description: Internal code of the error
+          example: 123-4567
+          minLength: 8
+          maxLength: 8
+          pattern: ^[0-9]{3}-[0-9]{4}$
+          type: string
+        detail:
+          description: A human readable explanation specific to this occurrence of the problem
+          example: Parameter not valid
+          maxLength: 4096
+          pattern: ^.{0,1024}$
+          type: string
+      required:
+      - code
+      - detail
+    DelegateId:
+      type: string
+      format: uuid
+      description: The unique identifier of the Delegate
+    ProducerDelegations:
+      type: object
+      additionalProperties: false
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProducerDelegation'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+      required:
+      - results
+      - pagination
+    DelegationState:
+      type: string
+      enum:
+      - WAITING_FOR_APPROVAL
+      - ACTIVE
+      - REJECTED
+      - REVOKED
+    DelegationRejection:
+      type: object
+      additionalProperties: false
+      properties:
+        rejectionReason:
+          type: string
+      required:
+      - rejectionReason
+    DelegatorId:
+      type: string
+      format: uuid
+      description: The unique identifier of the Delegator
+    EServiceId:
+      type: string
+      format: uuid
+      description: The unique identifier of the E-Service
+    DelegationId:
+      type: string
+      format: uuid
+      description: The unique identifier of the Delegation
+    Pagination:
+      type: object
+      additionalProperties: false
+      properties:
+        offset:
+          type: integer
+          format: int32
+          minimum: 0
+        limit:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 50
+        totalCount:
+          type: integer
+          format: int32
+          minimum: 0
+      required:
+      - offset
+      - limit
+      - totalCount
+    DelegationSeed:
+      type: object
+      additionalProperties: false
+      properties:
+        eserviceId:
+          $ref: '#/components/schemas/EServiceId'
+        delegateId:
+          $ref: '#/components/schemas/DelegateId'
+      required:
+      - eserviceId
+      - delegateId
+    ProducerDelegation_2:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          format: uuid
+        delegatorId:
+          type: string
+          format: uuid
+        delegateId:
+          type: string
+          format: uuid
+        eserviceId:
+          type: string
+          format: uuid
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        rejectionReason:
+          type: string
+        revokedAt:
+          type: string
+          format: date-time
+        submittedAt:
+          type: string
+          format: date-time
+        activatedAt:
+          type: string
+          format: date-time
+        rejectedAt:
+          type: string
+          format: date-time
+        state:
+          $ref: '#/components/schemas/DelegationState'
+      required:
+      - id
+      - delegatorId
+      - delegateId
+      - eserviceId
+      - createdAt
+      - state
+      - submittedAt
+    ConsumerDelegation_2:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          format: uuid
+        delegatorId:
+          type: string
+          format: uuid
+        delegateId:
+          type: string
+          format: uuid
+        eserviceId:
+          type: string
+          format: uuid
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        rejectionReason:
+          type: string
+        revokedAt:
+          type: string
+          format: date-time
+        submittedAt:
+          type: string
+          format: date-time
+        activatedAt:
+          type: string
+          format: date-time
+        rejectedAt:
+          type: string
+          format: date-time
+        state:
+          $ref: '#/components/schemas/DelegationState'
+      required:
+      - id
+      - delegatorId
+      - delegateId
+      - eserviceId
+      - createdAt
+      - state
+      - submittedAt
+    DelegationSeed_2:
+      type: object
+      additionalProperties: false
+      properties:
+        eserviceId:
+          type: string
+          format: uuid
+        delegateId:
+          type: string
+          format: uuid
+      required:
+      - eserviceId
+      - delegateId
+  parameters:
+    DelegateIdsParam:
+      in: query
+      name: delegateIds
+      description: Filter Delegations by delegate IDs. If not specified, return Delegations for any delegate
+      required: false
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+          format: uuid
+        default: []
+    LimitParam:
+      in: query
+      name: limit
+      description: Maximum number of results to return
+      required: true
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+        maximum: 50
+    EserviceIdsParam:
+      in: query
+      name: eserviceIds
+      description: Filter by E-Service IDs. If not specified, return results for any E-Service
+      required: false
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+          format: uuid
+        default: []
+    OffsetParam:
+      in: query
+      name: offset
+      description: Pagination starting position
+      required: true
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+    DelegatorIdsParam:
+      in: query
+      name: delegatorIds
+      description: Filter Delegations by delegator IDs. If not specified, return Delegations for any delegator
+      required: false
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+          format: uuid
+        default: []
+  headers:
+    IntegrityRest02AgidJwtSignatureHeader:
+      description: 'The `Agid-JWT-Signature` header contains a JSON Web Signature (JWS) signed with the PDND API private key.
+
+        It ensures payload integrity and non-repudiation across all responses (both success and error), in compliance with: 1) Linee Guida sull''interoperabilità tecnica delle Pubbliche Amministrazioni - Pattern di sicurezza,  2) RFC 7515 and 3) RFC 7519.
+
+        '
+      schema:
+        type: string
+    RateLimitRemainingHeader:
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+      description: Remaining requests within time interval
+    RateLimitIntervalHeader:
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+      description: Time interval in milliseconds. Allowed requests will be constantly replenished during the interval. At the end of the interval the max allowed requests will be available
+    RateLimitLimitHeader:
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+      description: Max allowed requests within time interval
+    IntegrityRest02DigestHeader:
+      schema:
+        type: string
+        pattern: ^SHA-256=[a-zA-Z0-9+/]{43}=$
+      description: 'Digest of the body using the canonical JSON representation of the response body.
+
+        The digest is calculated using the SHA-256 algorithm on the response body
+
+        exactly as it is sent to the client, encoded in Base64 as per RFC 3230
+
+        '
+  responses:
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+      headers:
+        X-Rate-Limit-Limit:
+          $ref: '#/components/headers/RateLimitLimitHeader'
+        X-Rate-Limit-Remaining:
+          $ref: '#/components/headers/RateLimitRemainingHeader'
+        X-Rate-Limit-Interval:
+          $ref: '#/components/headers/RateLimitIntervalHeader'
+        Digest:
+          $ref: '#/components/headers/IntegrityRest02DigestHeader'
+        Agid-JWT-Signature:
+          $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+    Conflict:
+      description: Conflict
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+      headers:
+        X-Rate-Limit-Limit:
+          $ref: '#/components/headers/RateLimitLimitHeader'
+        X-Rate-Limit-Remaining:
+          $ref: '#/components/headers/RateLimitRemainingHeader'
+        X-Rate-Limit-Interval:
+          $ref: '#/components/headers/RateLimitIntervalHeader'
+        Digest:
+          $ref: '#/components/headers/IntegrityRest02DigestHeader'
+        Agid-JWT-Signature:
+          $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+      headers:
+        X-Rate-Limit-Limit:
+          $ref: '#/components/headers/RateLimitLimitHeader'
+        X-Rate-Limit-Remaining:
+          $ref: '#/components/headers/RateLimitRemainingHeader'
+        X-Rate-Limit-Interval:
+          $ref: '#/components/headers/RateLimitIntervalHeader'
+        Digest:
+          $ref: '#/components/headers/IntegrityRest02DigestHeader'
+        Agid-JWT-Signature:
+          $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+    BadRequest:
+      description: Bad Request
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+      headers:
+        X-Rate-Limit-Limit:
+          $ref: '#/components/headers/RateLimitLimitHeader'
+        X-Rate-Limit-Remaining:
+          $ref: '#/components/headers/RateLimitRemainingHeader'
+        X-Rate-Limit-Interval:
+          $ref: '#/components/headers/RateLimitIntervalHeader'
+        Digest:
+          $ref: '#/components/headers/IntegrityRest02DigestHeader'
+        Agid-JWT-Signature:
+          $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+      headers:
+        X-Rate-Limit-Limit:
+          $ref: '#/components/headers/RateLimitLimitHeader'
+        X-Rate-Limit-Remaining:
+          $ref: '#/components/headers/RateLimitRemainingHeader'
+        X-Rate-Limit-Interval:
+          $ref: '#/components/headers/RateLimitIntervalHeader'
+        Digest:
+          $ref: '#/components/headers/IntegrityRest02DigestHeader'
+        Agid-JWT-Signature:
+          $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+    TooManyRequests:
+      description: Too Many Requests
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+      headers:
+        X-Rate-Limit-Limit:
+          $ref: '#/components/headers/RateLimitLimitHeader'
+        X-Rate-Limit-Remaining:
+          $ref: '#/components/headers/RateLimitRemainingHeader'
+        X-Rate-Limit-Interval:
+          $ref: '#/components/headers/RateLimitIntervalHeader'
+        Digest:
+          $ref: '#/components/headers/IntegrityRest02DigestHeader'
+        Agid-JWT-Signature:
+          $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+  securitySchemes:
+    DPoPAuth:
+      type: http
+      scheme: DPoP
+      description: 'This Authorization header must be used alongside the DPoP Proof JWT.
+
+        Use:
+
+        Authorization: DPoP <access_token>
+
+
+        The access token generated must also have a cnf field.
+
+        '
+    DPoPProofHeader:
+      type: apiKey
+      in: header
+      name: DPoP
+      description: 'DPoP proof JWT for sender-constrained access. Must accompany the DPoP Authorization header.
+
+        '
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-refined-from:
+- interop-api-v3.yaml
+- pagopa-pdnd-interop-v2-openapi.yml
+- pagopa-pdnd-interop-v3-openapi.yml

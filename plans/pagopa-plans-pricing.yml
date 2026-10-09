@@ -1,0 +1,13 @@
+generated: '2026-10-09'
+method: none
+name: PagoPA plans
+source: https://developer.pagopa.it/
+audience: unclear
+pricing_basis: none
+published: false
+delivery:
+  mode: managed
+plan_count: 0
+plans: []
+note: No API pricing or plans page found on developer.pagopa.it or docs.pagopa.it. Access is granted to onboarded public bodies, PSPs and partners through the Back Office / Area Riservata; no published
+  price.

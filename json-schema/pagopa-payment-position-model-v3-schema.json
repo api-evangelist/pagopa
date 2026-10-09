@@ -1,0 +1,354 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/pagopa/main/json-schema/pagopa-payment-position-model-v3-schema.json",
+  "title": "PaymentPositionModelV3",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/pagopa-gpd-v3-openapi.yml#/components/schemas/PaymentPositionModelV3",
+  "required": [
+    "companyName",
+    "iupd",
+    "paymentOption"
+  ],
+  "type": "object",
+  "properties": {
+    "iupd": {
+      "type": "string"
+    },
+    "payStandIn": {
+      "type": "boolean",
+      "description": "feature flag to enable a debt position in stand-in mode",
+      "default": "true"
+    },
+    "companyName": {
+      "maxLength": 140,
+      "minLength": 0,
+      "type": "string"
+    },
+    "officeName": {
+      "maxLength": 140,
+      "minLength": 0,
+      "type": "string"
+    },
+    "paymentDate": {
+      "type": "string",
+      "format": "date-time",
+      "readOnly": true
+    },
+    "status": {
+      "enum": [
+        "DRAFT",
+        "PUBLISHED",
+        "VALID",
+        "UNPAYABLE",
+        "PARTIALLY_PAID",
+        "PAID"
+      ],
+      "type": "string",
+      "readOnly": true
+    },
+    "paymentOption": {
+      "maxItems": 100,
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/PaymentOptionModelV3"
+      }
+    }
+  },
+  "$defs": {
+    "DebtorModel": {
+      "required": [
+        "fiscalCode",
+        "fullName",
+        "type"
+      ],
+      "type": "object",
+      "properties": {
+        "type": {
+          "enum": [
+            "F",
+            "G"
+          ],
+          "type": "string"
+        },
+        "fiscalCode": {
+          "type": "string"
+        },
+        "fullName": {
+          "type": "string"
+        },
+        "streetName": {
+          "type": "string"
+        },
+        "civicNumber": {
+          "type": "string"
+        },
+        "postalCode": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "province": {
+          "type": "string"
+        },
+        "region": {
+          "type": "string"
+        },
+        "country": {
+          "pattern": "[A-Z]{2}",
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        }
+      }
+    },
+    "InstallmentMetadataModel": {
+      "required": [
+        "key"
+      ],
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "InstallmentModel": {
+      "required": [
+        "amount",
+        "description",
+        "dueDate",
+        "iuv"
+      ],
+      "type": "object",
+      "properties": {
+        "nav": {
+          "type": "string"
+        },
+        "iuv": {
+          "type": "string"
+        },
+        "amount": {
+          "minimum": 1.0,
+          "type": "integer",
+          "format": "int64"
+        },
+        "description": {
+          "maxLength": 140,
+          "minLength": 0,
+          "type": "string"
+        },
+        "dueDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "fee": {
+          "type": "integer",
+          "format": "int64",
+          "readOnly": true
+        },
+        "notificationFee": {
+          "type": "integer",
+          "format": "int64",
+          "readOnly": true
+        },
+        "status": {
+          "enum": [
+            "UNPAID",
+            "PAID",
+            "PARTIALLY_REPORTED",
+            "REPORTED",
+            "UNPAYABLE",
+            "EXPIRED"
+          ],
+          "type": "string",
+          "readOnly": true
+        },
+        "transfer": {
+          "maxItems": 5,
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/TransferModel"
+          }
+        },
+        "installmentMetadata": {
+          "maxItems": 10,
+          "minItems": 0,
+          "uniqueItems": true,
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/InstallmentMetadataModel"
+          },
+          "description": "It can be added a maximum of 10 key-value pairs for metadata. Metadata keys must be unique within the same installment."
+        }
+      }
+    },
+    "PaymentOptionModelV3": {
+      "required": [
+        "debtor",
+        "installments",
+        "switchToExpired"
+      ],
+      "type": "object",
+      "properties": {
+        "description": {
+          "maxLength": 140,
+          "minLength": 0,
+          "type": "string",
+          "writeOnly": true
+        },
+        "validityDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "retentionDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "switchToExpired": {
+          "type": "boolean",
+          "description": "feature flag to enable the payment option to expire after the due date",
+          "default": "false"
+        },
+        "debtor": {
+          "$ref": "#/$defs/DebtorModel"
+        },
+        "installments": {
+          "maxItems": 100,
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/InstallmentModel"
+          }
+        }
+      }
+    },
+    "Stamp": {
+      "required": [
+        "hashDocument",
+        "provincialResidence",
+        "stampType"
+      ],
+      "type": "object",
+      "properties": {
+        "hashDocument": {
+          "maxLength": 72,
+          "minLength": 0,
+          "type": "string",
+          "description": "Document hash type is stBase64Binary72 as described in https://github.com/pagopa/pagopa-api."
+        },
+        "stampType": {
+          "maxLength": 2,
+          "minLength": 2,
+          "type": "string",
+          "description": "The type of the stamp"
+        },
+        "provincialResidence": {
+          "pattern": "[A-Z]{2}",
+          "type": "string",
+          "description": "The provincial of the residence"
+        }
+      }
+    },
+    "TransferMetadataModel": {
+      "required": [
+        "key",
+        "value"
+      ],
+      "type": "object",
+      "properties": {
+        "key": {
+          "maxLength": 140,
+          "minLength": 0,
+          "type": "string"
+        },
+        "value": {
+          "maxLength": 140,
+          "minLength": 0,
+          "type": "string"
+        }
+      }
+    },
+    "TransferModel": {
+      "required": [
+        "amount",
+        "category",
+        "idTransfer",
+        "remittanceInformation"
+      ],
+      "type": "object",
+      "properties": {
+        "idTransfer": {
+          "enum": [
+            "1",
+            "2",
+            "3",
+            "4",
+            "5"
+          ],
+          "type": "string"
+        },
+        "amount": {
+          "minimum": 1.0,
+          "type": "integer",
+          "format": "int64"
+        },
+        "organizationFiscalCode": {
+          "type": "string",
+          "description": "Fiscal code related to the organization targeted by this transfer."
+        },
+        "remittanceInformation": {
+          "maxLength": 140,
+          "minLength": 0,
+          "type": "string"
+        },
+        "category": {
+          "type": "string"
+        },
+        "iban": {
+          "maxLength": 35,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9]{1,35}$",
+          "type": "string",
+          "description": "mutual exclusive with stamp"
+        },
+        "postalIban": {
+          "maxLength": 35,
+          "minLength": 1,
+          "pattern": "^$|^[A-Za-z0-9]{1,35}$",
+          "type": "string",
+          "description": "optional - can be combined with iban but not with stamp"
+        },
+        "stamp": {
+          "$ref": "#/$defs/Stamp"
+        },
+        "companyName": {
+          "maxLength": 140,
+          "minLength": 0,
+          "type": "string"
+        },
+        "transferMetadata": {
+          "maxItems": 10,
+          "minItems": 0,
+          "uniqueItems": true,
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/TransferMetadataModel"
+          },
+          "description": "It can be added a maximum of 10 key-value pairs for metadata. Metadata keys must be unique within the same transfer."
+        }
+      }
+    }
+  }
+}

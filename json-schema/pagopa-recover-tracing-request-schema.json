@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/pagopa/main/json-schema/pagopa-recover-tracing-request-schema.json",
+  "title": "RecoverTracingRequest",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/pagopa-pdnd-tracing-openapi.yml#/components/schemas/RecoverTracingRequest",
+  "type": "object",
+  "properties": {
+    "file": {
+      "type": "string",
+      "format": "binary",
+      "description": "The CSV file to upload containing tracing data. <br><br> Example format: <br> `date,purpose_id,token_id,status,requests_count` <br> `2023-05-01,0e1114e6-31d1-41a4-811d-a0c3d1b70bbf,4e1234e6-31d1-41a4-811d-a0c3d1b70aad,404,100`"
+    }
+  },
+  "required": [
+    "file"
+  ]
+}

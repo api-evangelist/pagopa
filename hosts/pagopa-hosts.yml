@@ -1,0 +1,255 @@
+generated: '2026-10-09'
+method: derived
+source: the pre-flight dossier, apis.yml pointers, spec servers, well-known, vendors -- nothing fetched here
+generator: derive-hosts.py
+summary:
+  hosts: 21
+  own: 17
+  other_domain: 1
+  platform: 3
+  roles:
+  - api
+  - docs
+  - identity
+  - marketing
+  - other
+  - portal
+  - source
+  - status
+  - support
+  - website
+hosts:
+- host: api-emd.cstar.pagopa.it
+  found_by:
+  - apis[]
+  types: []
+  serves:
+  - api
+  registrable_domain: pagopa.it
+  role: other
+  relation: own
+- host: api-io.uat.cstar.pagopa.it
+  found_by:
+  - apis[]
+  types: []
+  serves:
+  - api
+  registrable_domain: pagopa.it
+  role: other
+  relation: own
+- host: api-rtp-cb.cstar.pagopa.it
+  found_by:
+  - apis[]
+  types: []
+  serves:
+  - api
+  registrable_domain: pagopa.it
+  role: other
+  relation: own
+- host: api-rtp.cstar.pagopa.it
+  found_by:
+  - apis[]
+  types: []
+  serves:
+  - api
+  registrable_domain: pagopa.it
+  role: other
+  relation: own
+- host: api.interop.pagopa.it
+  found_by:
+  - apis[]
+  - vendor-detect
+  types: []
+  serves:
+  - api
+  - api-gateway
+  vendor: aws-api-gateway
+  registrable_domain: pagopa.it
+  role: api
+  relation: own
+- host: api.io.pagopa.it
+  found_by:
+  - apis[]
+  types: []
+  serves:
+  - api
+  registrable_domain: pagopa.it
+  role: api
+  relation: own
+- host: api.notifichedigitali.it
+  found_by:
+  - pointer
+  - apis[]
+  types:
+  - StatusPage
+  serves:
+  - api
+  registrable_domain: notifichedigitali.it
+  role: status
+  relation: other-domain
+- host: api.pagopa.it
+  found_by:
+  - contract-discovery
+  types: []
+  serves: []
+  registrable_domain: pagopa.it
+  role: api
+  relation: own
+- host: api.platform.pagopa.it
+  found_by:
+  - apis[]
+  types: []
+  serves:
+  - api
+  registrable_domain: pagopa.it
+  role: api
+  relation: own
+- host: api.signalhub.interop.pagopa.it
+  found_by:
+  - apis[]
+  types: []
+  serves:
+  - api
+  registrable_domain: pagopa.it
+  role: api
+  relation: own
+- host: api.tracing.interop.pagopa.it
+  found_by:
+  - apis[]
+  types: []
+  serves:
+  - api
+  registrable_domain: pagopa.it
+  role: api
+  relation: own
+- host: api.uat.platform.pagopa.it
+  found_by:
+  - apis[]
+  types: []
+  serves:
+  - api
+  registrable_domain: pagopa.it
+  role: api
+  relation: own
+- host: centroassistenza.pagopa.it
+  found_by:
+  - pointer
+  - probed
+  - site-links
+  - contract-discovery
+  - well-known
+  - vendor-detect
+  types:
+  - Support
+  serves:
+  - support
+  vendor: zendesk
+  registrable_domain: pagopa.it
+  role: support
+  relation: own
+- host: developer.pagopa.it
+  found_by:
+  - pointer
+  - apis[]
+  - probed
+  - site-links
+  - docs-index
+  - contract-discovery
+  - well-known
+  types:
+  - GettingStarted
+  - DeveloperPortal
+  - TermsOfService
+  - PrivacyPolicy
+  serves:
+  - docs
+  registrable_domain: pagopa.it
+  role: portal
+  relation: own
+- host: docs.pagopa.it
+  found_by:
+  - pointer
+  - probed
+  - site-links
+  - docs-index
+  - contract-discovery
+  - well-known
+  - vendor-detect
+  types:
+  - Documentation
+  serves:
+  - docs
+  - cdn
+  - hosting
+  vendor: cloudflare
+  registrable_domain: pagopa.it
+  role: docs
+  relation: own
+- host: github.com
+  found_by:
+  - pointer
+  types:
+  - GitHubOrganization
+  - SpectralRules
+  serves: []
+  registrable_domain: github.com
+  role: source
+  relation: platform
+- host: medium.com
+  found_by:
+  - pointer
+  types:
+  - Blog
+  serves: []
+  registrable_domain: medium.com
+  role: marketing
+  relation: platform
+- host: mtls.eservices.att.interop.pagopa.it
+  found_by:
+  - apis[]
+  types: []
+  serves:
+  - api
+  registrable_domain: pagopa.it
+  role: other
+  relation: own
+- host: selfcare.pagopa.it
+  found_by:
+  - pointer
+  - probed
+  - site-links
+  - well-known
+  types:
+  - Login
+  serves: []
+  registrable_domain: pagopa.it
+  role: identity
+  relation: own
+- host: www.linkedin.com
+  found_by:
+  - pointer
+  types:
+  - LinkedIn
+  serves: []
+  registrable_domain: linkedin.com
+  role: other
+  relation: platform
+- host: www.pagopa.it
+  found_by:
+  - pointer
+  - probed
+  - contract-discovery
+  - well-known
+  - vendor-detect
+  types:
+  - Website
+  - Contact
+  - Newsroom
+  - Security
+  - Compliance
+  serves:
+  - cdn
+  vendor: cloudfront
+  registrable_domain: pagopa.it
+  role: website
+  relation: own

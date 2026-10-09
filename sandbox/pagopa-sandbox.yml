@@ -1,0 +1,32 @@
+generated: '2026-10-09'
+method: searched
+source:
+- https://docs.pagopa.it/manuale-back-office-pagopa/readme/funzionalita/generazione-api-key
+- https://docs.pagopa.it/centrostella-1/centro-stella/instructions-for-agenzia-delle-entrate-mandate/how-to-join/02.-integrate-pagopa-environments
+- https://docs.pagopa.it/interoperabilita-1/manuale-operativo/ambienti-disponibili
+description: 'PagoPA products run a separate test environment ("Ambiente di Collaudo" / UAT) beside production. For the pagoPA platform, API keys are generated per environment in the Back Office: "Solo
+  dopo aver completato la generazione nel primo ambiente selezionato, sarà possibile effettuarla anche nel secondo (ovvero "Produzione")." Centro Stella integrators request mTLS certificates and a subscription
+  key for both PRODUCTION and UAT. PDND Interoperabilità provides collaudo and produzione environments. No test cards, fixtures or time simulation are published.'
+docs: https://docs.pagopa.it/manuale-back-office-pagopa/readme/funzionalita/generazione-api-key
+modes:
+- name: collaudo (UAT)
+  description: 'Ambiente di Collaudo: test environment'
+- name: produzione
+  description: Ambiente di Produzione
+environments:
+- name: pagoPA platform UAT
+  base_url: https://api.uat.platform.pagopa.it
+  evidence: servers[] of openapi/pagopa-payment-options-psp-openapi.yml
+- name: SEND UAT
+  base_url: https://api.uat.notifichedigitali.it
+  evidence: servers[] of openapi/pagopa-send-b2b-pa-openapi.yml
+- name: CStar UAT (SRTP, MdC, PARI)
+  base_url: https://api-rtp.uat.cstar.pagopa.it, https://api-emd.uat.cstar.pagopa.it, https://api-io.uat.cstar.pagopa.it
+  evidence: servers[] of the srtp-*, mdc-* and pari-ecommerce specs
+- name: MdC TPP testing API
+  evidence: openapi/pagopa-mdc-tpp-testing-openapi.yml is a dedicated testing contract for TPPs
+key_formats:
+  note: Keys are per-environment Azure APIM subscription keys (header Ocp-Apim-Subscription-Key or query subscription-key); no visible test/live prefix is documented.
+gaps:
+- No published test cards, test IBANs or fixture data
+- No time simulation or event triggers

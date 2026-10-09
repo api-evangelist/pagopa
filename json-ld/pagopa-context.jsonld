@@ -1,0 +1,1219 @@
+{
+  "@context": {
+    "@vocab": "https://pagopa.it/schema#",
+    "schema": "https://schema.org/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "dcterms": "http://purl.org/dc/terms/",
+    "pagopa": "https://pagopa.it/schema#",
+    "NewDebtPositionRequest": "pagopa:NewDebtPositionRequest",
+    "paFiscalCode": {
+      "@id": "pagopa:paFiscalCode",
+      "@type": "xsd:string"
+    },
+    "entityType": {
+      "@id": "pagopa:entityType",
+      "@type": "xsd:string"
+    },
+    "entityFiscalCode": {
+      "@id": "pagopa:entityFiscalCode",
+      "@type": "xsd:string"
+    },
+    "entityFullName": {
+      "@id": "pagopa:entityFullName",
+      "@type": "xsd:string"
+    },
+    "iuv": {
+      "@id": "pagopa:iuv",
+      "@type": "xsd:string"
+    },
+    "nav": {
+      "@id": "pagopa:nav",
+      "@type": "xsd:string"
+    },
+    "amount": {
+      "@id": "pagopa:amount",
+      "@type": "@id"
+    },
+    "description": {
+      "@id": "pagopa:description",
+      "@type": "xsd:string"
+    },
+    "expirationDate": {
+      "@id": "pagopa:expirationDate",
+      "@type": "xsd:dateTime"
+    },
+    "iban": {
+      "@id": "pagopa:iban",
+      "@type": "xsd:string"
+    },
+    "postalIban": {
+      "@id": "pagopa:postalIban",
+      "@type": "xsd:string"
+    },
+    "switchToExpired": {
+      "@id": "pagopa:switchToExpired",
+      "@type": "xsd:boolean"
+    },
+    "payStandIn": {
+      "@id": "pagopa:payStandIn",
+      "@type": "xsd:boolean"
+    },
+    "DebtPositionResponse": "pagopa:DebtPositionResponse",
+    "companyName": {
+      "@id": "pagopa:companyName",
+      "@type": "xsd:string"
+    },
+    "status": {
+      "@id": "pagopa:status",
+      "@type": "xsd:string"
+    },
+    "ProblemJson": "pagopa:ProblemJson",
+    "type": {
+      "@id": "pagopa:type",
+      "@type": "@id"
+    },
+    "title": {
+      "@id": "pagopa:title",
+      "@type": "xsd:string"
+    },
+    "detail": {
+      "@id": "pagopa:detail",
+      "@type": "xsd:string"
+    },
+    "instance": {
+      "@id": "pagopa:instance",
+      "@type": "@id"
+    },
+    "AppInfo": "pagopa:AppInfo",
+    "environment": {
+      "@id": "pagopa:environment",
+      "@type": "xsd:string"
+    },
+    "name": {
+      "@id": "pagopa:name",
+      "@type": "xsd:string"
+    },
+    "version": {
+      "@id": "pagopa:version",
+      "@type": "xsd:string"
+    },
+    "BrokerInstitutionResource": "pagopa:BrokerInstitutionResource",
+    "aca": {
+      "@id": "pagopa:aca",
+      "@type": "xsd:boolean"
+    },
+    "activationDate": {
+      "@id": "pagopa:activationDate",
+      "@type": "xsd:dateTime"
+    },
+    "applicationCode": {
+      "@id": "pagopa:applicationCode",
+      "@type": "xsd:string"
+    },
+    "auxDigit": {
+      "@id": "pagopa:auxDigit",
+      "@type": "xsd:string"
+    },
+    "broadcast": {
+      "@id": "pagopa:broadcast",
+      "@type": "xsd:boolean"
+    },
+    "brokerCompanyName": {
+      "@id": "pagopa:brokerCompanyName",
+      "@type": "xsd:string"
+    },
+    "brokerTaxCode": {
+      "@id": "pagopa:brokerTaxCode",
+      "@type": "xsd:string"
+    },
+    "cbillCode": {
+      "@id": "pagopa:cbillCode",
+      "@type": "xsd:string"
+    },
+    "ciStatus": {
+      "@id": "pagopa:ciStatus",
+      "@type": "xsd:boolean"
+    },
+    "endpointMU": {
+      "@id": "pagopa:endpointMU",
+      "@type": "xsd:string"
+    },
+    "endpointRT": {
+      "@id": "pagopa:endpointRT",
+      "@type": "xsd:string"
+    },
+    "endpointRedirect": {
+      "@id": "pagopa:endpointRedirect",
+      "@type": "xsd:string"
+    },
+    "intermediated": {
+      "@id": "pagopa:intermediated",
+      "@type": "xsd:boolean"
+    },
+    "model": {
+      "@id": "pagopa:model",
+      "@type": "xsd:integer"
+    },
+    "primitiveVersion": {
+      "@id": "pagopa:primitiveVersion",
+      "@type": "xsd:integer"
+    },
+    "pspPayment": {
+      "@id": "pagopa:pspPayment",
+      "@type": "xsd:boolean"
+    },
+    "segregationCode": {
+      "@id": "pagopa:segregationCode",
+      "@type": "xsd:string"
+    },
+    "standIn": {
+      "@id": "pagopa:standIn",
+      "@type": "xsd:boolean"
+    },
+    "stationId": {
+      "@id": "pagopa:stationId",
+      "@type": "xsd:string"
+    },
+    "stationState": {
+      "@id": "pagopa:stationState",
+      "@type": "xsd:string"
+    },
+    "taxCode": {
+      "@id": "pagopa:taxCode",
+      "@type": "xsd:string"
+    },
+    "BrokerInstitutionsResponse": "pagopa:BrokerInstitutionsResponse",
+    "creditorInstitutions": {
+      "@id": "pagopa:creditorInstitutions",
+      "@container": "@list"
+    },
+    "pageInfo": {
+      "@id": "pagopa:pageInfo",
+      "@type": "@id"
+    },
+    "CIIbansResource": "pagopa:CIIbansResource",
+    "ciFiscalCode": {
+      "@id": "pagopa:ciFiscalCode",
+      "@type": "xsd:string"
+    },
+    "ciName": {
+      "@id": "pagopa:ciName",
+      "@type": "xsd:string"
+    },
+    "label": {
+      "@id": "pagopa:label",
+      "@type": "xsd:string"
+    },
+    "validityDate": {
+      "@id": "pagopa:validityDate",
+      "@type": "xsd:dateTime"
+    },
+    "CIIbansResponse": "pagopa:CIIbansResponse",
+    "ibans": {
+      "@id": "pagopa:ibans",
+      "@container": "@list"
+    },
+    "PageInfo": "pagopa:PageInfo",
+    "limit": {
+      "@id": "pagopa:limit",
+      "@type": "xsd:integer"
+    },
+    "page": {
+      "@id": "pagopa:page",
+      "@type": "xsd:integer"
+    },
+    "totalElements": {
+      "@id": "pagopa:totalElements",
+      "@type": "xsd:integer"
+    },
+    "totalPages": {
+      "@id": "pagopa:totalPages",
+      "@type": "xsd:integer"
+    },
+    "CtReceiptModelResponse": "pagopa:CtReceiptModelResponse",
+    "receiptId": {
+      "@id": "pagopa:receiptId",
+      "@type": "xsd:string"
+    },
+    "noticeNumber": {
+      "@id": "pagopa:noticeNumber",
+      "@type": "xsd:string"
+    },
+    "fiscalCode": {
+      "@id": "pagopa:fiscalCode",
+      "@type": "xsd:string"
+    },
+    "outcome": {
+      "@id": "pagopa:outcome",
+      "@type": "xsd:string"
+    },
+    "creditorReferenceId": {
+      "@id": "pagopa:creditorReferenceId",
+      "@type": "xsd:string"
+    },
+    "paymentAmount": {
+      "@id": "pagopa:paymentAmount",
+      "@type": "xsd:decimal"
+    },
+    "officeName": {
+      "@id": "pagopa:officeName",
+      "@type": "xsd:string"
+    },
+    "debtor": {
+      "@id": "pagopa:debtor",
+      "@type": "@id"
+    },
+    "transferList": {
+      "@id": "pagopa:transferList",
+      "@container": "@list"
+    },
+    "idPSP": {
+      "@id": "pagopa:idPSP",
+      "@type": "xsd:string"
+    },
+    "pspFiscalCode": {
+      "@id": "pagopa:pspFiscalCode",
+      "@type": "xsd:string"
+    },
+    "pspPartitaIVA": {
+      "@id": "pagopa:pspPartitaIVA",
+      "@type": "xsd:string"
+    },
+    "pspCompanyName": {
+      "@id": "pagopa:pspCompanyName",
+      "@type": "xsd:string"
+    },
+    "idChannel": {
+      "@id": "pagopa:idChannel",
+      "@type": "xsd:string"
+    },
+    "channelDescription": {
+      "@id": "pagopa:channelDescription",
+      "@type": "xsd:string"
+    },
+    "payer": {
+      "@id": "pagopa:payer",
+      "@type": "@id"
+    },
+    "paymentMethod": {
+      "@id": "pagopa:paymentMethod",
+      "@type": "xsd:string"
+    },
+    "fee": {
+      "@id": "pagopa:fee",
+      "@type": "xsd:decimal"
+    },
+    "primaryCiIncurredFee": {
+      "@id": "pagopa:primaryCiIncurredFee",
+      "@type": "xsd:decimal"
+    },
+    "idBundle": {
+      "@id": "pagopa:idBundle",
+      "@type": "xsd:string"
+    },
+    "idCiBundle": {
+      "@id": "pagopa:idCiBundle",
+      "@type": "xsd:string"
+    },
+    "paymentDateTime": {
+      "@id": "pagopa:paymentDateTime",
+      "@type": "xsd:date"
+    },
+    "paymentDateTimeFormatted": {
+      "@id": "pagopa:paymentDateTimeFormatted",
+      "@type": "xsd:dateTime"
+    },
+    "applicationDate": {
+      "@id": "pagopa:applicationDate",
+      "@type": "xsd:date"
+    },
+    "transferDate": {
+      "@id": "pagopa:transferDate",
+      "@type": "xsd:date"
+    },
+    "metadata": {
+      "@id": "pagopa:metadata",
+      "@container": "@list"
+    },
+    "Debtor": "pagopa:Debtor",
+    "entityUniqueIdentifierType": {
+      "@id": "pagopa:entityUniqueIdentifierType",
+      "@type": "xsd:string"
+    },
+    "entityUniqueIdentifierValue": {
+      "@id": "pagopa:entityUniqueIdentifierValue",
+      "@type": "xsd:string"
+    },
+    "fullName": {
+      "@id": "pagopa:fullName",
+      "@type": "xsd:string"
+    },
+    "streetName": {
+      "@id": "pagopa:streetName",
+      "@type": "xsd:string"
+    },
+    "civicNumber": {
+      "@id": "pagopa:civicNumber",
+      "@type": "xsd:string"
+    },
+    "postalCode": {
+      "@id": "pagopa:postalCode",
+      "@type": "xsd:string"
+    },
+    "city": {
+      "@id": "pagopa:city",
+      "@type": "xsd:string"
+    },
+    "stateProvinceRegion": {
+      "@id": "pagopa:stateProvinceRegion",
+      "@type": "xsd:string"
+    },
+    "country": {
+      "@id": "pagopa:country",
+      "@type": "xsd:string"
+    },
+    "email": {
+      "@id": "pagopa:email",
+      "@type": "xsd:string"
+    },
+    "MapEntry": "pagopa:MapEntry",
+    "key": {
+      "@id": "pagopa:key",
+      "@type": "xsd:string"
+    },
+    "value": {
+      "@id": "pagopa:value",
+      "@type": "xsd:string"
+    },
+    "Payer": "pagopa:Payer",
+    "TransferPA": "pagopa:TransferPA",
+    "idTransfer": {
+      "@id": "pagopa:idTransfer",
+      "@type": "xsd:integer"
+    },
+    "transferAmount": {
+      "@id": "pagopa:transferAmount",
+      "@type": "xsd:decimal"
+    },
+    "fiscalCodePA": {
+      "@id": "pagopa:fiscalCodePA",
+      "@type": "xsd:string"
+    },
+    "mbdAttachment": {
+      "@id": "pagopa:mbdAttachment",
+      "@type": "xsd:string"
+    },
+    "remittanceInformation": {
+      "@id": "pagopa:remittanceInformation",
+      "@type": "xsd:string"
+    },
+    "transferCategory": {
+      "@id": "pagopa:transferCategory",
+      "@type": "xsd:string"
+    },
+    "CartRequest": "pagopa:CartRequest",
+    "emailNotice": {
+      "@id": "pagopa:emailNotice",
+      "@type": "xsd:string"
+    },
+    "paymentNotices": {
+      "@id": "pagopa:paymentNotices",
+      "@container": "@list"
+    },
+    "returnUrls": {
+      "@id": "pagopa:returnUrls"
+    },
+    "idCart": {
+      "@id": "pagopa:idCart",
+      "@type": "xsd:string"
+    },
+    "allCCP": {
+      "@id": "pagopa:allCCP",
+      "@type": "xsd:boolean"
+    },
+    "PaymentNotice": "pagopa:PaymentNotice",
+    "TransactionResultRequest": "pagopa:TransactionResultRequest",
+    "idPsp": {
+      "@id": "pagopa:idPsp",
+      "@type": "xsd:string"
+    },
+    "idPSPTransaction": {
+      "@id": "pagopa:idPSPTransaction",
+      "@type": "xsd:string"
+    },
+    "details": {
+      "@id": "pagopa:details",
+      "@type": "@id"
+    },
+    "TransactionAuthorizedOutcomeDetails": "pagopa:TransactionAuthorizedOutcomeDetails",
+    "timestampOperation": {
+      "@id": "pagopa:timestampOperation",
+      "@type": "xsd:dateTime"
+    },
+    "authorizationCode": {
+      "@id": "pagopa:authorizationCode",
+      "@type": "xsd:string"
+    },
+    "TransactionDeniedOutcomeDetails": "pagopa:TransactionDeniedOutcomeDetails",
+    "errorCode": {
+      "@id": "pagopa:errorCode",
+      "@type": "xsd:string"
+    },
+    "TransactionResultResponse": "pagopa:TransactionResultResponse",
+    "idTransaction": {
+      "@id": "pagopa:idTransaction",
+      "@type": "@id"
+    },
+    "AuthorizationOutcome": "pagopa:AuthorizationOutcome",
+    "AuthorizationResponseOutcome": "pagopa:AuthorizationResponseOutcome",
+    "AddPaymentRequest": "pagopa:AddPaymentRequest",
+    "payments": {
+      "@id": "pagopa:payments",
+      "@container": "@list"
+    },
+    "CreateFlowRequest": "pagopa:CreateFlowRequest",
+    "fdr": {
+      "@id": "pagopa:fdr",
+      "@type": "xsd:string"
+    },
+    "fdrDate": {
+      "@id": "pagopa:fdrDate",
+      "@type": "@id"
+    },
+    "sender": {
+      "@id": "pagopa:sender",
+      "@type": "@id"
+    },
+    "receiver": {
+      "@id": "pagopa:receiver",
+      "@type": "@id"
+    },
+    "regulation": {
+      "@id": "pagopa:regulation",
+      "@type": "xsd:string"
+    },
+    "regulationDate": {
+      "@id": "pagopa:regulationDate",
+      "@type": "@id"
+    },
+    "bicCodePouringBank": {
+      "@id": "pagopa:bicCodePouringBank",
+      "@type": "xsd:string"
+    },
+    "totPayments": {
+      "@id": "pagopa:totPayments",
+      "@type": "xsd:integer"
+    },
+    "sumPayments": {
+      "@id": "pagopa:sumPayments",
+      "@type": "xsd:decimal"
+    },
+    "DeletePaymentRequest": "pagopa:DeletePaymentRequest",
+    "indexList": {
+      "@id": "pagopa:indexList",
+      "@container": "@list"
+    },
+    "ErrorMessage": "pagopa:ErrorMessage",
+    "path": {
+      "@id": "pagopa:path",
+      "@type": "xsd:string"
+    },
+    "message": {
+      "@id": "pagopa:message",
+      "@type": "xsd:string"
+    },
+    "ErrorResponse": "pagopa:ErrorResponse",
+    "errorId": {
+      "@id": "pagopa:errorId",
+      "@type": "xsd:string"
+    },
+    "httpStatusCode": {
+      "@id": "pagopa:httpStatusCode",
+      "@type": "xsd:integer"
+    },
+    "httpStatusDescription": {
+      "@id": "pagopa:httpStatusDescription",
+      "@type": "xsd:string"
+    },
+    "appErrorCode": {
+      "@id": "pagopa:appErrorCode",
+      "@type": "xsd:string"
+    },
+    "errors": {
+      "@id": "pagopa:errors",
+      "@container": "@list"
+    },
+    "FlowByCICreated": "pagopa:FlowByCICreated",
+    "organizationId": {
+      "@id": "pagopa:organizationId",
+      "@type": "xsd:string"
+    },
+    "revision": {
+      "@id": "pagopa:revision",
+      "@type": "xsd:integer"
+    },
+    "created": {
+      "@id": "pagopa:created",
+      "@type": "@id"
+    },
+    "FlowByCIPublished": "pagopa:FlowByCIPublished",
+    "published": {
+      "@id": "pagopa:published",
+      "@type": "@id"
+    },
+    "FlowByPSP": "pagopa:FlowByPSP",
+    "pspId": {
+      "@id": "pagopa:pspId",
+      "@type": "xsd:string"
+    },
+    "flowDate": {
+      "@id": "pagopa:flowDate",
+      "@type": "@id"
+    },
+    "FlowBySenderAndReceiver": "pagopa:FlowBySenderAndReceiver",
+    "GenericResponse": "pagopa:GenericResponse",
+    "InfoResponse": "pagopa:InfoResponse",
+    "InternalAddPaymentRequest": "pagopa:InternalAddPaymentRequest",
+    "InternalDeletePaymentRequest": "pagopa:InternalDeletePaymentRequest",
+    "Metadata": "pagopa:Metadata",
+    "pageSize": {
+      "@id": "pagopa:pageSize",
+      "@type": "xsd:integer"
+    },
+    "pageNumber": {
+      "@id": "pagopa:pageNumber",
+      "@type": "xsd:integer"
+    },
+    "totPage": {
+      "@id": "pagopa:totPage",
+      "@type": "xsd:integer"
+    },
+    "PaginatedFlowsBySenderAndReceiverResponse": "pagopa:PaginatedFlowsBySenderAndReceiverResponse",
+    "count": {
+      "@id": "pagopa:count",
+      "@type": "xsd:integer"
+    },
+    "data": {
+      "@id": "pagopa:data",
+      "@container": "@list"
+    },
+    "PaginatedFlowsCreatedResponse": "pagopa:PaginatedFlowsCreatedResponse",
+    "PaginatedFlowsPublishedResponse": "pagopa:PaginatedFlowsPublishedResponse",
+    "PaginatedFlowsResponse": "pagopa:PaginatedFlowsResponse",
+    "PaginatedPaymentsResponse": "pagopa:PaginatedPaymentsResponse",
+    "Payment": "pagopa:Payment",
+    "index": {
+      "@id": "pagopa:index",
+      "@type": "xsd:integer"
+    },
+    "iur": {
+      "@id": "pagopa:iur",
+      "@type": "xsd:string"
+    },
+    "pay": {
+      "@id": "pagopa:pay",
+      "@type": "xsd:decimal"
+    },
+    "payStatus": {
+      "@id": "pagopa:payStatus",
+      "@type": "xsd:string"
+    },
+    "payDate": {
+      "@id": "pagopa:payDate",
+      "@type": "@id"
+    },
+    "Receiver": "pagopa:Receiver",
+    "id": {
+      "@id": "pagopa:id",
+      "@type": "xsd:string"
+    },
+    "organizationName": {
+      "@id": "pagopa:organizationName",
+      "@type": "xsd:string"
+    },
+    "ReportingFlowStatusEnum": "pagopa:ReportingFlowStatusEnum",
+    "Sender": "pagopa:Sender",
+    "pspName": {
+      "@id": "pagopa:pspName",
+      "@type": "xsd:string"
+    },
+    "pspBrokerId": {
+      "@id": "pagopa:pspBrokerId",
+      "@type": "xsd:string"
+    },
+    "channelId": {
+      "@id": "pagopa:channelId",
+      "@type": "xsd:string"
+    },
+    "password": {
+      "@id": "pagopa:password",
+      "@type": "xsd:string"
+    },
+    "SenderTypeEnum": "pagopa:SenderTypeEnum",
+    "SingleFlowCreatedResponse": "pagopa:SingleFlowCreatedResponse",
+    "updated": {
+      "@id": "pagopa:updated",
+      "@type": "@id"
+    },
+    "computedTotPayments": {
+      "@id": "pagopa:computedTotPayments",
+      "@type": "xsd:integer"
+    },
+    "computedSumPayments": {
+      "@id": "pagopa:computedSumPayments",
+      "@type": "xsd:decimal"
+    },
+    "SingleFlowResponse": "pagopa:SingleFlowResponse",
+    "ProblemDetail": "pagopa:ProblemDetail",
+    "Clause": "pagopa:Clause",
+    "ExistingSignatureFieldAttrs": "pagopa:ExistingSignatureFieldAttrs",
+    "unique_name": {
+      "@id": "pagopa:unique_name",
+      "@type": "xsd:string"
+    },
+    "SignatureFieldToBeCreatedAttrs": "pagopa:SignatureFieldToBeCreatedAttrs",
+    "coordinates": {
+      "@id": "pagopa:coordinates"
+    },
+    "size": {
+      "@id": "pagopa:size"
+    },
+    "SignatureField": "pagopa:SignatureField",
+    "attrs": {
+      "@id": "pagopa:attrs",
+      "@type": "@id"
+    },
+    "clause": {
+      "@id": "pagopa:clause",
+      "@type": "@id"
+    },
+    "DocumentMetadata": "pagopa:DocumentMetadata",
+    "signature_fields": {
+      "@id": "pagopa:signature_fields",
+      "@container": "@list"
+    },
+    "CreateDossierBody": "pagopa:CreateDossierBody",
+    "support_email": {
+      "@id": "pagopa:support_email",
+      "@type": "@id"
+    },
+    "documents_metadata": {
+      "@id": "pagopa:documents_metadata",
+      "@type": "@id"
+    },
+    "DossierDetailView": "pagopa:DossierDetailView",
+    "created_at": {
+      "@id": "pagopa:created_at",
+      "@type": "@id"
+    },
+    "updated_at": {
+      "@id": "pagopa:updated_at",
+      "@type": "@id"
+    },
+    "GetSignerByFiscalCodeBody": "pagopa:GetSignerByFiscalCodeBody",
+    "fiscal_code": {
+      "@id": "pagopa:fiscal_code",
+      "@type": "@id"
+    },
+    "SignerDetailView": "pagopa:SignerDetailView",
+    "CreateSignatureRequestBody": "pagopa:CreateSignatureRequestBody",
+    "dossier_id": {
+      "@id": "pagopa:dossier_id",
+      "@type": "@id"
+    },
+    "signer_id": {
+      "@id": "pagopa:signer_id",
+      "@type": "@id"
+    },
+    "expires_at": {
+      "@id": "pagopa:expires_at",
+      "@type": "@id"
+    },
+    "Document": "pagopa:Document",
+    "SignatureRequestDetailView": "pagopa:SignatureRequestDetailView",
+    "documents": {
+      "@id": "pagopa:documents",
+      "@container": "@list"
+    },
+    "notification": {
+      "@id": "pagopa:notification",
+      "@type": "@id"
+    },
+    "signed_at": {
+      "@id": "pagopa:signed_at",
+      "@type": "@id"
+    },
+    "rejected_at": {
+      "@id": "pagopa:rejected_at",
+      "@type": "@id"
+    },
+    "reject_reason": {
+      "@id": "pagopa:reject_reason",
+      "@type": "xsd:string"
+    },
+    "qr_code_url": {
+      "@id": "pagopa:qr_code_url",
+      "@type": "@id"
+    },
+    "cancelled_at": {
+      "@id": "pagopa:cancelled_at",
+      "@type": "@id"
+    },
+    "SignatureRequestListView": "pagopa:SignatureRequestListView",
+    "SignatureRequestList": "pagopa:SignatureRequestList",
+    "items": {
+      "@id": "pagopa:items",
+      "@container": "@list"
+    },
+    "continuation_token": {
+      "@id": "pagopa:continuation_token",
+      "@type": "xsd:string"
+    },
+    "NotificationDetailView": "pagopa:NotificationDetailView",
+    "io_message_id": {
+      "@id": "pagopa:io_message_id",
+      "@type": "xsd:string"
+    },
+    "DocumentValidationResult": "pagopa:DocumentValidationResult",
+    "is_valid": {
+      "@id": "pagopa:is_valid",
+      "@type": "xsd:boolean"
+    },
+    "violations": {
+      "@id": "pagopa:violations",
+      "@container": "@list"
+    },
+    "PaymentOptionMetadataModel": "pagopa:PaymentOptionMetadataModel",
+    "PaymentOptionModel": "pagopa:PaymentOptionModel",
+    "isPartialPayment": {
+      "@id": "pagopa:isPartialPayment",
+      "@type": "xsd:boolean"
+    },
+    "dueDate": {
+      "@id": "pagopa:dueDate",
+      "@type": "xsd:dateTime"
+    },
+    "retentionDate": {
+      "@id": "pagopa:retentionDate",
+      "@type": "xsd:dateTime"
+    },
+    "notificationFee": {
+      "@id": "pagopa:notificationFee",
+      "@type": "xsd:integer"
+    },
+    "transfer": {
+      "@id": "pagopa:transfer",
+      "@container": "@list"
+    },
+    "paymentOptionMetadata": {
+      "@id": "pagopa:paymentOptionMetadata",
+      "@container": "@list"
+    },
+    "PaymentPositionModel": "pagopa:PaymentPositionModel",
+    "iupd": {
+      "@id": "pagopa:iupd",
+      "@type": "xsd:string"
+    },
+    "province": {
+      "@id": "pagopa:province",
+      "@type": "xsd:string"
+    },
+    "region": {
+      "@id": "pagopa:region",
+      "@type": "xsd:string"
+    },
+    "phone": {
+      "@id": "pagopa:phone",
+      "@type": "xsd:string"
+    },
+    "paymentDate": {
+      "@id": "pagopa:paymentDate",
+      "@type": "xsd:dateTime"
+    },
+    "paymentOption": {
+      "@id": "pagopa:paymentOption",
+      "@container": "@list"
+    },
+    "Stamp": "pagopa:Stamp",
+    "hashDocument": {
+      "@id": "pagopa:hashDocument",
+      "@type": "xsd:string"
+    },
+    "stampType": {
+      "@id": "pagopa:stampType",
+      "@type": "xsd:string"
+    },
+    "provincialResidence": {
+      "@id": "pagopa:provincialResidence",
+      "@type": "xsd:string"
+    },
+    "TransferMetadataModel": "pagopa:TransferMetadataModel",
+    "TransferModel": "pagopa:TransferModel",
+    "organizationFiscalCode": {
+      "@id": "pagopa:organizationFiscalCode",
+      "@type": "xsd:string"
+    },
+    "category": {
+      "@id": "pagopa:category",
+      "@type": "xsd:string"
+    },
+    "stamp": {
+      "@id": "pagopa:stamp",
+      "@type": "@id"
+    },
+    "transferMetadata": {
+      "@id": "pagopa:transferMetadata",
+      "@container": "@list"
+    },
+    "AlreadyPaidPaymentOptionModel": "pagopa:AlreadyPaidPaymentOptionModel",
+    "PaymentOptionMetadataModelResponse": "pagopa:PaymentOptionMetadataModelResponse",
+    "PaymentsModelResponse": "pagopa:PaymentsModelResponse",
+    "reportingDate": {
+      "@id": "pagopa:reportingDate",
+      "@type": "xsd:dateTime"
+    },
+    "insertedDate": {
+      "@id": "pagopa:insertedDate",
+      "@type": "xsd:dateTime"
+    },
+    "pspCompany": {
+      "@id": "pagopa:pspCompany",
+      "@type": "xsd:string"
+    },
+    "idReceipt": {
+      "@id": "pagopa:idReceipt",
+      "@type": "xsd:string"
+    },
+    "idFlowReporting": {
+      "@id": "pagopa:idFlowReporting",
+      "@type": "xsd:string"
+    },
+    "lastUpdatedDate": {
+      "@id": "pagopa:lastUpdatedDate",
+      "@type": "xsd:dateTime"
+    },
+    "lastUpdatedDateNotificationFee": {
+      "@id": "pagopa:lastUpdatedDateNotificationFee",
+      "@type": "xsd:dateTime"
+    },
+    "serviceType": {
+      "@id": "pagopa:serviceType",
+      "@type": "xsd:string"
+    },
+    "TransferMetadataModelResponse": "pagopa:TransferMetadataModelResponse",
+    "TransferModelResponse": "pagopa:TransferModelResponse",
+    "PaymentOptionModelResponse": "pagopa:PaymentOptionModelResponse",
+    "PaymentPositionModelBaseResponse": "pagopa:PaymentPositionModelBaseResponse",
+    "publishDate": {
+      "@id": "pagopa:publishDate",
+      "@type": "xsd:dateTime"
+    },
+    "PaymentPositionsInfo": "pagopa:PaymentPositionsInfo",
+    "payment_position_list": {
+      "@id": "pagopa:payment_position_list",
+      "@container": "@list"
+    },
+    "page_info": {
+      "@id": "pagopa:page_info",
+      "@type": "@id"
+    },
+    "ResponseEntry": "pagopa:ResponseEntry",
+    "statusCode": {
+      "@id": "pagopa:statusCode",
+      "@type": "xsd:integer"
+    },
+    "statusMessage": {
+      "@id": "pagopa:statusMessage",
+      "@type": "xsd:string"
+    },
+    "requestIDs": {
+      "@id": "pagopa:requestIDs",
+      "@container": "@list"
+    },
+    "UploadReport": "pagopa:UploadReport",
+    "uploadID": {
+      "@id": "pagopa:uploadID",
+      "@type": "xsd:string"
+    },
+    "processedItem": {
+      "@id": "pagopa:processedItem",
+      "@type": "xsd:integer"
+    },
+    "submittedItem": {
+      "@id": "pagopa:submittedItem",
+      "@type": "xsd:integer"
+    },
+    "responses": {
+      "@id": "pagopa:responses",
+      "@container": "@list"
+    },
+    "startTime": {
+      "@id": "pagopa:startTime",
+      "@type": "xsd:dateTime"
+    },
+    "endTime": {
+      "@id": "pagopa:endTime",
+      "@type": "xsd:dateTime"
+    },
+    "ReceiptModelResponse": "pagopa:ReceiptModelResponse",
+    "ReceiptsInfo": "pagopa:ReceiptsInfo",
+    "receipts_list": {
+      "@id": "pagopa:receipts_list",
+      "@container": "@list"
+    },
+    "Flow": "pagopa:Flow",
+    "flowId": {
+      "@id": "pagopa:flowId",
+      "@type": "xsd:string"
+    },
+    "UpdateTransferIbanMassiveModel": "pagopa:UpdateTransferIbanMassiveModel",
+    "newIban": {
+      "@id": "pagopa:newIban",
+      "@type": "xsd:string"
+    },
+    "UpdateTransferIbanMassiveResponse": "pagopa:UpdateTransferIbanMassiveResponse",
+    "updatedTransfers": {
+      "@id": "pagopa:updatedTransfers",
+      "@type": "xsd:integer"
+    },
+    "DebtorModel": "pagopa:DebtorModel",
+    "InstallmentMetadataModel": "pagopa:InstallmentMetadataModel",
+    "InstallmentModel": "pagopa:InstallmentModel",
+    "installmentMetadata": {
+      "@id": "pagopa:installmentMetadata",
+      "@container": "@list"
+    },
+    "PaymentOptionModelV3": "pagopa:PaymentOptionModelV3",
+    "installments": {
+      "@id": "pagopa:installments",
+      "@container": "@list"
+    },
+    "PaymentPositionModelV3": "pagopa:PaymentPositionModelV3",
+    "InstallmentModelResponse": "pagopa:InstallmentModelResponse",
+    "PaymentOptionModelResponseV3": "pagopa:PaymentOptionModelResponseV3",
+    "PaymentPositionModelResponseV3": "pagopa:PaymentPositionModelResponseV3",
+    "PaymentPositionsInfoV3": "pagopa:PaymentPositionsInfoV3",
+    "GetCartErrorResponse": "pagopa:GetCartErrorResponse",
+    "errorUrl": {
+      "@id": "pagopa:errorUrl",
+      "@type": "xsd:string"
+    },
+    "GetCartResponse": "pagopa:GetCartResponse",
+    "checkoutRedirectUrl": {
+      "@id": "pagopa:checkoutRedirectUrl",
+      "@type": "xsd:string"
+    },
+    "mbdDownloadLink": {
+      "@id": "pagopa:mbdDownloadLink",
+      "@type": "xsd:string"
+    },
+    "GetMbdRequest": "pagopa:GetMbdRequest",
+    "idCIService": {
+      "@id": "pagopa:idCIService",
+      "@type": "xsd:string"
+    },
+    "GetMdbReceipt": "pagopa:GetMdbReceipt",
+    "content": {
+      "@id": "pagopa:content",
+      "@container": "@list"
+    },
+    "ReturnUrls": "pagopa:ReturnUrls",
+    "cancelUrl": {
+      "@id": "pagopa:cancelUrl",
+      "@type": "xsd:string"
+    },
+    "successUrl": {
+      "@id": "pagopa:successUrl",
+      "@type": "xsd:string"
+    },
+    "CreateMbdRequestV2": "pagopa:CreateMbdRequestV2",
+    "PaymentNoticeV2": "pagopa:PaymentNoticeV2",
+    "documentHash": {
+      "@id": "pagopa:documentHash",
+      "@type": "xsd:string"
+    },
+    "ReturnUrlsV2": "pagopa:ReturnUrlsV2",
+    "waitingUrl": {
+      "@id": "pagopa:waitingUrl",
+      "@type": "xsd:string"
+    },
+    "UniqueIdentifier": "pagopa:UniqueIdentifier",
+    "CitizenConsentResponseDTO": "pagopa:CitizenConsentResponseDTO",
+    "consents": {
+      "@id": "pagopa:consents"
+    },
+    "CitizenConsentErrorDTO": "pagopa:CitizenConsentErrorDTO",
+    "code": {
+      "@id": "pagopa:code",
+      "@type": "xsd:string"
+    },
+    "RetrievalRequestDTO": "pagopa:RetrievalRequestDTO",
+    "agent": {
+      "@id": "pagopa:agent",
+      "@type": "xsd:string"
+    },
+    "originId": {
+      "@id": "pagopa:originId",
+      "@type": "xsd:string"
+    },
+    "linkVersion": {
+      "@id": "pagopa:linkVersion",
+      "@type": "xsd:string"
+    },
+    "RetrievaIdResponseDTO": "pagopa:RetrievaIdResponseDTO",
+    "retrievalId": {
+      "@id": "pagopa:retrievalId",
+      "@type": "xsd:string"
+    },
+    "RetrievalResponseDTO": "pagopa:RetrievalResponseDTO",
+    "tppId": {
+      "@id": "pagopa:tppId",
+      "@type": "xsd:string"
+    },
+    "deeplink": {
+      "@id": "pagopa:deeplink",
+      "@type": "xsd:string"
+    },
+    "pspDenomination": {
+      "@id": "pagopa:pspDenomination",
+      "@type": "xsd:string"
+    },
+    "isPaymentEnabled": {
+      "@id": "pagopa:isPaymentEnabled",
+      "@type": "xsd:boolean"
+    },
+    "RetrievalErrorDTO": "pagopa:RetrievalErrorDTO",
+    "TokenResponse": "pagopa:TokenResponse",
+    "access_token": {
+      "@id": "pagopa:access_token",
+      "@type": "xsd:string"
+    },
+    "token_type": {
+      "@id": "pagopa:token_type",
+      "@type": "xsd:string"
+    },
+    "expires_in": {
+      "@id": "pagopa:expires_in",
+      "@type": "xsd:integer"
+    },
+    "NotificationPayload": "pagopa:NotificationPayload",
+    "messageId": {
+      "@id": "pagopa:messageId",
+      "@type": "xsd:string"
+    },
+    "recipientId": {
+      "@id": "pagopa:recipientId",
+      "@type": "xsd:string"
+    },
+    "triggerDateTime": {
+      "@id": "pagopa:triggerDateTime",
+      "@type": "xsd:dateTime"
+    },
+    "triggerDateTimeUTC": {
+      "@id": "pagopa:triggerDateTimeUTC",
+      "@type": "xsd:dateTime"
+    },
+    "senderDescription": {
+      "@id": "pagopa:senderDescription",
+      "@type": "xsd:string"
+    },
+    "messageUrl": {
+      "@id": "pagopa:messageUrl",
+      "@type": "@id"
+    },
+    "associatedPayment": {
+      "@id": "pagopa:associatedPayment",
+      "@type": "xsd:boolean"
+    },
+    "analogSchedulingDate": {
+      "@id": "pagopa:analogSchedulingDate",
+      "@type": "xsd:dateTime"
+    },
+    "workflowType": {
+      "@id": "pagopa:workflowType",
+      "@type": "xsd:string"
+    },
+    "TppNetworkConnectionResponse": "pagopa:TppNetworkConnectionResponse",
+    "TPPErrorDTO": "pagopa:TPPErrorDTO",
+    "TransactionBarCodeResponse": "pagopa:TransactionBarCodeResponse",
+    "trxCode": {
+      "@id": "pagopa:trxCode",
+      "@type": "xsd:string"
+    },
+    "initiativeId": {
+      "@id": "pagopa:initiativeId",
+      "@type": "xsd:string"
+    },
+    "initiativeName": {
+      "@id": "pagopa:initiativeName",
+      "@type": "xsd:string"
+    },
+    "trxDate": {
+      "@id": "pagopa:trxDate",
+      "@type": "xsd:dateTime"
+    },
+    "trxExpirationSeconds": {
+      "@id": "pagopa:trxExpirationSeconds",
+      "@type": "xsd:decimal"
+    },
+    "residualBudgetCents": {
+      "@id": "pagopa:residualBudgetCents",
+      "@type": "xsd:decimal"
+    },
+    "PreviewPaymentRequestDTO": "pagopa:PreviewPaymentRequestDTO",
+    "productName": {
+      "@id": "pagopa:productName",
+      "@type": "xsd:string"
+    },
+    "productGtin": {
+      "@id": "pagopa:productGtin",
+      "@type": "xsd:string"
+    },
+    "amountCents": {
+      "@id": "pagopa:amountCents",
+      "@type": "xsd:integer"
+    },
+    "PreviewPaymentDTO": "pagopa:PreviewPaymentDTO",
+    "originalAmountCents": {
+      "@id": "pagopa:originalAmountCents",
+      "@type": "xsd:integer"
+    },
+    "rewardCents": {
+      "@id": "pagopa:rewardCents",
+      "@type": "xsd:integer"
+    },
+    "residualAmountCents": {
+      "@id": "pagopa:residualAmountCents",
+      "@type": "xsd:integer"
+    },
+    "userId": {
+      "@id": "pagopa:userId",
+      "@type": "xsd:string"
+    },
+    "extendedAuthorization": {
+      "@id": "pagopa:extendedAuthorization",
+      "@type": "xsd:boolean"
+    },
+    "PreviewPaymentRequestV2DTO": "pagopa:PreviewPaymentRequestV2DTO",
+    "additionalProperties": {
+      "@id": "pagopa:additionalProperties"
+    },
+    "PreviewPaymentResponseV2DTO": "pagopa:PreviewPaymentResponseV2DTO",
+    "ProductListDTO": "pagopa:ProductListDTO",
+    "pageNo": {
+      "@id": "pagopa:pageNo",
+      "@type": "xsd:integer"
+    }
+  },
+  "@type": "schema:Dataset",
+  "schema:name": "PagoPA API JSON-LD context",
+  "schema:description": "A JSON-LD @context for the objects PagoPA's own API contract declares: one class per component schema, one property per declared field, typed from the contract. Derived by script (derive-json-ld.py, 2026-10-09) from openapi/pagopa-aca-openapi.yml, openapi/pagopa-backoffice-external-ec-openapi.yml, openapi/pagopa-backoffice-external-psp-openapi.yml.",
+  "dcterms:created": "2026-10-09",
+  "dcterms:source": [
+    "openapi/pagopa-aca-openapi.yml",
+    "openapi/pagopa-backoffice-external-ec-openapi.yml",
+    "openapi/pagopa-backoffice-external-psp-openapi.yml",
+    "openapi/pagopa-biz-events-openapi.yml",
+    "openapi/pagopa-checkout-ec-v1-openapi.yml"
+  ]
+}

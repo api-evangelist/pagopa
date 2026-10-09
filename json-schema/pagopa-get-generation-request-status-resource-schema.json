@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/pagopa/main/json-schema/pagopa-get-generation-request-status-resource-schema.json",
+  "title": "GetGenerationRequestStatusResource",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/pagopa-print-payment-notices-openapi.yml#/components/schemas/GetGenerationRequestStatusResource",
+  "required": [
+    "noticesInError",
+    "processedNotices",
+    "status"
+  ],
+  "type": "object",
+  "properties": {
+    "noticesInError": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "description": "items related to the request that produced an error"
+      },
+      "description": "items related to the request that produced an error"
+    },
+    "processedNotices": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "description": "Successfully processed items in request"
+      },
+      "description": "Successfully processed items in request"
+    },
+    "status": {
+      "enum": [
+        "INSERTED",
+        "PROCESSING",
+        "COMPLETING",
+        "FAILED",
+        "PROCESSED",
+        "PROCESSED_WITH_FAILURES"
+      ],
+      "type": "string",
+      "description": "Generation request status"
+    }
+  }
+}

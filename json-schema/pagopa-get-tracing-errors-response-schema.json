@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/pagopa/main/json-schema/pagopa-get-tracing-errors-response-schema.json",
+  "title": "GetTracingErrorsResponse",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/pagopa-pdnd-tracing-openapi.yml#/components/schemas/GetTracingErrorsResponse",
+  "type": "object",
+  "required": [
+    "results",
+    "totalCount"
+  ],
+  "properties": {
+    "results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "purposeId": {
+            "type": "string"
+          },
+          "severity": {
+            "type": "string",
+            "enum": [
+              "INVALID",
+              "WARNING"
+            ]
+          },
+          "errorCode": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "rowNumber": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "purposeId",
+          "severity",
+          "errorCode",
+          "message",
+          "rowNumber"
+        ]
+      }
+    },
+    "totalCount": {
+      "type": "integer",
+      "format": "int64"
+    }
+  }
+}

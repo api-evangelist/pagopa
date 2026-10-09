@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/pagopa/main/json-schema/pagopa-transaction-result-response-schema.json",
+  "title": "TransactionResultResponse",
+  "description": "Callback api transaction outcome response body",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/pagopa-ecommerce-redirect-openapi.yml#/components/schemas/TransactionResultResponse",
+  "required": [
+    "idTransaction",
+    "outcome"
+  ],
+  "type": "object",
+  "properties": {
+    "idTransaction": {
+      "$ref": "#/$defs/PagopaIdTransaction"
+    },
+    "outcome": {
+      "$ref": "#/$defs/AuthorizationResponseOutcome"
+    }
+  },
+  "$defs": {
+    "AuthorizationResponseOutcome": {
+      "enum": [
+        "OK",
+        "KO"
+      ],
+      "type": "string",
+      "description": "Transaction authorization callback process outcome.\nThe outcome can assume the following values:\n* OK -> callback request have been processed successfully\n* KO -> there was an error processing the callback request\n"
+    },
+    "PagopaIdTransaction": {
+      "maxLength": 32,
+      "minLength": 32,
+      "type": "string",
+      "description": "Uniquely identify a transaction"
+    }
+  }
+}

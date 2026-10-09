@@ -1,0 +1,22 @@
+generated: '2026-10-09'
+method: derived
+source: openapi/*.yml
+versioning: URI path versioning; parallel major versions are published (checkout-ec v1/v2, GPD v1/v3, marca-da-bollo v1/v2, PDND interop v2/v3, GPD massive v1/v2). SEND B2B versions individual operations
+  (/delivery/v2.1 ... v2.6/requests).
+deprecation:
+  policy: null
+  note: 'No published deprecation policy or Sunset/Deprecation headers found. Deprecation is marked with deprecated: true in the contracts.'
+status_page: https://api.notifichedigitali.it/status
+status_page_note: 'SEND publishes a machine-readable platform status API (openapi/pagopa-send-platform-status-openapi.yml: /status, /downtime/v1/resolved); no human status page was found.'
+deprecated_operations:
+- api: SEND B2B PA
+  count: 71
+  examples:
+  - sendNewNotification
+  - sendNewNotificationV21
+  - retrieveSentNotificationV20
+- api: PARI e-commerce
+  count: 12
+  examples:
+  - capturePaymentBonusElettrodomestici
+  - reversalTransactionBonusElettrodomestici

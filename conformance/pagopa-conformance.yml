@@ -1,0 +1,47 @@
+generated: '2026-10-09'
+method: derived
+source: openapi/*.yml
+standards:
+- id: iso20022
+  conforms: true
+  domain_standard: true
+  evidence: 'openapi/pagopa-srtp-callback-openapi.yml line 37: "ISO20022 based SEPA Request-To-Pay Response"; line 64: "ISO20022 based SEPA Request-To-Pay
+    Cancellation"'
+- id: epc-srtp
+  conforms: true
+  domain_standard: true
+  evidence: openapi/pagopa-srtp-callback-openapi.yml lines 230-246 reference EPC259-22 V3.0 SRTP scheme datasets (DS08N, DS08P, DS04b)
+- id: rfc9457
+  conforms: partial
+  evidence: application/problem+json responses in PDND interop, attestation, Signal Hub and SEND contracts; not used by pagoPA platform APIs
+- id: oauth2
+  conforms: true
+  evidence: oAuth2 clientCredentials securitySchemes in SRTP and MdC contracts
+- id: dpop
+  conforms: true
+  evidence: 'openapi/pagopa-pdnd-interop-v3-openapi.yml security: DPoPAuth + DPoPProofHeader'
+- id: idempotency
+  conforms: partial
+  evidence: Idempotency-Key on print-payment-notices generateNoticeMassiveRequest; idempotenceToken on SEND sendNewNotification*
+- id: openapi-3.0
+  conforms: true
+  evidence: the document declares 3.0.0
+- id: openapi-3.0
+  conforms: true
+  evidence: the document declares 3.0.1
+- id: openapi-3.0
+  conforms: true
+  evidence: the document declares 3.0.3
+- id: openapi-3.1
+  conforms: true
+  evidence: the document declares 3.1.0
+- id: swagger-2.0
+  conforms: true
+  evidence: the document declares swagger-2.0
+- id: pagination
+  conforms: true
+  evidence: list operations take limit, offset, page
+- id: ratelimit-headers
+  conforms: true
+  evidence: responses declare RateLimit-Limit, RateLimit-Reset, Retry-After, X-Rate-Limit-Interval, X-Rate-Limit-Limit, X-Rate-Limit-Remaining,
+    X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, retry-after

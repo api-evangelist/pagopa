@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/pagopa/main/json-schema/pagopa-transaction-result-request-schema.json",
+  "title": "TransactionResultRequest",
+  "description": "Callback api transaction outcome request body",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/pagopa-ecommerce-redirect-openapi.yml#/components/schemas/TransactionResultRequest",
+  "required": [
+    "idPsp",
+    "idPSPTransaction",
+    "outcome",
+    "details"
+  ],
+  "type": "object",
+  "properties": {
+    "idPsp": {
+      "type": "string",
+      "description": "PSP identifier as received in redirections url request"
+    },
+    "idPSPTransaction": {
+      "type": "string",
+      "description": "Unique PSP transaction identifier"
+    },
+    "outcome": {
+      "$ref": "#/$defs/AuthorizationOutcome"
+    },
+    "details": {
+      "$ref": "#/$defs/TransactionResultDetails"
+    }
+  },
+  "$defs": {
+    "AuthorizationOutcome": {
+      "enum": [
+        "OK",
+        "KO",
+        "CANCELED",
+        "EXPIRED",
+        "ERROR"
+      ],
+      "type": "string",
+      "description": "Transaction outcome enumeration.\nThe outcome can assume the following values:\n* OK -> `Authorization completed successfully`\n* KO -> `Authorization KO (for example missing funds for transaction)`\n* CANCELED -> `User canceled the authorization process`\n* EXPIRED -> `Authorization process has not been completed before timeout set for the operation`\n* ERROR -> `An unexpected error occurred during authorization process`\n"
+    },
+    "TransactionAuthorizedOutcomeDetails": {
+      "required": [
+        "timestampOperation",
+        "authorizationCode"
+      ],
+      "type": "object",
+      "properties": {
+        "timestampOperation": {
+          "type": "string",
+          "description": "Payment date and time",
+          "format": "date-time"
+        },
+        "authorizationCode": {
+          "type": "string",
+          "description": "Unique PSP authorization code"
+        }
+      }
+    },
+    "TransactionDeniedOutcomeDetails": {
+      "required": [
+        "errorCode"
+      ],
+      "type": "object",
+      "properties": {
+        "errorCode": {
+          "type": "string",
+          "description": "Authorization error code"
+        }
+      }
+    },
+    "TransactionResultDetails": {
+      "required": [
+        "outcome"
+      ],
+      "type": "object",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/TransactionAuthorizedOutcomeDetails"
+        },
+        {
+          "$ref": "#/$defs/TransactionDeniedOutcomeDetails"
+        }
+      ]
+    }
+  }
+}

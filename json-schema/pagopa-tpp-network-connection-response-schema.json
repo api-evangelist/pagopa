@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/pagopa/main/json-schema/pagopa-tpp-network-connection-response-schema.json",
+  "title": "TppNetworkConnectionResponse",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/pagopa-mdc-tpp-testing-openapi.yml#/components/schemas/TppNetworkConnectionResponse",
+  "type": "object",
+  "required": [
+    "code",
+    "message"
+  ],
+  "properties": {
+    "code": {
+      "type": "string",
+      "enum": [
+        "PAGOPA_NETWORK_TEST"
+      ],
+      "description": "\"ENG: Message code: PAGOPA_NETWORK_TEST: BancaX has reached our systems,\n - IT: Codice messaggio: PAGOPA_NETWORK_TEST: BancaX ha raggiunto i nostri sistemi\""
+    },
+    "message": {
+      "type": "string",
+      "description": "ENG: Messagge - IT: Messaggio",
+      "maxLength": 250,
+      "pattern": "^[\\w\\s.,!?'\"-]+$"
+    }
+  }
+}

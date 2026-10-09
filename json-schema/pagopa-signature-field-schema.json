@@ -1,0 +1,113 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/pagopa/main/json-schema/pagopa-signature-field-schema.json",
+  "title": "SignatureField",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/pagopa-firma-con-io-issuer-openapi.yml#/components/schemas/SignatureField",
+  "type": "object",
+  "properties": {
+    "attrs": {
+      "$ref": "#/$defs/SignatureFieldAttrs"
+    },
+    "clause": {
+      "$ref": "#/$defs/Clause"
+    }
+  },
+  "required": [
+    "attrs",
+    "clause"
+  ],
+  "$defs": {
+    "Clause": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 80
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "REQUIRED",
+            "UNFAIR",
+            "OPTIONAL"
+          ]
+        }
+      },
+      "required": [
+        "title",
+        "type"
+      ]
+    },
+    "ExistingSignatureFieldAttrs": {
+      "type": "object",
+      "properties": {
+        "unique_name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "unique_name"
+      ]
+    },
+    "SignatureFieldAttrs": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ExistingSignatureFieldAttrs"
+        },
+        {
+          "$ref": "#/$defs/SignatureFieldToBeCreatedAttrs"
+        }
+      ]
+    },
+    "SignatureFieldToBeCreatedAttrs": {
+      "type": "object",
+      "properties": {
+        "coordinates": {
+          "type": "object",
+          "properties": {
+            "x": {
+              "type": "number"
+            },
+            "y": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "x",
+            "y"
+          ]
+        },
+        "page": {
+          "type": "number",
+          "minimum": 0
+        },
+        "size": {
+          "type": "object",
+          "properties": {
+            "w": {
+              "type": "number",
+              "minimum": 0
+            },
+            "h": {
+              "type": "number",
+              "minimum": 0
+            }
+          },
+          "required": [
+            "w",
+            "h"
+          ]
+        }
+      },
+      "required": [
+        "coordinates",
+        "page",
+        "size"
+      ]
+    }
+  }
+}

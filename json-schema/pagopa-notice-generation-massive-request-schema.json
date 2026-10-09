@@ -1,0 +1,196 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/pagopa/main/json-schema/pagopa-notice-generation-massive-request-schema.json",
+  "title": "NoticeGenerationMassiveRequest",
+  "description": "massive notice generation request data",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/pagopa-print-payment-notices-openapi.yml#/components/schemas/NoticeGenerationMassiveRequest",
+  "required": [
+    "notices"
+  ],
+  "type": "object",
+  "properties": {
+    "notices": {
+      "maxItems": 1000,
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/NoticeGenerationRequestItem"
+      }
+    }
+  },
+  "$defs": {
+    "CreditorInstitution": {
+      "required": [
+        "taxCode"
+      ],
+      "type": "object",
+      "properties": {
+        "taxCode": {
+          "type": "string",
+          "description": "CI tax code"
+        }
+      },
+      "description": "Creditor Institution data"
+    },
+    "Debtor": {
+      "required": [
+        "address",
+        "buildingNumber",
+        "city",
+        "fullName",
+        "postalCode",
+        "province"
+      ],
+      "type": "object",
+      "properties": {
+        "address": {
+          "maxLength": 140,
+          "minLength": 0,
+          "type": "string",
+          "description": "Debtor address"
+        },
+        "buildingNumber": {
+          "type": "string",
+          "description": "Debtor building number"
+        },
+        "city": {
+          "type": "string",
+          "description": "Debtor city"
+        },
+        "fullName": {
+          "maxLength": 70,
+          "minLength": 0,
+          "type": "string",
+          "description": "Debtor full name"
+        },
+        "postalCode": {
+          "type": "string",
+          "description": "Debtor postal code"
+        },
+        "province": {
+          "type": "string",
+          "description": "Debtor province"
+        },
+        "taxCode": {
+          "maxLength": 16,
+          "minLength": 0,
+          "type": "string",
+          "description": "Debtor taxCode"
+        }
+      },
+      "description": "Debtor data"
+    },
+    "InstallmentData": {
+      "required": [
+        "amount",
+        "code"
+      ],
+      "type": "object",
+      "properties": {
+        "amount": {
+          "maximum": 99999999999.0,
+          "type": "integer",
+          "description": "Installment amount",
+          "format": "int64"
+        },
+        "code": {
+          "maxLength": 18,
+          "minLength": 18,
+          "type": "string",
+          "description": "Installment code"
+        },
+        "dueDate": {
+          "type": "string",
+          "description": "Installment dueDate"
+        }
+      },
+      "description": "Notice reduced amount to pay (used in reduced amount for infractions).  Mandatory for CDS infraction notices"
+    },
+    "Notice": {
+      "required": [
+        "subject"
+      ],
+      "type": "object",
+      "properties": {
+        "code": {
+          "maxLength": 18,
+          "minLength": 18,
+          "type": "string",
+          "description": "Notice code, mandatory whenever the template contains a general payment"
+        },
+        "discounted": {
+          "$ref": "#/$defs/InstallmentData"
+        },
+        "dueDate": {
+          "type": "string",
+          "description": "Notice due date"
+        },
+        "installments": {
+          "maxItems": 2147483647,
+          "minItems": 2,
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/InstallmentData"
+          },
+          "description": "Notice Installments"
+        },
+        "paymentAmount": {
+          "maximum": 99999999999.0,
+          "type": "integer",
+          "description": "Notice total amount to pay",
+          "format": "int64"
+        },
+        "reduced": {
+          "$ref": "#/$defs/InstallmentData"
+        },
+        "subject": {
+          "maxLength": 90,
+          "minLength": 0,
+          "type": "string",
+          "description": "Notice subject"
+        }
+      },
+      "description": "Notice data"
+    },
+    "NoticeGenerationRequestItem": {
+      "required": [
+        "data",
+        "templateId"
+      ],
+      "type": "object",
+      "properties": {
+        "data": {
+          "$ref": "#/$defs/NoticeRequestData"
+        },
+        "templateId": {
+          "type": "string",
+          "description": "The template identifier. Use the appropriate GET service to retrieve the list of the ids"
+        }
+      },
+      "description": "templateId to use for retrieval"
+    },
+    "NoticeRequestData": {
+      "required": [
+        "creditorInstitution",
+        "debtor",
+        "notice"
+      ],
+      "type": "object",
+      "properties": {
+        "creditorInstitution": {
+          "$ref": "#/$defs/CreditorInstitution"
+        },
+        "debtor": {
+          "$ref": "#/$defs/Debtor"
+        },
+        "notice": {
+          "$ref": "#/$defs/Notice"
+        }
+      },
+      "description": "The data used to fill the template"
+    }
+  }
+}

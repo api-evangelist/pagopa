@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/pagopa/main/json-schema/pagopa-verifica-organization-id-schema.json",
+  "title": "VerificaOrganizationId",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/pagopa-pdnd-attestation-organization-id-openapi.yml#/components/schemas/VerificaOrganizationId",
+  "type": "object",
+  "properties": {
+    "organizationId": {
+      "$ref": "#/$defs/OrganizationId"
+    },
+    "valid": {
+      "type": "boolean"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "ATTIVA",
+        "CESSATA",
+        "SOSPESA"
+      ]
+    },
+    "denomination": {
+      "type": "string"
+    },
+    "dateStartActivity": {
+      "type": "string",
+      "format": "date"
+    },
+    "dateEndActivity": {
+      "type": "string",
+      "format": "date"
+    },
+    "dateStartSuspension": {
+      "type": "string",
+      "format": "date"
+    },
+    "isOrganizationId": {
+      "type": "boolean"
+    },
+    "organizationGroupId": {
+      "$ref": "#/$defs/OrganizationId"
+    },
+    "dateStartPartecipationOrganizationGroupId": {
+      "type": "string",
+      "format": "date"
+    },
+    "isPartecipantOrganizationGroupId": {
+      "type": "boolean"
+    }
+  },
+  "$defs": {
+    "OrganizationId": {
+      "type": "string",
+      "maxLength": 11,
+      "minLength": 11,
+      "pattern": "^[0-9]+"
+    }
+  }
+}

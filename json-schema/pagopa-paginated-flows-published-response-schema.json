@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/pagopa/main/json-schema/pagopa-paginated-flows-published-response-schema.json",
+  "title": "PaginatedFlowsPublishedResponse",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/pagopa-fdr-psp-openapi.yml#/components/schemas/PaginatedFlowsPublishedResponse",
+  "type": "object",
+  "properties": {
+    "metadata": {
+      "$ref": "#/$defs/Metadata"
+    },
+    "count": {
+      "type": "integer",
+      "description": "The number of elements that can be found in this page.",
+      "format": "int64"
+    },
+    "data": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/FlowByCIPublished"
+      },
+      "description": "The list of flows that are included in this page. Date-time fields inside each item are defined with UTC time-zone."
+    }
+  },
+  "$defs": {
+    "FlowByCIPublished": {
+      "type": "object",
+      "properties": {
+        "fdr": {
+          "type": "string",
+          "description": "The unique identifier of the flow."
+        },
+        "organizationId": {
+          "type": "string",
+          "description": "The domain identifier of the creditor institution related to the flow."
+        },
+        "revision": {
+          "type": "integer",
+          "description": "The revision (or version) of the flow.",
+          "format": "int64"
+        },
+        "published": {
+          "$ref": "#/$defs/Instant"
+        }
+      }
+    },
+    "Instant": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "Metadata": {
+      "type": "object",
+      "properties": {
+        "pageSize": {
+          "type": "integer",
+          "description": "The size of the current page shown in response",
+          "format": "int32"
+        },
+        "pageNumber": {
+          "type": "integer",
+          "description": "The index of the current page shown in response",
+          "format": "int32"
+        },
+        "totPage": {
+          "type": "integer",
+          "description": "The total number of the pages that can be retrieved in order to show all elements.",
+          "format": "int32"
+        }
+      }
+    }
+  }
+}

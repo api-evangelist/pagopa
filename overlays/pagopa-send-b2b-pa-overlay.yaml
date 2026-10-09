@@ -1,0 +1,16 @@
+overlay: 1.0.0
+info:
+  title: 'API Evangelist enhancements for Piattaforma Notifiche: API B2B per le Pubbliche Amministrazioni'
+  version: 1.0.0
+extends: ../openapi/_original/pagopa-send-b2b-pa-openapi.yml
+x-apievangelist:
+  generated: '2026-10-09'
+  method: generated
+  source: openapi/pagopa-send-b2b-pa-openapi.yml
+actions:
+- target: $.info
+  update:
+    x-apievangelist-profile: https://apievangelist.com/
+    x-apievangelist-reviewed: '2026-10-09'
+    x-apievangelist-provider: PagoPA S.p.A.
+    x-apievangelist-operation-count: 90

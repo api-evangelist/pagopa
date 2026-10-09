@@ -1,0 +1,141 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/pagopa/main/json-schema/pagopa-purpose-schema.json",
+  "title": "Purpose",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/pagopa-pdnd-interop-v2-openapi.yml#/components/schemas/Purpose",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "eserviceId": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "consumerId": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "suspendedByConsumer": {
+      "type": "boolean"
+    },
+    "suspendedByProducer": {
+      "type": "boolean"
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "isRiskAnalysisValid": {
+      "type": "boolean"
+    },
+    "isFreeOfCharge": {
+      "type": "boolean"
+    },
+    "freeOfChargeReason": {
+      "type": "string"
+    },
+    "delegationId": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "currentVersion": {
+      "$ref": "#/$defs/PurposeVersion"
+    },
+    "waitingForApprovalVersion": {
+      "$ref": "#/$defs/PurposeVersion"
+    },
+    "rejectedVersion": {
+      "$ref": "#/$defs/PurposeVersion"
+    },
+    "purposeTemplateId": {
+      "type": "string",
+      "format": "uuid"
+    }
+  },
+  "required": [
+    "id",
+    "eserviceId",
+    "consumerId",
+    "title",
+    "description",
+    "createdAt",
+    "isRiskAnalysisValid",
+    "isFreeOfCharge"
+  ],
+  "$defs": {
+    "PurposeVersion": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "state": {
+          "$ref": "#/$defs/PurposeVersionState"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "suspendedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "firstActivationAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "dailyCalls": {
+          "description": "Maximum number of daily calls performed using this version",
+          "type": "integer",
+          "format": "int32",
+          "minimum": 1,
+          "maximum": 1000000000
+        },
+        "rejectionReason": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "state",
+        "dailyCalls",
+        "createdAt"
+      ],
+      "description": "business representation of a purpose version"
+    },
+    "PurposeVersionState": {
+      "type": "string",
+      "description": "Purpose State",
+      "enum": [
+        "ACTIVE",
+        "DRAFT",
+        "SUSPENDED",
+        "WAITING_FOR_APPROVAL",
+        "ARCHIVED",
+        "REJECTED"
+      ]
+    }
+  }
+}

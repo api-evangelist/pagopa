@@ -1,0 +1,424 @@
+generated: '2026-10-09'
+method: derived
+generator: derive-vocabulary.py
+source:
+- openapi/pagopa-aca-openapi.yml
+- openapi/pagopa-backoffice-external-ec-openapi.yml
+- openapi/pagopa-backoffice-external-psp-openapi.yml
+- openapi/pagopa-biz-events-openapi.yml
+- openapi/pagopa-checkout-ec-v1-openapi.yml
+vocabulary:
+  name: PagoPA Domain Vocabulary
+  description: 'Terms declared by PagoPA''s own API contract: its resource groups, objects and enumerations, with the contract''s definitions.
+    Derived, not authored.'
+  version: '2026-10-09'
+  terms:
+  - term: ACA
+    definition: Api's for performing a debt position census
+    tags:
+    - Resource Group
+    source: openapi/pagopa-aca-openapi.yml
+  - term: Actuator
+    definition: Monitor and interact
+    tags:
+    - Resource Group
+    source: openapi/pagopa-biz-events-openapi.yml
+  - term: b2b - pagoPA side
+    definition: Api's to notify transaction outcome
+    tags:
+    - Resource Group
+    source: openapi/pagopa-ecommerce-redirect-openapi.yml
+  - term: PSP
+    definition: APIs for payment service providers, used for creation and inspection of flows
+    tags:
+    - Resource Group
+    source: openapi/pagopa-fdr-organizations-openapi.yml
+  - term: Info
+    definition: Info operations
+    tags:
+    - Resource Group
+    source: openapi/pagopa-fdr-organizations-openapi.yml
+  - term: Organizations
+    definition: APIs for creditor institution, used for inspection of generated flows
+    tags:
+    - Resource Group
+    source: openapi/pagopa-fdr-organizations-openapi.yml
+  - term: Support
+    definition: APIs for technical support, used for troubleshooting operations
+    tags:
+    - Resource Group
+    source: openapi/pagopa-fdr-organizations-openapi.yml
+  - term: Internal Operations
+    definition: APIs for internal operations, used for hidden processes in FdR ecosystem
+    tags:
+    - Resource Group
+    source: openapi/pagopa-fdr-organizations-openapi.yml
+  - term: MBD - v1
+    definition: APIs for @eBollo v1
+    tags:
+    - Resource Group
+    source: openapi/pagopa-marca-da-bollo-v1-openapi.yml
+  - term: MBD - v2
+    definition: APIs for @eBollo v2
+    tags:
+    - Resource Group
+    source: openapi/pagopa-marca-da-bollo-v2-openapi.yml
+  - term: Citizen operation
+    definition: 'ENG: TPP integration - Citizen consent operations IT: Integrazione TPP - Operazioni sui consensi del cittadino'
+    tags:
+    - Resource Group
+    source: openapi/pagopa-mdc-citizen-consent-openapi.yml
+  - term: Payment
+    definition: Payment operation
+    tags:
+    - Resource Group
+    source: openapi/pagopa-mdc-payment-openapi.yml
+  - term: Network Testing
+    definition: Testing network connection
+    tags:
+    - Resource Group
+    source: openapi/pagopa-mdc-tpp-testing-openapi.yml
+  - term: products
+    definition: Operazioni relative all'elenco dei prodotti e al filtraggio
+    tags:
+    - Resource Group
+    source: openapi/pagopa-pari-ecommerce-openapi.yml
+  - term: transaction
+    definition: Operazioni relative alle transazioni
+    tags:
+    - Resource Group
+    source: openapi/pagopa-pari-ecommerce-openapi.yml
+  - term: Payment Options
+    definition: APIs to retrieve payment options
+    tags:
+    - Resource Group
+    source: openapi/pagopa-payment-options-psp-openapi.yml
+  - term: HealthCheck
+    definition: Unauthenticated endpoint for service status check.
+    tags:
+    - Resource Group
+    source: openapi/pagopa-pdnd-attestation-keychain-mock-openapi.yml
+  - term: Check
+    definition: checks the validity and existence of the input signature
+    tags:
+    - Resource Group
+    source: openapi/pagopa-pdnd-attestation-keychain-mock-openapi.yml
+  - term: Health Check
+    definition: Unauthenticated endpoint for checking service status
+    tags:
+    - Resource Group
+    source: openapi/pagopa-pdnd-attestation-organization-id-openapi.yml
+  - term: clients
+    definition: Clients routes
+    tags:
+    - Resource Group
+    source: openapi/pagopa-pdnd-interop-v2-openapi.yml
+  - term: attributes
+    definition: Attributes routes
+    tags:
+    - Resource Group
+    source: openapi/pagopa-pdnd-interop-v2-openapi.yml
+  - term: agreements
+    definition: Agreements routes
+    tags:
+    - Resource Group
+    source: openapi/pagopa-pdnd-interop-v2-openapi.yml
+  - term: eservices
+    definition: E-Services routes
+    tags:
+    - Resource Group
+    source: openapi/pagopa-pdnd-interop-v2-openapi.yml
+  - term: keys
+    definition: Keys routes
+    tags:
+    - Resource Group
+    source: openapi/pagopa-pdnd-interop-v2-openapi.yml
+  - term: purposes
+    definition: Purposes routes
+    tags:
+    - Resource Group
+    source: openapi/pagopa-pdnd-interop-v2-openapi.yml
+  - term: tenants
+    definition: Tenants routes
+    tags:
+    - Resource Group
+    source: openapi/pagopa-pdnd-interop-v2-openapi.yml
+  - term: delegations
+    definition: Delegations routes
+    tags:
+    - Resource Group
+    source: openapi/pagopa-pdnd-interop-v2-openapi.yml
+  - term: eserviceTemplates
+    definition: E-Service Templates routes
+    tags:
+    - Resource Group
+    source: openapi/pagopa-pdnd-interop-v2-openapi.yml
+  - term: producerKeychains
+    definition: Producer Keychains routes
+    tags:
+    - Resource Group
+    source: openapi/pagopa-pdnd-interop-v2-openapi.yml
+  - term: purposeTemplates
+    definition: Purpose Templates routes
+    tags:
+    - Resource Group
+    source: openapi/pagopa-pdnd-interop-v2-openapi.yml
+  - term: health
+    definition: Verify service status
+    tags:
+    - Resource Group
+    source: openapi/pagopa-pdnd-interop-v2-openapi.yml
+  - term: events
+    definition: Events routes
+    tags:
+    - Resource Group
+    source: openapi/pagopa-pdnd-interop-v2-openapi.yml
+  - term: users
+    definition: Users routes
+    tags:
+    - Resource Group
+    source: openapi/pagopa-pdnd-interop-v3-openapi.yml
+  - term: Tracings
+    definition: Tracings service
+    tags:
+    - Resource Group
+    source: openapi/pagopa-pdnd-tracing-openapi.yml
+  - term: Health
+    definition: Verify service status
+    tags:
+    - Resource Group
+    source: openapi/pagopa-pdnd-tracing-openapi.yml
+  - term: NewNotification
+    definition: Invocazioni per effettuare il pre-caricamento dei documenti della notifica e inviare notifiche
+    tags:
+    - Resource Group
+    source: openapi/pagopa-send-b2b-pa-openapi.yml
+  - term: SenderReadB2B
+    definition: Invocazioni utilizzabili dai mittenti per verificare lo stato delle richieste di notifica inviate e delle notifiche accettate.
+    tags:
+    - Resource Group
+    source: openapi/pagopa-send-b2b-pa-openapi.yml
+  - term: NotificationPrice
+    definition: Invocazioni per determinare il costo della notifica per il destinatario.
+    tags:
+    - Resource Group
+    source: openapi/pagopa-send-b2b-pa-openapi.yml
+  - term: LegalFacts
+    definition: Invocazioni per effettuare il download degli atti opponibili a terzi
+    tags:
+    - Resource Group
+    source: openapi/pagopa-send-b2b-pa-openapi.yml
+  - term: PaymentEvents
+    definition: Invocazioni per comunicare eventi di pagamento dalla PA
+    tags:
+    - Resource Group
+    source: openapi/pagopa-send-b2b-pa-openapi.yml
+  - term: NotificationCancellation
+    definition: Annullamento di una notifica
+    tags:
+    - Resource Group
+    source: openapi/pagopa-send-b2b-pa-openapi.yml
+  - term: Streams
+    definition: Gestione degli stream di eventi che PN mette a disposizione
+    tags:
+    - Resource Group
+    source: openapi/pagopa-send-b2b-pa-openapi.yml
+  - term: Events
+    definition: Metodi per la lettura degli eventi dagli stream
+    tags:
+    - Resource Group
+    source: openapi/pagopa-send-b2b-pa-openapi.yml
+  - term: Status
+    definition: Lettura dello stato di SEND, API pubbliche
+    tags:
+    - Resource Group
+    source: openapi/pagopa-send-platform-status-openapi.yml
+  - term: Downtime
+    definition: Invocazioni per recupero dei disservizi di SEND
+    tags:
+    - Resource Group
+    source: openapi/pagopa-send-platform-status-openapi.yml
+  - term: interopProbing
+    definition: Invocazioni per sapere lo stato dell'E-service di PDND Interoprabilità
+    tags:
+    - Resource Group
+    source: openapi/pagopa-send-platform-status-openapi.yml
+  - term: create
+    definition: Create operation.
+    tags:
+    - Resource Group
+    source: openapi/pagopa-srtp-activation-openapi.yml
+  - term: read
+    definition: Read operation.
+    tags:
+    - Resource Group
+    source: openapi/pagopa-srtp-activation-openapi.yml
+  - term: update
+    definition: Update operation.
+    tags:
+    - Resource Group
+    source: openapi/pagopa-srtp-activation-openapi.yml
+  - term: delete
+    definition: Delete operation.
+    tags:
+    - Resource Group
+    source: openapi/pagopa-srtp-activation-openapi.yml
+  - term: callback
+    definition: API Group aims to get the callback.
+    tags:
+    - Resource Group
+    source: openapi/pagopa-srtp-callback-openapi.yml
+  - term: NewDebtPositionRequest
+    definition: Request body for creating a new transaction
+    tags:
+    - Object
+    source: openapi/pagopa-aca-openapi.yml#/components/schemas/NewDebtPositionRequest
+  - term: DebtPositionResponse
+    definition: 'Object declared by the contract with fields: paFiscalCode, companyName, entityType, entityFiscalCode, entityFullName, iuv, nav,
+      amount, description, expirationDate, iban, postalIban. (2 more)'
+    tags:
+    - Object
+    source: openapi/pagopa-aca-openapi.yml#/components/schemas/DebtPositionResponse
+  - term: AmountEuroCents
+    definition: Amount for payments, in eurocents
+    tags:
+    - Object
+    source: openapi/pagopa-aca-openapi.yml#/components/schemas/AmountEuroCents
+  - term: ProblemJson
+    definition: 'Object declared by the contract with fields: type, title, status, detail, instance.'
+    tags:
+    - Object
+    source: openapi/pagopa-aca-openapi.yml#/components/schemas/ProblemJson
+  - term: AppInfo
+    definition: 'Object declared by the contract with fields: environment, name, version.'
+    tags:
+    - Object
+    source: openapi/pagopa-backoffice-external-ec-openapi.yml#/components/schemas/AppInfo
+  - term: BrokerInstitutionResource
+    definition: List of creditor institutions
+    tags:
+    - Object
+    source: openapi/pagopa-backoffice-external-ec-openapi.yml#/components/schemas/BrokerInstitutionResource
+  - term: BrokerInstitutionsResponse
+    definition: 'Object declared by the contract with fields: creditorInstitutions, pageInfo.'
+    tags:
+    - Object
+    source: openapi/pagopa-backoffice-external-ec-openapi.yml#/components/schemas/BrokerInstitutionsResponse
+  - term: CIIbansResource
+    definition: list of IBANs
+    tags:
+    - Object
+    source: openapi/pagopa-backoffice-external-ec-openapi.yml#/components/schemas/CIIbansResource
+  - term: CIIbansResponse
+    definition: 'Object declared by the contract with fields: ibans, pageInfo.'
+    tags:
+    - Object
+    source: openapi/pagopa-backoffice-external-ec-openapi.yml#/components/schemas/CIIbansResponse
+  - term: PageInfo
+    definition: Information about the pagination
+    tags:
+    - Object
+    source: openapi/pagopa-backoffice-external-ec-openapi.yml#/components/schemas/PageInfo
+  - term: CtReceiptModelResponse
+    definition: 'Object declared by the contract with fields: receiptId, noticeNumber, fiscalCode, outcome, creditorReferenceId, paymentAmount,
+      description, companyName, officeName, debtor, transferList, idPSP. (16 more)'
+    tags:
+    - Object
+    source: openapi/pagopa-biz-events-openapi.yml#/components/schemas/CtReceiptModelResponse
+  - term: Debtor
+    definition: 'Object declared by the contract with fields: entityUniqueIdentifierType, entityUniqueIdentifierValue, fullName, streetName, civicNumber,
+      postalCode, city, stateProvinceRegion, country, email.'
+    tags:
+    - Object
+    source: openapi/pagopa-biz-events-openapi.yml#/components/schemas/Debtor
+  - term: MapEntry
+    definition: 'Object declared by the contract with fields: key, value.'
+    tags:
+    - Object
+    source: openapi/pagopa-biz-events-openapi.yml#/components/schemas/MapEntry
+  - term: Payer
+    definition: 'Object declared by the contract with fields: entityUniqueIdentifierType, entityUniqueIdentifierValue, fullName, streetName, civicNumber,
+      postalCode, city, stateProvinceRegion, country, email.'
+    tags:
+    - Object
+    source: openapi/pagopa-biz-events-openapi.yml#/components/schemas/Payer
+  - term: TransferPA
+    definition: 'Object declared by the contract with fields: idTransfer, transferAmount, fiscalCodePA, iban, mbdAttachment, remittanceInformation,
+      transferCategory, metadata.'
+    tags:
+    - Object
+    source: openapi/pagopa-biz-events-openapi.yml#/components/schemas/TransferPA
+  - term: HttpStatusCode
+    definition: The HTTP status code generated by the origin server for this occurrence of the problem.
+    tags:
+    - Object
+    source: openapi/pagopa-checkout-ec-v1-openapi.yml#/components/schemas/HttpStatusCode
+  - term: CartRequest
+    definition: 'Object declared by the contract with fields: emailNotice, paymentNotices, returnUrls, idCart, allCCP.'
+    tags:
+    - Object
+    source: openapi/pagopa-checkout-ec-v1-openapi.yml#/components/schemas/CartRequest
+  - term: PaymentNotice
+    definition: 'Object declared by the contract with fields: noticeNumber, fiscalCode, amount, companyName, description.'
+    tags:
+    - Object
+    source: openapi/pagopa-checkout-ec-v1-openapi.yml#/components/schemas/PaymentNotice
+  - term: PagopaIdTransaction
+    definition: Uniquely identify a transaction
+    tags:
+    - Object
+    source: openapi/pagopa-ecommerce-redirect-openapi.yml#/components/schemas/PagopaIdTransaction
+  - term: TransactionResultRequest
+    definition: Callback api transaction outcome request body
+    tags:
+    - Object
+    source: openapi/pagopa-ecommerce-redirect-openapi.yml#/components/schemas/TransactionResultRequest
+  - term: TransactionAuthorizedOutcomeDetails
+    definition: 'Object declared by the contract with fields: timestampOperation, authorizationCode.'
+    tags:
+    - Object
+    source: openapi/pagopa-ecommerce-redirect-openapi.yml#/components/schemas/TransactionAuthorizedOutcomeDetails
+  - term: TransactionDeniedOutcomeDetails
+    definition: 'Object declared by the contract with fields: errorCode.'
+    tags:
+    - Object
+    source: openapi/pagopa-ecommerce-redirect-openapi.yml#/components/schemas/TransactionDeniedOutcomeDetails
+  - term: TransactionResultResponse
+    definition: Callback api transaction outcome response body
+    tags:
+    - Object
+    source: openapi/pagopa-ecommerce-redirect-openapi.yml#/components/schemas/TransactionResultResponse
+  - term: AuthorizationOutcome
+    definition: 'Transaction outcome enumeration. The outcome can assume the following values: * OK -> `Authorization completed successfully`
+      * KO -> `Authorization KO (for example missing funds for transaction)` * CANCELED -> `User canceled the authorization process` * EXPIRED
+      -> `Authorization process has not been completed before timeout set for the operation` * ERROR -> `An unexpected error occurred during aut'
+    tags:
+    - Enumeration
+    source: openapi/pagopa-ecommerce-redirect-openapi.yml#/components/schemas/AuthorizationOutcome
+  - term: AuthorizationResponseOutcome
+    definition: 'Transaction authorization callback process outcome. The outcome can assume the following values: * OK -> callback request have
+      been processed successfully * KO -> there was an error processing the callback request'
+    tags:
+    - Enumeration
+    source: openapi/pagopa-ecommerce-redirect-openapi.yml#/components/schemas/AuthorizationResponseOutcome
+  - term: AddPaymentRequest
+    definition: 'Object declared by the contract with fields: payments.'
+    tags:
+    - Object
+    source: openapi/pagopa-fdr-organizations-openapi.yml#/components/schemas/AddPaymentRequest
+  - term: CreateFlowRequest
+    definition: 'Object declared by the contract with fields: fdr, fdrDate, sender, receiver, regulation, regulationDate, bicCodePouringBank,
+      totPayments, sumPayments.'
+    tags:
+    - Object
+    source: openapi/pagopa-fdr-organizations-openapi.yml#/components/schemas/CreateFlowRequest
+  - term: DeletePaymentRequest
+    definition: 'Object declared by the contract with fields: indexList.'
+    tags:
+    - Object
+    source: openapi/pagopa-fdr-organizations-openapi.yml#/components/schemas/DeletePaymentRequest
+  - term: ErrorMessage
+    definition: 'Object declared by the contract with fields: path, message.'
+    tags:
+    - Object
+    source: openapi/pagopa-fdr-organizations-openapi.yml#/components/schemas/ErrorMessage

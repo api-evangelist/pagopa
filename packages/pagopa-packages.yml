@@ -1,0 +1,72 @@
+generated: '2026-10-09'
+method: searched
+source:
+- https://registry.npmjs.org/-/v1/search?text=@pagopa
+- https://registry.npmjs.org/@pagopa/io-functions-services-sdk
+note: The @pagopa npm scope publishes ~98 packages, most of them internal tooling (eslint config, DX CLI, Azure helpers). Only packages that wrap or model a profiled API surface are listed. No PyPI package
+  named pagopa (404). The developer portal does not publish an SDK page.
+packages:
+- name: '@pagopa/io-functions-services-sdk'
+  registry: npm
+  url: https://www.npmjs.com/package/@pagopa/io-functions-services-sdk
+  language: TypeScript
+  official: true
+  version: 3.40.1
+  published: '2024-07-16'
+  note: Generated SDK for @pagopa/io-functions-services (the IO services API). Published by the @pagopa npm scope; version/date from registry.npmjs.org.
+- name: '@pagopa/interop-outbound-models'
+  registry: npm
+  url: https://www.npmjs.com/package/@pagopa/interop-outbound-models
+  language: TypeScript
+  official: true
+  version: 1.8.23
+  published: '2026-09-02'
+  note: PagoPA Interoperability (PDND) outbound models. Published by the @pagopa npm scope; version/date from registry.npmjs.org.
+- name: '@pagopa/io-pagopa-commons'
+  registry: npm
+  url: https://www.npmjs.com/package/@pagopa/io-pagopa-commons
+  language: TypeScript
+  official: true
+  version: 4.0.0
+  published: '2023-05-16'
+  note: Common code for integrating with PagoPA. Published by the @pagopa npm scope; version/date from registry.npmjs.org.
+- name: '@pagopa/openapi-codegen-ts'
+  registry: npm
+  url: https://www.npmjs.com/package/@pagopa/openapi-codegen-ts
+  language: TypeScript
+  official: true
+  version: 14.2.0
+  published: '2025-12-17'
+  note: OpenAPI code generator used across PagoPA projects (repo pagopa/io-utils). Published by the @pagopa npm scope; version/date from registry.npmjs.org.
+- name: '@pagopa/io-wallet-oid4vci'
+  registry: npm
+  url: https://www.npmjs.com/package/@pagopa/io-wallet-oid4vci
+  language: TypeScript
+  official: true
+  version: 1.5.8
+  published: '2026-09-25'
+  note: OpenID4VCI helpers for IT-Wallet credential issuance flows (repo pagopa/io-wallet-sdk). Published by the @pagopa npm scope; version/date from registry.npmjs.org.
+- name: '@pagopa/io-react-native-wallet'
+  registry: npm
+  url: https://www.npmjs.com/package/@pagopa/io-react-native-wallet
+  language: TypeScript
+  official: true
+  version: 3.8.2
+  published: '2026-10-06'
+  note: Data structures, helpers and API for IO Wallet. Published by the @pagopa npm scope; version/date from registry.npmjs.org.
+- name: '@pagopa/mui-italia'
+  registry: npm
+  url: https://www.npmjs.com/package/@pagopa/mui-italia
+  language: TypeScript
+  official: true
+  version: 2.7.0
+  published: '2026-09-14'
+  note: Material-UI theme / UI kit used by PagoPA front ends. Published by the @pagopa npm scope; version/date from registry.npmjs.org.
+- name: italia-pagopa-api
+  registry: npm
+  url: https://www.npmjs.com/package/italia-pagopa-api
+  language: TypeScript
+  official: false
+  version: 2.1.0
+  published: '2018-06-29'
+  note: Client and server for interacting with pagoPA; repository github.com/teamdigitale/italia-pagopa-api (Team Digitale, not the @pagopa scope). Last release 2018.

@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/pagopa/main/json-schema/pagopa-update-transfer-iban-massive-response-schema.json",
+  "title": "UpdateTransferIbanMassiveResponse",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/pagopa-gpd-v1-openapi.yml#/components/schemas/UpdateTransferIbanMassiveResponse",
+  "type": "object",
+  "properties": {
+    "description": {
+      "type": "string"
+    },
+    "updatedTransfers": {
+      "type": "integer",
+      "format": "int32"
+    }
+  }
+}

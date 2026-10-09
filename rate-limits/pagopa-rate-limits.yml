@@ -1,0 +1,55 @@
+generated: '2026-10-09'
+method: searched
+name: PagoPA rate limits
+source: https://raw.githubusercontent.com/pagopa/pagopa-api/master/openapi/fdr_psp.json
+note: Numeric limits are published only in the FdR (Flussi di Rendicontazione) contracts, as a "TPS" row in each operation description. Other contracts document 429 responses (537 response objects across
+  43 specs) and rate-limit headers but give no figures.
+limit_count: 2
+limits:
+- name: FdR PSP API per-operation TPS
+  limit_text: 1.0/sec
+  max: 1
+  window: 1 second
+  scope: per-operation
+  api: FdR - PSP
+  endpoint: all 11 operations, e.g. POST /psps/{pspId}/fdrs/{fdr} (IPspsController_createEmptyFlow)
+  source: https://raw.githubusercontent.com/pagopa/pagopa-api/master/openapi/fdr_psp.json
+- name: FdR Organizations API per-operation TPS
+  limit_text: 1.0/sec
+  max: 1
+  window: 1 second
+  scope: per-operation
+  api: FdR - Organizations
+  endpoint: GET /organizations/{organizationId}/fdrs (IOrganizationsController_getAllPublishedFlows) and the 2 other operations
+  source: https://raw.githubusercontent.com/pagopa/pagopa-api/master/openapi/fdr_organization.json
+headers:
+  exhaustion_status: 429
+  families:
+  - headers:
+    - X-Rate-Limit-Limit
+    - X-Rate-Limit-Remaining
+    - X-Rate-Limit-Interval
+    apis:
+    - PDND Interoperabilità v2/v3
+    - PDND Signal Hub push/pull
+  - headers:
+    - RateLimit-Limit
+    - RateLimit-Reset
+    - Retry-After
+    apis:
+    - SRTP activation/payees/service-providers
+    - MdC citizen-consent/payment/tpp-testing
+    - PARI e-commerce
+    - PDND attestation e-services
+  - headers:
+    - X-RateLimit-Limit
+    - X-RateLimit-Remaining
+    - X-RateLimit-Reset
+    apis:
+    - PARI e-commerce
+    - PDND attestation e-services
+  - headers:
+    - retry-after
+    apis:
+    - SEND B2B PA
+  source: openapi/*.yml response headers (derived)

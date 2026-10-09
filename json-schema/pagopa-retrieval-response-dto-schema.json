@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/pagopa/main/json-schema/pagopa-retrieval-response-dto-schema.json",
+  "title": "RetrievalResponseDTO",
+  "description": "Retrieval Response information",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/pagopa-mdc-payment-openapi.yml#/components/schemas/RetrievalResponseDTO",
+  "type": "object",
+  "required": [
+    "retrievalId"
+  ],
+  "properties": {
+    "retrievalId": {
+      "type": "string",
+      "description": "ENG: Unique ID that identify retrieval payload - IT: Identificativo univoco del retrieval payload",
+      "pattern": "^[ -~]{1,50}$",
+      "minLength": 50,
+      "maxLength": 50
+    },
+    "tppId": {
+      "type": "string",
+      "description": "ENG: Unique ID that identify TPP on PagoPA systems - IT: Identificativo univoco della TPP sui sistemi PagoPA",
+      "pattern": "^[ -~]{1,50}$",
+      "minLength": 50,
+      "maxLength": 50
+    },
+    "deeplink": {
+      "type": "string",
+      "description": "Rappresenta il collegamento profondo (DeepLink) che consente il reindirizzamento diretto a una specifica sezione o funzionalità dell'app TPP. Deve essere una stringa alfanumerica che rispetti un formato specifico e avere una lunghezza compresa tra 48 e 128 caratteri.",
+      "pattern": "^[a-zA-Z0-9._~:/?#\\[\\]@!$&'()*+,;=-]{48,128}$",
+      "minLength": 10,
+      "maxLength": 128
+    },
+    "pspDenomination": {
+      "type": "string",
+      "description": "Etichetta del pulsante di pagamento (ad es. il nome del provider di pagamento).",
+      "pattern": "^[a-zA-Z0-9 ]{1,15}$",
+      "minLength": 1,
+      "maxLength": 15
+    },
+    "originId": {
+      "type": "string",
+      "description": "ID of the original message",
+      "pattern": "^[ -~]{24,36}$",
+      "minLength": 24,
+      "maxLength": 36
+    },
+    "isPaymentEnabled": {
+      "type": "boolean",
+      "description": "ENG: Flag indicating whether the TPP is integrated with the payment system. - IT: Flag che indica se il TPP è integrato con il sistema di pagamento."
+    }
+  }
+}

@@ -1,0 +1,287 @@
+openapi: 3.2.0
+info:
+  title: Pagopa Notice Templates APIs API
+  version: 0.9.8
+  termsOfService: https://www.pagopa.gov.it/
+  description: 'Operations tagged Notice Templates APIs across 2 of this provider''s published API definitions: print-payment-notice-service.json, pagopa-print-payment-notices-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.platform.pagopa.it/print-payment-notice-service/external/v1
+security:
+- apiKeyHeader: []
+- apiKeyQuery: []
+tags:
+- name: Notice Templates APIs
+paths:
+  /notices/templates:
+    get:
+      tags:
+      - Notice Templates APIs
+      summary: getTemplates
+      description: Return available templates for notice generation
+      operationId: getTemplates
+      parameters:
+      - name: X-Request-Id
+        in: header
+        description: This header identifies the call, if not passed it is self-generated. This ID is returned in the response.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Return template data
+          headers:
+            X-Request-Id:
+              description: This header identifies the call
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TemplateResource'
+              example:
+              - description: string
+                templateExampleUrl: string
+                templateId: string
+        '400':
+          description: Bad Request
+          headers:
+            X-Request-Id:
+              description: This header identifies the call
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemJson'
+              example:
+                detail: There was an error processing the request
+                status: 200
+                title: string
+        '401':
+          description: Unauthorized
+          headers:
+            X-Request-Id:
+              description: This header identifies the call
+              schema:
+                type: string
+        '403':
+          description: Forbidden
+          headers:
+            X-Request-Id:
+              description: This header identifies the call
+              schema:
+                type: string
+        '404':
+          description: Templates not found
+          headers:
+            X-Request-Id:
+              description: This header identifies the call
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemJson'
+              example:
+                detail: There was an error processing the request
+                status: 200
+                title: string
+        '429':
+          description: Too many requests
+          headers:
+            X-Request-Id:
+              description: This header identifies the call
+              schema:
+                type: string
+        '500':
+          description: Service error
+          headers:
+            X-Request-Id:
+              description: This header identifies the call
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemJson'
+              example:
+                detail: There was an error processing the request
+                status: 200
+                title: string
+        '503':
+          description: Service or template table unavailable
+          headers:
+            X-Request-Id:
+              description: This header identifies the call
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemJson'
+              example:
+                detail: There was an error processing the request
+                status: 200
+                title: string
+    servers:
+    - url: https://api.platform.pagopa.it/print-payment-notice-service/external/v1
+  /notices/templates/{template_id}:
+    get:
+      tags:
+      - Notice Templates APIs
+      summary: getTemplate
+      description: Return templates
+      operationId: getTemplate
+      parameters:
+      - name: template_id
+        in: path
+        description: templateId to use for retrieval
+        required: true
+        schema:
+          type: string
+      - name: X-Request-Id
+        in: header
+        description: This header identifies the call, if not passed it is self-generated. This ID is returned in the response.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Return template data
+          headers:
+            X-Request-Id:
+              description: This header identifies the call
+              schema:
+                type: string
+          content:
+            application/json: {}
+        '400':
+          description: Bad Request
+          headers:
+            X-Request-Id:
+              description: This header identifies the call
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemJson'
+              example:
+                detail: There was an error processing the request
+                status: 200
+                title: string
+        '401':
+          description: Unauthorized
+          headers:
+            X-Request-Id:
+              description: This header identifies the call
+              schema:
+                type: string
+        '403':
+          description: Forbidden
+          headers:
+            X-Request-Id:
+              description: This header identifies the call
+              schema:
+                type: string
+        '404':
+          description: Template not found
+          headers:
+            X-Request-Id:
+              description: This header identifies the call
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemJson'
+              example:
+                detail: There was an error processing the request
+                status: 200
+                title: string
+        '429':
+          description: Too many requests
+          headers:
+            X-Request-Id:
+              description: This header identifies the call
+              schema:
+                type: string
+        '500':
+          description: Service error
+          headers:
+            X-Request-Id:
+              description: This header identifies the call
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemJson'
+              example:
+                detail: There was an error processing the request
+                status: 200
+                title: string
+        '503':
+          description: Service or template storage unavailable
+          headers:
+            X-Request-Id:
+              description: This header identifies the call
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemJson'
+              example:
+                detail: There was an error processing the request
+                status: 200
+                title: string
+    servers:
+    - url: https://api.platform.pagopa.it/print-payment-notice-service/external/v1
+components:
+  schemas:
+    ProblemJson:
+      type: object
+      properties:
+        detail:
+          type: string
+          description: A human readable explanation specific to this occurrence of the problem.
+          example: There was an error processing the request
+        status:
+          maximum: 600.0
+          minimum: 100.0
+          type: integer
+          description: The HTTP status code generated by the origin server for this occurrence of the problem.
+          format: int32
+          example: 200
+        title:
+          type: string
+          description: 'A short, summary of the problem type. Written in english and readable for engineers (usually not suited for non technical stakeholders and not localized); example: Service Unavailable'
+    TemplateResource:
+      required:
+      - description
+      - templateExampleUrl
+      - templateId
+      type: object
+      properties:
+        description:
+          type: string
+          description: Template description
+        templateExampleUrl:
+          type: string
+          description: Template example url
+        templateId:
+          type: string
+          description: templateId, to use when requiring generation of a notice with the selected template
+  securitySchemes:
+    apiKeyHeader:
+      type: apiKey
+      name: Ocp-Apim-Subscription-Key
+      in: header
+    apiKeyQuery:
+      type: apiKey
+      name: subscription-key
+      in: query
+x-refined-from:
+- print-payment-notice-service.json
+- pagopa-print-payment-notices-openapi.yml

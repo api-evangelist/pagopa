@@ -1,0 +1,93 @@
+openapi: 3.2.0
+info:
+  title: Pagopa Status API
+  x-refined-note:
+  - x-summary differs across the merged source definitions and was not carried
+  version: '1.0'
+  description: 'Operations tagged Status across 6 of this provider''s published API definitions: send-downtime-logs.yaml, signalhub-pull.yaml, signalhub-push.yaml, pagopa-pdnd-signal-hub-pull-openapi.yml, pagopa-pdnd-signal-hub-push-openapi.yml, pagopa-send-platform-status-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.notifichedigitali.it
+  description: Ambiente di produzione
+- url: https://api.uat.notifichedigitali.it
+  description: Ambiente di test
+- url: https://api.dev.notifichedigitali.it
+  description: Ambiente di sviluppo
+- url: https://api.signalhub.interop.pagopa.it/1.0/pull
+  description: Production environment
+- url: https://api.signalhub.interop.pagopa.it/1.0/push
+  description: Production environment
+tags:
+- name: Status
+  description: Lettura dello stato di SEND, API pubbliche
+paths:
+  /status:
+    get:
+      summary: status path
+      description: 'Questo path e questo metodo devono, per richiesta di AGID, restituire
+
+
+        - status 200 se la piattaforma notifica è correttamente funzionante,
+
+
+        - status 500 se la piattaforma ha un funzionamento degradato.
+
+
+        Il body e lasciato libero quindi utilizziamo quanto già definito per il path /downtime/status'
+      tags:
+      - Status
+      operationId: status
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/problem+json:
+              schema:
+                $ref: ./schemas-pn-components-v1.yaml#/components/schemas/PnStatusResponse
+              example:
+                functionalities:
+                - NOTIFICATION_CREATE
+                - NOTIFICATION_VISUALIZATION
+                - NOTIFICATION_WORKFLOW
+                openIncidents: []
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: ./schemas-pn-components-v1.yaml#/components/schemas/PnStatusResponse
+              example:
+                functionalities:
+                - NOTIFICATION_CREATE
+                - NOTIFICATION_VISUALIZATION
+                - NOTIFICATION_WORKFLOW
+                openIncidents:
+                - functionality: NOTIFICATION_CREATE
+                  status: KO
+                  startDate: '2019-08-24T14:15:22Z'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: ./schemas-pn-errors-v1.yaml#/components/schemas/Problem
+    servers:
+    - url: https://api.notifichedigitali.it
+      description: Ambiente di produzione
+    - url: https://api.uat.notifichedigitali.it
+      description: Ambiente di test
+    - url: https://api.dev.notifichedigitali.it
+      description: Ambiente di sviluppo
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: A bearer token in the format of a JWS and conformed to the specifications included in [RFC8725](https://tools.ietf.org/html/RFC8725).
+x-refined-from:
+- send-downtime-logs.yaml
+- signalhub-pull.yaml
+- signalhub-push.yaml
+- pagopa-pdnd-signal-hub-pull-openapi.yml
+- pagopa-pdnd-signal-hub-push-openapi.yml
+- pagopa-send-platform-status-openapi.yml

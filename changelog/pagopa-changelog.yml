@@ -1,0 +1,30 @@
+generated: '2026-10-09'
+method: searched
+source: https://developer.pagopa.it/it/pago-pa/guides/avviso-pagamento/per-iniziare/changelog
+scope: Changelog of the "Guida tecnica sugli avvisi di pagamento pagoPA" (payment notice technical guide, which the print-payment-notices API implements). No API-wide changelog was found on developer.pagopa.it.
+scheme: semver-like document versions with month dates
+current_version: 3.5.1
+docs: https://developer.pagopa.it/it/pago-pa/guides/avviso-pagamento/per-iniziare/changelog
+entries:
+- version: 3.5.1
+  date: 2026-02
+  breaking: false
+  highlights:
+  - Nelle Informazioni sull'Ente Creditore , il campo ENTE.NOME ora supporta fino a 100 caratteri.
+- version: '3.5'
+  date: 2025-11
+  breaking: false
+  highlights:
+  - Aggiornato il testo nella sezione " Quanto e dove pagare? "per chiarire che l'importo può variare a causa dei costi di notifica
+  - Aggiornati il file di esempio e assets Violazioni Codice della Strada
+- version: '3.4'
+  date: 2025-07
+  breaking: false
+  highlights:
+  - Inseriti riferimenti alle API di generazione avvisi
+  - Specificato le modalità di stampa fronte retro
+- version: '3.3'
+  date: 2024-05
+  breaking: false
+  highlights:
+  - Specificato meglio l'obbligo della Codifica dei testi in formato UTF-8

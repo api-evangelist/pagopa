@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/pagopa/main/json-schema/pagopa-paginated-payments-response-schema.json",
+  "title": "PaginatedPaymentsResponse",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/pagopa-fdr-organizations-openapi.yml#/components/schemas/PaginatedPaymentsResponse",
+  "type": "object",
+  "properties": {
+    "metadata": {
+      "$ref": "#/$defs/Metadata"
+    },
+    "count": {
+      "type": "integer",
+      "description": "The number of elements that can be found in this page.",
+      "format": "int64"
+    },
+    "data": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Payment"
+      },
+      "description": "The list of payments that are included in this page. Date-time fields inside each item are defined with UTC time-zone. The original business day is preserved where applicable."
+    }
+  },
+  "$defs": {
+    "Instant": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "Metadata": {
+      "type": "object",
+      "properties": {
+        "pageSize": {
+          "type": "integer",
+          "description": "The size of the current page shown in response",
+          "format": "int32"
+        },
+        "pageNumber": {
+          "type": "integer",
+          "description": "The index of the current page shown in response",
+          "format": "int32"
+        },
+        "totPage": {
+          "type": "integer",
+          "description": "The total number of the pages that can be retrieved in order to show all elements.",
+          "format": "int32"
+        }
+      }
+    },
+    "Payment": {
+      "required": [
+        "index",
+        "iuv",
+        "iur",
+        "idTransfer",
+        "pay",
+        "payStatus",
+        "payDate"
+      ],
+      "type": "object",
+      "properties": {
+        "index": {
+          "minimum": 1.0,
+          "type": "integer",
+          "description": "Unique index of the payment in the flow",
+          "format": "int64"
+        },
+        "iuv": {
+          "pattern": "^(.{1,35})$",
+          "type": "string",
+          "description": "The value of the 'Identificativo Univoco Versamento' code related to the payment.<br>In the XML request for SOAP primitives, this field is mappable with the tag <b>[FlussoRiversamento.datiSingoliPagamenti.identificativoUnivocoVersamento]</b>."
+        },
+        "iur": {
+          "pattern": "^(.{1,35})$",
+          "type": "string",
+          "description": "The value of the 'Identificativo Univoco Riscossione' code related to the payment in the flow.<br>In the XML request for SOAP primitives, this field is mappable with the tag <b>[FlussoRiversamento.datiSingoliPagamenti.identificativoUnivocoRiscossione]</b>."
+        },
+        "idTransfer": {
+          "maximum": 5.0,
+          "minimum": 1.0,
+          "type": "integer",
+          "description": "The value of the transfer identifier related to the payment during the payment process.<br>In the XML request for SOAP primitives, this field is mappable with the tag <b>[FlussoRiversamento.datiSingoliPagamenti.indiceDatiSingoloPagamento]</b>.",
+          "format": "int64"
+        },
+        "pay": {
+          "pattern": "^\\d{1,2147483647}[.]\\d{1,2}?$",
+          "type": "number",
+          "description": "The value of the payment amount in decimal euro.<br>In the XML request for SOAP primitives, this field is mappable with the tag <b>[FlussoRiversamento.datiSingoliPagamenti.singoloImportoPagato]</b>.",
+          "format": "double"
+        },
+        "payStatus": {
+          "enum": [
+            "EXECUTED",
+            "STAND_IN",
+            "STAND_IN_NO_RPT",
+            "NO_RPT"
+          ],
+          "type": "string",
+          "description": "The value of the status of the payment in relation to ist completion.<br>In the XML request for SOAP primitives, this field is mappable with the tag <b>[FlussoRiversamento.datiSingoliPagamenti.codiceEsitoSingoloPagamento]</b>.<br>The enumeration is mapped with the following values:<br><ul><li>EXECUTED -> 0</li><li>STAND_IN -> 4</li><li>STAND_IN_NO_RPT -> 8</li><li>NO_RPT -> 9</li></ul>"
+        },
+        "payDate": {
+          "$ref": "#/$defs/Instant"
+        }
+      }
+    }
+  }
+}

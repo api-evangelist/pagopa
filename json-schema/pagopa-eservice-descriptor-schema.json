@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/pagopa/main/json-schema/pagopa-eservice-descriptor-schema.json",
+  "title": "EServiceDescriptor",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/pagopa-pdnd-interop-v2-openapi.yml#/components/schemas/EServiceDescriptor",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "version": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "audience": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "voucherLifespan": {
+      "type": "integer",
+      "format": "int32"
+    },
+    "dailyCallsPerConsumer": {
+      "description": "Maximum number of daily calls that this descriptor can afford per consumer",
+      "type": "integer",
+      "format": "int32",
+      "minimum": 1,
+      "maximum": 1000000000
+    },
+    "dailyCallsTotal": {
+      "description": "Total daily calls available for this E-Service",
+      "type": "integer",
+      "format": "int32",
+      "minimum": 1,
+      "maximum": 1000000000
+    },
+    "state": {
+      "$ref": "#/$defs/EServiceDescriptorState"
+    },
+    "agreementApprovalPolicy": {
+      "$ref": "#/$defs/AgreementApprovalPolicy"
+    },
+    "serverUrls": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "publishedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "suspendedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "deprecatedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "archivedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "templateVersionId": {
+      "type": "string",
+      "format": "uuid"
+    }
+  },
+  "required": [
+    "id",
+    "version",
+    "docs",
+    "state",
+    "creationDate",
+    "audience",
+    "voucherLifespan",
+    "dailyCallsPerConsumer",
+    "dailyCallsTotal",
+    "agreementApprovalPolicy",
+    "serverUrls"
+  ],
+  "$defs": {
+    "AgreementApprovalPolicy": {
+      "type": "string",
+      "description": "E-Service Descriptor policy for new Agreements approval",
+      "enum": [
+        "AUTOMATIC",
+        "MANUAL"
+      ]
+    },
+    "EServiceDescriptorState": {
+      "type": "string",
+      "description": "E-Service Descriptor State",
+      "enum": [
+        "DRAFT",
+        "PUBLISHED",
+        "DEPRECATED",
+        "SUSPENDED",
+        "ARCHIVED",
+        "WAITING_FOR_APPROVAL"
+      ]
+    }
+  }
+}

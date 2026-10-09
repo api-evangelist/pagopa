@@ -1,0 +1,369 @@
+openapi: 3.2.0
+info:
+  title: Pagopa Payments API
+  version: 1.0.0
+  termsOfService: https://www.pagopa.gov.it/
+  description: 'Operations tagged Payments API across 4 of this provider''s published API definitions: gpd-4-aca.json, gpd.json, pagopa-gpd-aca-openapi.yml, pagopa-gpd-v1-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.platform.pagopa.it/aca/debt-positions-service/v1
+  description: ACA Production environment
+- url: https://api.platform.pagopa.it/gpd/debt-positions-service/v1
+security:
+- apiKeyHeader: []
+- apiKeyQuery: []
+tags:
+- name: Payments API
+paths:
+  /organizations/{organizationfiscalcode}/paymentoptions/paids/{nav}:
+    post:
+      tags:
+      - Payments API
+      summary: The Organization mark a payment option as already paid
+      description: The Organization mark a payment option as already paid.
+      operationId: setPaymentOptionAsAlreadyPaid
+      parameters:
+      - name: organizationfiscalcode
+        in: path
+        description: Organization fiscal code, the fiscal code of the Organization.
+        required: true
+        schema:
+          type: string
+      - name: nav
+        in: path
+        description: NAV (notice number) is the unique reference assigned to the payment by a creditor institution.
+        required: true
+        schema:
+          type: string
+      - name: X-Request-Id
+        in: header
+        description: This header identifies the call, if not passed it is self-generated. This ID is returned in the response.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlreadyPaidPaymentOptionModel'
+            example:
+              paymentDate: string
+      responses:
+        '200':
+          description: Request set as paid.
+          headers:
+            X-Request-Id:
+              description: This header identifies the call
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentsModelResponse'
+              example:
+                nav: string
+                iuv: string
+                organizationFiscalCode: string
+                amount: 0
+                description: string
+                isPartialPayment: true
+                dueDate: string
+                retentionDate: string
+                paymentDate: string
+                reportingDate: string
+                insertedDate: string
+                paymentMethod: string
+                fee: 0
+                notificationFee: 0
+                pspCompany: string
+                idReceipt: string
+                idFlowReporting: string
+                status: PO_UNPAID
+                lastUpdatedDate: string
+                lastUpdatedDateNotificationFee: string
+                paymentOptionMetadata:
+                - key: string
+                  value: string
+                transfer:
+                - organizationFiscalCode: string
+                  companyName: string
+                  idTransfer: string
+                  amount: 0
+                  remittanceInformation: string
+                  category: string
+                  iban: string
+                  postalIban: string
+                  stamp:
+                    hashDocument: string
+                    stampType: string
+                    provincialResidence: RM
+                  insertedDate: string
+                  status: T_UNREPORTED
+                  lastUpdatedDate: string
+                  transferMetadata:
+                  - key: string
+                    value: string
+                serviceType: string
+        '400':
+          description: Malformed request.
+          headers:
+            X-Request-Id:
+              description: This header identifies the call
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemJson'
+              example:
+                title: string
+                status: 200
+                detail: There was an error processing the request
+        '401':
+          description: Wrong or missing function key.
+          headers:
+            X-Request-Id:
+              description: This header identifies the call
+              schema:
+                type: string
+        '404':
+          description: No payment option found.
+          headers:
+            X-Request-Id:
+              description: This header identifies the call
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemJson'
+              example:
+                title: string
+                status: 200
+                detail: There was an error processing the request
+        '409':
+          description: 'Conflict: existing related payment found.'
+          headers:
+            X-Request-Id:
+              description: This header identifies the call
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemJson'
+              example:
+                title: string
+                status: 200
+                detail: There was an error processing the request
+        '422':
+          description: 'Unprocessable: not in payable state.'
+          headers:
+            X-Request-Id:
+              description: This header identifies the call
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemJson'
+              example:
+                title: string
+                status: 200
+                detail: There was an error processing the request
+        '500':
+          description: Service unavailable.
+          headers:
+            X-Request-Id:
+              description: This header identifies the call
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemJson'
+              example:
+                title: string
+                status: 200
+                detail: There was an error processing the request
+    servers:
+    - url: https://api.platform.pagopa.it/aca/debt-positions-service/v1
+      description: ACA Production environment
+components:
+  schemas:
+    TransferModelResponse:
+      type: object
+      properties:
+        organizationFiscalCode:
+          type: string
+        companyName:
+          type: string
+        idTransfer:
+          type: string
+        amount:
+          type: integer
+          format: int64
+        remittanceInformation:
+          type: string
+        category:
+          type: string
+        iban:
+          type: string
+        postalIban:
+          type: string
+        stamp:
+          $ref: '#/components/schemas/Stamp'
+        insertedDate:
+          type: string
+          format: date-time
+        status:
+          enum:
+          - T_UNREPORTED
+          - T_REPORTED
+          type: string
+        lastUpdatedDate:
+          type: string
+          format: date-time
+        transferMetadata:
+          type: array
+          items:
+            $ref: '#/components/schemas/TransferMetadataModelResponse'
+    TransferMetadataModelResponse:
+      type: object
+      properties:
+        key:
+          type: string
+        value:
+          type: string
+    Stamp:
+      required:
+      - hashDocument
+      - provincialResidence
+      - stampType
+      type: object
+      properties:
+        hashDocument:
+          maxLength: 72
+          minLength: 0
+          type: string
+          description: Document hash type is stBase64Binary72 as described in https://github.com/pagopa/pagopa-api.
+        stampType:
+          maxLength: 2
+          minLength: 2
+          type: string
+          description: The type of the stamp
+        provincialResidence:
+          pattern: '[A-Z]{2}'
+          type: string
+          description: The provincial of the residence
+          example: RM
+    AlreadyPaidPaymentOptionModel:
+      type: object
+      properties:
+        paymentDate:
+          type: string
+          format: date-time
+    PaymentOptionMetadataModelResponse:
+      type: object
+      properties:
+        key:
+          type: string
+        value:
+          type: string
+    ProblemJson:
+      type: object
+      properties:
+        title:
+          type: string
+          description: 'A short, summary of the problem type. Written in english and readable for engineers (usually not suited for non technical stakeholders and not localized); example: Service Unavailable'
+        status:
+          maximum: 600.0
+          minimum: 100.0
+          type: integer
+          description: The HTTP status code generated by the origin server for this occurrence of the problem.
+          format: int32
+          example: 200
+        detail:
+          type: string
+          description: A human readable explanation specific to this occurrence of the problem.
+          example: There was an error processing the request
+    PaymentsModelResponse:
+      type: object
+      properties:
+        nav:
+          type: string
+        iuv:
+          type: string
+        organizationFiscalCode:
+          type: string
+        amount:
+          type: integer
+          format: int64
+        description:
+          type: string
+        isPartialPayment:
+          type: boolean
+        dueDate:
+          type: string
+          format: date-time
+        retentionDate:
+          type: string
+          format: date-time
+        paymentDate:
+          type: string
+          format: date-time
+        reportingDate:
+          type: string
+          format: date-time
+        insertedDate:
+          type: string
+          format: date-time
+        paymentMethod:
+          type: string
+        fee:
+          type: integer
+          format: int64
+        notificationFee:
+          type: integer
+          format: int64
+        pspCompany:
+          type: string
+        idReceipt:
+          type: string
+        idFlowReporting:
+          type: string
+        status:
+          enum:
+          - PO_UNPAID
+          - PO_PAID
+          - PO_PARTIALLY_REPORTED
+          - PO_REPORTED
+          type: string
+        lastUpdatedDate:
+          type: string
+          format: date-time
+        lastUpdatedDateNotificationFee:
+          type: string
+          format: date-time
+        paymentOptionMetadata:
+          type: array
+          items:
+            $ref: '#/components/schemas/PaymentOptionMetadataModelResponse'
+        transfer:
+          type: array
+          items:
+            $ref: '#/components/schemas/TransferModelResponse'
+        serviceType:
+          type: string
+  securitySchemes:
+    apiKeyHeader:
+      type: apiKey
+      name: Ocp-Apim-Subscription-Key
+      in: header
+    apiKeyQuery:
+      type: apiKey
+      name: subscription-key
+      in: query
+x-refined-from:
+- gpd-4-aca.json
+- gpd.json
+- pagopa-gpd-aca-openapi.yml
+- pagopa-gpd-v1-openapi.yml

@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/pagopa/main/json-schema/pagopa-preview-payment-request-v2-dto-schema.json",
+  "title": "PreviewPaymentRequestV2DTO",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/pagopa-pari-ecommerce-openapi.yml#/components/schemas/PreviewPaymentRequestV2DTO",
+  "type": "object",
+  "properties": {
+    "amountCents": {
+      "type": "integer",
+      "format": "int64",
+      "minimum": 0,
+      "maximum": 1000000000,
+      "description": "Importo totale della spesa in centesimi"
+    },
+    "additionalProperties": {
+      "type": "object",
+      "description": "Campi aggiuntivi usati per la preview del prodotto",
+      "additionalProperties": {
+        "type": "string",
+        "maxLength": 255,
+        "pattern": ".*"
+      }
+    }
+  },
+  "required": [
+    "amountCents"
+  ]
+}

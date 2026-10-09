@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/pagopa/main/json-schema/pagopa-get-mbd-request-schema.json",
+  "title": "GetMbdRequest",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/pagopa-marca-da-bollo-v1-openapi.yml#/components/schemas/GetMbdRequest",
+  "required": [
+    "idCIService",
+    "returnUrls"
+  ],
+  "type": "object",
+  "properties": {
+    "idCIService": {
+      "type": "string",
+      "description": "Identifier of the association between the organization and MBD payment service."
+    },
+    "paymentNotices": {
+      "maxItems": 1,
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/PaymentNotice"
+      }
+    },
+    "returnUrls": {
+      "$ref": "#/$defs/ReturnUrls"
+    }
+  },
+  "$defs": {
+    "PaymentNotice": {
+      "required": [
+        "amount",
+        "documentHash",
+        "email",
+        "firstName",
+        "fiscalCode",
+        "lastName",
+        "province"
+      ],
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "integer",
+          "description": "MBD amount (Eurocents value).",
+          "format": "int64"
+        },
+        "documentHash": {
+          "type": "string",
+          "description": "Document hash."
+        },
+        "email": {
+          "type": "string",
+          "description": "Debtor mail."
+        },
+        "firstName": {
+          "type": "string",
+          "description": "Debtor name."
+        },
+        "fiscalCode": {
+          "pattern": "^(?:[A-Z]{6}\\d{2}[A-Z]\\d{2}[A-Z]\\d{3}[A-Z]|\\d{11})$",
+          "type": "string",
+          "description": "Debtor fiscal code."
+        },
+        "lastName": {
+          "type": "string",
+          "description": "Debtor surname."
+        },
+        "province": {
+          "type": "string",
+          "description": "Debtor province."
+        }
+      }
+    },
+    "ReturnUrls": {
+      "required": [
+        "cancelUrl",
+        "errorUrl",
+        "successUrl"
+      ],
+      "type": "object",
+      "properties": {
+        "cancelUrl": {
+          "type": "string",
+          "description": "Redirect cancel URL."
+        },
+        "errorUrl": {
+          "type": "string",
+          "description": "Redirect error URL."
+        },
+        "successUrl": {
+          "type": "string",
+          "description": "Redirect success URL."
+        }
+      }
+    }
+  }
+}

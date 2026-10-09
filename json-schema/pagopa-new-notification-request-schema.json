@@ -1,0 +1,405 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/pagopa/main/json-schema/pagopa-new-notification-request-schema.json",
+  "title": "NewNotificationRequest",
+  "description": "I campi utilizzati per la creazione di una nuova Notifica.",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/pagopa-send-b2b-pa-openapi.yml#/components/schemas/NewNotificationRequest",
+  "type": "object",
+  "required": [
+    "paProtocolNumber",
+    "subject",
+    "recipients",
+    "documents",
+    "physicalCommunicationType",
+    "notificationFeePolicy",
+    "senderDenomination",
+    "senderTaxId",
+    "taxonomyCode"
+  ],
+  "properties": {
+    "idempotenceToken": {
+      "description": "Identificativo utilizzabile dal chiamante per disambiguare differenti  \"richieste di notificazione\" effettuate con lo stesso numero di protocollo  (campo _paProtocolNumber_). Questo può essere necessario in caso di  \"richiesta di notifica\" rifiutata per errori nei codici di verifica degli allegati.",
+      "type": "string",
+      "pattern": "^[ -~]*$",
+      "maxLength": 256
+    },
+    "paProtocolNumber": {
+      "description": "Numero di protocollo che la PA mittente assegna alla notifica stessa",
+      "type": "string",
+      "pattern": "^.*$",
+      "maxLength": 256
+    },
+    "subject": {
+      "type": "string",
+      "description": "titolo della notifica, NON inserire dati personali/sensibili",
+      "minLength": 10,
+      "maxLength": 134,
+      "pattern": "^.*$"
+    },
+    "abstract": {
+      "type": "string",
+      "description": "descrizione sintetica della notifica, NON inserire dati personali/sensibili",
+      "pattern": "^.*$",
+      "maxLength": 1024
+    },
+    "recipients": {
+      "type": "array",
+      "description": "Informazioni sui destinatari",
+      "items": {
+        "$ref": "#/$defs/NotificationRecipient"
+      }
+    },
+    "documents": {
+      "type": "array",
+      "description": "Documenti notificati",
+      "items": {
+        "$ref": "#/$defs/NotificationDocument"
+      },
+      "minItems": 1
+    },
+    "notificationFeePolicy": {
+      "$ref": "#/$defs/NotificationFeePolicy"
+    },
+    "cancelledIun": {
+      "$ref": "#/$defs/IUN"
+    },
+    "physicalCommunicationType": {
+      "type": "string",
+      "description": "Tipologia comunicazione fisica",
+      "enum": [
+        "AR_REGISTERED_LETTER",
+        "REGISTERED_LETTER_890"
+      ]
+    },
+    "senderDenomination": {
+      "$ref": "#/$defs/Denomination"
+    },
+    "senderTaxId": {
+      "description": "Sender PA fiscal code",
+      "type": "string",
+      "maxLength": 11,
+      "minLength": 11,
+      "pattern": "^\\d+$"
+    },
+    "group": {
+      "type": "string",
+      "description": "Gruppo di utenti dell'ente mittente che può visualizzare la notifica",
+      "pattern": "^[ -~]*$",
+      "maxLength": 1024
+    },
+    "amount": {
+      "type": "integer",
+      "format": "int32",
+      "description": "Importo della notifica in eurocent"
+    },
+    "paymentExpirationDate": {
+      "type": "string",
+      "minLength": 10,
+      "maxLength": 10,
+      "pattern": "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|[12][0-9]|0[1-9])$",
+      "description": "Data di scadenza del pagamento nel formato YYYY-MM-DD riferito all'Italia"
+    },
+    "taxonomyCode": {
+      "type": "string",
+      "minLength": 7,
+      "maxLength": 7,
+      "pattern": "^([0-9]{6}[A-Z]{1})$",
+      "description": "Codice tassonomico della notifica basato sulla definizione presente nell'allegato 2 capitolo C del bando [__AVVISO PUBBLICO MISURA 1.4.5 PIATTAFORMA NOTIFICHE DIGITALI__](https://pnrrcomuni.fondazioneifel.it/bandi_public/Bando/325)      "
+    },
+    "pagoPaIntMode": {
+      "type": "string",
+      "description": "Modalitá di integrazione pagoPA per l'attualizazione del costo della notifica. <br/> - _NONE_: nessuna attualizzazione. <br/> - _SYNC_: modalitá sincrona. <br/> - _ASYNC_: modalitá asincrona. (Non ancora supportata) <br/>",
+      "enum": [
+        "NONE",
+        "SYNC",
+        "ASYNC"
+      ]
+    }
+  },
+  "$defs": {
+    "Denomination": {
+      "description": "Denominazione ente o persona fisica / ragione sociale. La codifica prevede i caratteri ISO LATIN 1, senza | e senza i caratteri di controllo, ovvero la seguente regexp: ^[ -{}~\\u00A0-ÿ]*$",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 88,
+      "pattern": "^.*$"
+    },
+    "IUN": {
+      "description": "Identificativo Univoco Notifica",
+      "type": "string",
+      "minLength": 25,
+      "maxLength": 25,
+      "pattern": "^[A-Z]{4}-[A-Z]{4}-[A-Z]{4}-[0-9]{6}-[A-Z]{1}-[0-9]{1}$"
+    },
+    "NotificationAttachment": {
+      "description": "Un allegato della notifica.",
+      "type": "object",
+      "required": [
+        "digests",
+        "contentType",
+        "ref"
+      ],
+      "properties": {
+        "digests": {
+          "$ref": "#/$defs/NotificationAttachmentDigests"
+        },
+        "contentType": {
+          "type": "string",
+          "description": "tipo di contenuto dell'allegato, supportato application/pdf",
+          "minLength": 15,
+          "maxLength": 15,
+          "pattern": "^application\\/pdf$"
+        },
+        "ref": {
+          "$ref": "#/$defs/NotificationAttachmentBodyRef"
+        }
+      }
+    },
+    "NotificationAttachmentBodyRef": {
+      "description": "Riferimento all'allegato precaricato",
+      "required": [
+        "key",
+        "versionToken"
+      ],
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string",
+          "description": "Chiave in cui è stato salvato l'allegato",
+          "maxLength": 512,
+          "pattern": "^(safestorage:\\/\\/)?[A-Za-z0-9._-]+$"
+        },
+        "versionToken": {
+          "type": "string",
+          "description": "Token per recuperare l'esatta istanza dell'allegato, che dovrà coincidere con l'__x-amz-version-id__ ottenuto nell'header della response in fase di upload del documento ad esso associato.",
+          "pattern": "^.*$",
+          "maxLength": 256
+        }
+      }
+    },
+    "NotificationAttachmentDigests": {
+      "description": "Codici per la verifica del corretto caricamento di un allegato",
+      "type": "object",
+      "required": [
+        "sha256"
+      ],
+      "properties": {
+        "sha256": {
+          "type": "string",
+          "description": "Digest \"sha256\" della codifica binaria dell'allegato in base64",
+          "minLength": 44,
+          "maxLength": 44,
+          "pattern": "^[A-Za-z0-9+\\/]{43}=|[A-Za-z0-9+\\/]{44}$"
+        }
+      }
+    },
+    "NotificationDigitalAddress": {
+      "description": "Indirizzo di invio della notifica",
+      "required": [
+        "address",
+        "type"
+      ],
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "tipo di indirizzo PEC, REM, SERCQ, ...",
+          "enum": [
+            "PEC"
+          ]
+        },
+        "address": {
+          "type": "string",
+          "description": "Indirizzo PEC o REM che il mittente della notifica intende utilizzare per  raggiungere il destinatario.",
+          "pattern": "^(?:[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?|\\[(?:(?:25[0-5]|2[0-4]\\d|[01]?\\d\\d?)\\.){3}(?:25[0-5]|2[0-4]\\d|[01]?\\d\\d?|[a-zA-Z0-9-]*[a-zA-Z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])$",
+          "maxLength": 320
+        }
+      }
+    },
+    "NotificationDocument": {
+      "description": "Un documento da notificare",
+      "allOf": [
+        {
+          "$ref": "#/$defs/NotificationAttachment"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string",
+              "description": "Titolo del documento allegato. Stringa alfanumerica con caratteri utilizzabili in un nome file.",
+              "minLength": 1,
+              "maxLength": 512,
+              "pattern": "^.*$"
+            },
+            "docIdx": {
+              "type": "string",
+              "description": "Indice del documento partendo da 0.",
+              "maxLength": 3,
+              "pattern": "^\\d+$"
+            }
+          }
+        }
+      ]
+    },
+    "NotificationFeePolicy": {
+      "type": "string",
+      "description": "Politica di addebitamento dei costi di notifica. <br/> - _FLAT_RATE_: costo forfettario fisso. In questa modalità SEND non gestisce  il costo della notifica per il destinatario.<br/> - _DELIVERY_MODE_: costo calcolato in base all'effettivo percorso di notifica. <br/>",
+      "enum": [
+        "FLAT_RATE",
+        "DELIVERY_MODE"
+      ]
+    },
+    "NotificationPaymentAttachment": {
+      "description": "Un modulo di pagamento allegato alla notifica",
+      "allOf": [
+        {
+          "$ref": "#/$defs/NotificationAttachment"
+        }
+      ]
+    },
+    "NotificationPaymentInfo": {
+      "title": "Informazioni per effettuare il pagamento",
+      "description": "Informazioni utili per effettuare il pagamento di una notifica, sono associate al destinatario perché le spese di notifica possono differire a seconda del canale di notifica utilizzato. <br/>\n  - _noticeCode_: \"codice avviso pagoPA\" di pagamento del sistema pagoPA, usato per pagamento online.<br/>\n  - _creditorTaxId_: codice fiscale dell'ente a cui fa riferimento il \"codice avviso pagoPA\". <br/>\n  - _pagoPaForm_: riferimento al PDF contenete il bollettino pagoPA<br/>",
+      "type": "object",
+      "required": [
+        "noticeCode",
+        "creditorTaxId"
+      ],
+      "properties": {
+        "noticeCode": {
+          "$ref": "#/$defs/noticeCode"
+        },
+        "creditorTaxId": {
+          "$ref": "#/$defs/paTaxId"
+        },
+        "noticeCodeAlternative": {
+          "$ref": "#/$defs/noticeCode"
+        },
+        "pagoPaForm": {
+          "$ref": "#/$defs/NotificationPaymentAttachment"
+        }
+      }
+    },
+    "NotificationPhysicalAddress": {
+      "description": "Indirizzo fisico",
+      "type": "object",
+      "required": [
+        "address",
+        "municipality"
+      ],
+      "properties": {
+        "at": {
+          "type": "string",
+          "description": "Campo \"presso\" dell'indirizzo",
+          "pattern": "^.*$",
+          "maxLength": 44
+        },
+        "address": {
+          "type": "string",
+          "description": "Indirizzo del domicilio fisico",
+          "pattern": "^.*$",
+          "minLength": 2,
+          "maxLength": 1024
+        },
+        "addressDetails": {
+          "type": "string",
+          "description": "Seconda riga dell'indirizzo fisico",
+          "pattern": "^.*$",
+          "maxLength": 1024
+        },
+        "zip": {
+          "type": "string",
+          "description": "Codice di avviamento postale. In caso di invio estero diventa facoltativo",
+          "minLength": 0,
+          "maxLength": 15,
+          "pattern": "^(\\w|\\ |\\-)*$"
+        },
+        "municipality": {
+          "type": "string",
+          "description": "Comune",
+          "pattern": "^.*$",
+          "minLength": 2,
+          "maxLength": 256
+        },
+        "municipalityDetails": {
+          "type": "string",
+          "description": "Frazione o località",
+          "pattern": "^.*$",
+          "maxLength": 256
+        },
+        "province": {
+          "type": "string",
+          "description": "Provincia",
+          "pattern": "^.*$",
+          "maxLength": 256
+        },
+        "foreignState": {
+          "type": "string",
+          "description": "Denominazione paese estero",
+          "pattern": "^.*$",
+          "maxLength": 256
+        }
+      }
+    },
+    "NotificationRecipient": {
+      "description": "Informazioni sui destinatari",
+      "required": [
+        "denomination",
+        "recipientType",
+        "taxId",
+        "physicalAddress"
+      ],
+      "type": "object",
+      "properties": {
+        "recipientType": {
+          "type": "string",
+          "description": "Tipologia di destinatario: Persona Fisica (PF) o Persona Giuridica (PG)",
+          "enum": [
+            "PF",
+            "PG"
+          ]
+        },
+        "taxId": {
+          "$ref": "#/$defs/TaxId"
+        },
+        "denomination": {
+          "$ref": "#/$defs/Denomination"
+        },
+        "digitalDomicile": {
+          "$ref": "#/$defs/NotificationDigitalAddress"
+        },
+        "physicalAddress": {
+          "$ref": "#/$defs/NotificationPhysicalAddress"
+        },
+        "payment": {
+          "$ref": "#/$defs/NotificationPaymentInfo"
+        }
+      }
+    },
+    "TaxId": {
+      "description": "C.F. persona fisica o persona giuridica",
+      "type": "string",
+      "minLength": 11,
+      "maxLength": 16,
+      "pattern": "^([A-Z]{6}[0-9LMNPQRSTUV]{2}[A-Z]{1}[0-9LMNPQRSTUV]{2}[A-Z]{1}[0-9LMNPQRSTUV]{3}[A-Z]{1})|([0-9]{11})$"
+    },
+    "noticeCode": {
+      "description": "Payment notice number  numero avviso",
+      "type": "string",
+      "maxLength": 18,
+      "minLength": 18,
+      "pattern": "^\\d+$"
+    },
+    "paTaxId": {
+      "description": "Payment PA fiscal code",
+      "type": "string",
+      "maxLength": 11,
+      "minLength": 11,
+      "pattern": "^\\d+$"
+    }
+  }
+}

@@ -1,0 +1,482 @@
+openapi: 3.2.0
+info:
+  title: Pagopa Keys API
+  contact:
+    name: API Support
+    url: https://github.com/pagopa/pdnd-interop-frontend/issues
+  termsOfService: https://selfcare.interop.pagopa.it/ui/it/termini-di-servizio
+  x-summary: PDND Interoperability API
+  version: '1.0'
+  description: 'Operations tagged keys across 3 of this provider''s published API definitions: interop-api-v3.yaml, pagopa-pdnd-interop-v2-openapi.yml, pagopa-pdnd-interop-v3-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.interop.pagopa.it/v3
+  description: Production environment
+- url: https://api.interop.pagopa.it/v2
+  description: PROD environment
+tags:
+- name: Keys
+  description: Keys routes
+paths:
+  /keys/{kid}:
+    get:
+      tags:
+      - Keys
+      summary: Retrieve a Key in JWK format
+      description: Retrieve the JWK by kid
+      operationId: getJWKByKid
+      parameters:
+      - name: kid
+        in: path
+        description: The unique identifier of the Key (kid)
+        required: true
+        schema:
+          $ref: '#/components/schemas/Kid'
+      responses:
+        '200':
+          description: Key retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Key'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /producerKeys/{kid}:
+    get:
+      tags:
+      - Keys
+      summary: Retrieve a Producer Key in JWK format
+      description: Retrieve the Producer JWK by kid
+      operationId: getProducerJWKByKid
+      parameters:
+      - name: kid
+        in: path
+        description: The unique identifier of the Producer Key (kid)
+        required: true
+        schema:
+          $ref: '#/components/schemas/Kid'
+      responses:
+        '200':
+          description: Producer Key retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProducerKey'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+components:
+  schemas:
+    ProducerKeychainId:
+      type: string
+      format: uuid
+      description: The unique identifier of the Producer Keychain
+    ProducerKey:
+      description: Key
+      type: object
+      additionalProperties: false
+      properties:
+        producerKeychainId:
+          $ref: '#/components/schemas/ProducerKeychainId'
+        jwk:
+          $ref: '#/components/schemas/JWK'
+      required:
+      - producerKeychainId
+      - jwk
+    OtherPrimeInfo:
+      type: object
+      additionalProperties: false
+      properties:
+        r:
+          type: string
+        d:
+          type: string
+        t:
+          type: string
+      required:
+      - r
+      - d
+      - t
+    JWK:
+      description: JSON Web Key
+      type: object
+      additionalProperties: false
+      properties:
+        kty:
+          type: string
+        key_ops:
+          type: array
+          items:
+            type: string
+        use:
+          type: string
+        alg:
+          type: string
+        kid:
+          $ref: '#/components/schemas/Kid'
+        x5u:
+          type: string
+          minLength: 1
+        x5t:
+          type: string
+        x5t#S256:
+          type: string
+        x5c:
+          type: array
+          items:
+            type: string
+        crv:
+          type: string
+        x:
+          type: string
+        y:
+          type: string
+        d:
+          type: string
+        k:
+          type: string
+        n:
+          type: string
+        e:
+          type: string
+        p:
+          type: string
+        q:
+          type: string
+        dp:
+          type: string
+        dq:
+          type: string
+        qi:
+          type: string
+        oth:
+          uniqueItems: false
+          minItems: 1
+          type: array
+          items:
+            $ref: '#/components/schemas/OtherPrimeInfo'
+      required:
+      - kty
+      - kid
+    Kid:
+      type: string
+      description: The unique identifier of the Key
+    Problem:
+      properties:
+        type:
+          description: URI reference of type definition
+          type: string
+        status:
+          description: The HTTP status code generated by the origin server for this occurrence of the problem
+          example: 503
+          format: int32
+          minimum: 100
+          type: integer
+          exclusiveMaximum: 600
+        title:
+          description: A short, summary of the problem type. Written in english and readable
+          example: Service Unavailable
+          maxLength: 64
+          pattern: ^[ -~]{0,64}$
+          type: string
+        correlationId:
+          description: Unique identifier of the request
+          example: 53af4f2d-0c87-41ef-a645-b726a821852b
+          maxLength: 64
+          type: string
+        detail:
+          description: A human readable explanation of the problem
+          example: Request took too long to complete
+          maxLength: 4096
+          pattern: ^.{0,1024}$
+          type: string
+        errors:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/ProblemError'
+      additionalProperties: false
+      required:
+      - type
+      - status
+      - title
+    ProblemError:
+      properties:
+        code:
+          description: Internal code of the error
+          example: 123-4567
+          minLength: 8
+          maxLength: 8
+          pattern: ^[0-9]{3}-[0-9]{4}$
+          type: string
+        detail:
+          description: A human readable explanation specific to this occurrence of the problem
+          example: Parameter not valid
+          maxLength: 4096
+          pattern: ^.{0,1024}$
+          type: string
+      required:
+      - code
+      - detail
+    Key:
+      description: Key
+      type: object
+      additionalProperties: false
+      properties:
+        clientId:
+          $ref: '#/components/schemas/ClientId'
+        jwk:
+          $ref: '#/components/schemas/JWK'
+      required:
+      - clientId
+      - jwk
+    ClientId:
+      type: string
+      format: uuid
+      description: The unique identifier of the Client
+    ProducerKey_2:
+      description: Key
+      type: object
+      additionalProperties: false
+      properties:
+        producerKeychainId:
+          type: string
+          format: uuid
+        jwk:
+          $ref: '#/components/schemas/JWK_2'
+      required:
+      - producerKeychainId
+      - jwk
+    JWK_2:
+      description: JSON Web Key
+      type: object
+      additionalProperties: false
+      properties:
+        kty:
+          type: string
+        key_ops:
+          type: array
+          items:
+            type: string
+        use:
+          type: string
+        alg:
+          type: string
+        kid:
+          type: string
+        x5u:
+          type: string
+          minLength: 1
+        x5t:
+          type: string
+        x5t#S256:
+          type: string
+        x5c:
+          type: array
+          items:
+            type: string
+        crv:
+          type: string
+        x:
+          type: string
+        y:
+          type: string
+        d:
+          type: string
+        k:
+          type: string
+        n:
+          type: string
+        e:
+          type: string
+        p:
+          type: string
+        q:
+          type: string
+        dp:
+          type: string
+        dq:
+          type: string
+        qi:
+          type: string
+        oth:
+          uniqueItems: false
+          minItems: 1
+          type: array
+          items:
+            $ref: '#/components/schemas/OtherPrimeInfo'
+      required:
+      - kty
+      - kid
+    Key_2:
+      description: Key
+      type: object
+      additionalProperties: false
+      properties:
+        clientId:
+          type: string
+          format: uuid
+        jwk:
+          $ref: '#/components/schemas/JWK_2'
+      required:
+      - clientId
+      - jwk
+  responses:
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+      headers:
+        X-Rate-Limit-Limit:
+          $ref: '#/components/headers/RateLimitLimitHeader'
+        X-Rate-Limit-Remaining:
+          $ref: '#/components/headers/RateLimitRemainingHeader'
+        X-Rate-Limit-Interval:
+          $ref: '#/components/headers/RateLimitIntervalHeader'
+        Digest:
+          $ref: '#/components/headers/IntegrityRest02DigestHeader'
+        Agid-JWT-Signature:
+          $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+      headers:
+        X-Rate-Limit-Limit:
+          $ref: '#/components/headers/RateLimitLimitHeader'
+        X-Rate-Limit-Remaining:
+          $ref: '#/components/headers/RateLimitRemainingHeader'
+        X-Rate-Limit-Interval:
+          $ref: '#/components/headers/RateLimitIntervalHeader'
+        Digest:
+          $ref: '#/components/headers/IntegrityRest02DigestHeader'
+        Agid-JWT-Signature:
+          $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+    TooManyRequests:
+      description: Too Many Requests
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+      headers:
+        X-Rate-Limit-Limit:
+          $ref: '#/components/headers/RateLimitLimitHeader'
+        X-Rate-Limit-Remaining:
+          $ref: '#/components/headers/RateLimitRemainingHeader'
+        X-Rate-Limit-Interval:
+          $ref: '#/components/headers/RateLimitIntervalHeader'
+        Digest:
+          $ref: '#/components/headers/IntegrityRest02DigestHeader'
+        Agid-JWT-Signature:
+          $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+  headers:
+    IntegrityRest02DigestHeader:
+      schema:
+        type: string
+        pattern: ^SHA-256=[a-zA-Z0-9+/]{43}=$
+      description: 'Digest of the body using the canonical JSON representation of the response body.
+
+        The digest is calculated using the SHA-256 algorithm on the response body
+
+        exactly as it is sent to the client, encoded in Base64 as per RFC 3230
+
+        '
+    IntegrityRest02AgidJwtSignatureHeader:
+      description: 'The `Agid-JWT-Signature` header contains a JSON Web Signature (JWS) signed with the PDND API private key.
+
+        It ensures payload integrity and non-repudiation across all responses (both success and error), in compliance with: 1) Linee Guida sull''interoperabilità tecnica delle Pubbliche Amministrazioni - Pattern di sicurezza,  2) RFC 7515 and 3) RFC 7519.
+
+        '
+      schema:
+        type: string
+    RateLimitLimitHeader:
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+      description: Max allowed requests within time interval
+    RateLimitIntervalHeader:
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+      description: Time interval in milliseconds. Allowed requests will be constantly replenished during the interval. At the end of the interval the max allowed requests will be available
+    RateLimitRemainingHeader:
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+      description: Remaining requests within time interval
+  securitySchemes:
+    DPoPAuth:
+      type: http
+      scheme: DPoP
+      description: 'This Authorization header must be used alongside the DPoP Proof JWT.
+
+        Use:
+
+        Authorization: DPoP <access_token>
+
+
+        The access token generated must also have a cnf field.
+
+        '
+    DPoPProofHeader:
+      type: apiKey
+      in: header
+      name: DPoP
+      description: 'DPoP proof JWT for sender-constrained access. Must accompany the DPoP Authorization header.
+
+        '
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-refined-from:
+- interop-api-v3.yaml
+- pagopa-pdnd-interop-v2-openapi.yml
+- pagopa-pdnd-interop-v3-openapi.yml

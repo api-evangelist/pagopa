@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/pagopa/main/json-schema/pagopa-preview-payment-response-v2-dto-schema.json",
+  "title": "PreviewPaymentResponseV2DTO",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/pagopa-pari-ecommerce-openapi.yml#/components/schemas/PreviewPaymentResponseV2DTO",
+  "type": "object",
+  "properties": {
+    "trxCode": {
+      "type": "string",
+      "description": "Codice della transazione (codice sconto)",
+      "maxLength": 24,
+      "pattern": "^[a-zA-Z0-9]+$"
+    },
+    "trxDate": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Data della transazione",
+      "maxLength": 255
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "CREATED",
+        "IDENTIFIED",
+        "AUTHORIZATION_REQUESTED",
+        "AUTHORIZED"
+      ],
+      "description": "Stato del pagamento [CREATED: Creato, IDENTIFIED: Utente associato, AUTHORIZATION_REQUESTED: autorizzazione richiesta, AUTHORIZED: autorizzato]"
+    },
+    "originalAmountCents": {
+      "type": "integer",
+      "format": "int64",
+      "description": "Importo originale da pagare in centesimi",
+      "minimum": 0,
+      "maximum": 1000000000
+    },
+    "rewardCents": {
+      "type": "integer",
+      "format": "int64",
+      "description": "Sconto generato",
+      "minimum": 0,
+      "maximum": 1000000000
+    },
+    "residualAmountCents": {
+      "type": "integer",
+      "format": "int64",
+      "description": "Importo residuo da pagare dopo lo sconto",
+      "minimum": 0,
+      "maximum": 1000000000
+    },
+    "userId": {
+      "type": "string",
+      "description": "Codice fiscale utente",
+      "maxLength": 16,
+      "pattern": ".*"
+    },
+    "additionalProperties": {
+      "type": "object",
+      "description": "Campi aggiuntivi restituiti dalla preview del prodotto",
+      "additionalProperties": {
+        "type": "string",
+        "maxLength": 255,
+        "pattern": ".*"
+      }
+    },
+    "extendedAuthorization": {
+      "type": "boolean",
+      "description": "True, se l'autorizzazione è estesa"
+    }
+  }
+}

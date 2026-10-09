@@ -1,0 +1,374 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/pagopa/main/json-schema/pagopa-payment-positions-info-v3-schema.json",
+  "title": "PaymentPositionsInfoV3",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/pagopa-gpd-v3-openapi.yml#/components/schemas/PaymentPositionsInfoV3",
+  "required": [
+    "page_info",
+    "payment_position_list"
+  ],
+  "type": "object",
+  "properties": {
+    "payment_position_list": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/PaymentPositionModelResponseV3"
+      }
+    },
+    "page_info": {
+      "$ref": "#/$defs/PageInfo"
+    }
+  },
+  "$defs": {
+    "DebtorModel": {
+      "required": [
+        "fiscalCode",
+        "fullName",
+        "type"
+      ],
+      "type": "object",
+      "properties": {
+        "type": {
+          "enum": [
+            "F",
+            "G"
+          ],
+          "type": "string"
+        },
+        "fiscalCode": {
+          "type": "string"
+        },
+        "fullName": {
+          "type": "string"
+        },
+        "streetName": {
+          "type": "string"
+        },
+        "civicNumber": {
+          "type": "string"
+        },
+        "postalCode": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "province": {
+          "type": "string"
+        },
+        "region": {
+          "type": "string"
+        },
+        "country": {
+          "pattern": "[A-Z]{2}",
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        }
+      }
+    },
+    "InstallmentMetadataModel": {
+      "required": [
+        "key"
+      ],
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "InstallmentModelResponse": {
+      "type": "object",
+      "properties": {
+        "nav": {
+          "type": "string"
+        },
+        "iuv": {
+          "type": "string"
+        },
+        "organizationFiscalCode": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "description": {
+          "type": "string"
+        },
+        "dueDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "paymentDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "reportingDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "paymentMethod": {
+          "type": "string"
+        },
+        "pspCompany": {
+          "type": "string"
+        },
+        "fee": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "notificationFee": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "idReceipt": {
+          "type": "string"
+        },
+        "idFlowReporting": {
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "UNPAID",
+            "PAID",
+            "PARTIALLY_REPORTED",
+            "REPORTED",
+            "UNPAYABLE",
+            "EXPIRED"
+          ],
+          "type": "string"
+        },
+        "lastUpdatedDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "installmentMetadata": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/InstallmentMetadataModel"
+          }
+        },
+        "transfer": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/TransferModelResponse"
+          }
+        }
+      }
+    },
+    "PageInfo": {
+      "required": [
+        "items_found",
+        "limit",
+        "page",
+        "total_pages"
+      ],
+      "type": "object",
+      "properties": {
+        "page": {
+          "type": "integer",
+          "description": "Page number",
+          "format": "int32"
+        },
+        "limit": {
+          "type": "integer",
+          "description": "Required number of items per page",
+          "format": "int32"
+        },
+        "items_found": {
+          "type": "integer",
+          "description": "Number of items found. (The last page may have fewer elements than required)",
+          "format": "int32"
+        },
+        "total_pages": {
+          "type": "integer",
+          "description": "Total number of pages",
+          "format": "int32"
+        }
+      }
+    },
+    "PaymentOptionModelResponseV3": {
+      "type": "object",
+      "properties": {
+        "switchToExpired": {
+          "type": "boolean"
+        },
+        "retentionDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "insertedDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "validityDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "debtor": {
+          "$ref": "#/$defs/DebtorModel"
+        },
+        "installments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/InstallmentModelResponse"
+          }
+        }
+      }
+    },
+    "PaymentPositionModelResponseV3": {
+      "type": "object",
+      "properties": {
+        "iupd": {
+          "type": "string"
+        },
+        "organizationFiscalCode": {
+          "type": "string"
+        },
+        "companyName": {
+          "type": "string"
+        },
+        "officeName": {
+          "type": "string"
+        },
+        "insertedDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "publishDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "paymentDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "status": {
+          "enum": [
+            "DRAFT",
+            "PUBLISHED",
+            "VALID",
+            "UNPAYABLE",
+            "PARTIALLY_PAID",
+            "PAID"
+          ],
+          "type": "string"
+        },
+        "lastUpdatedDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "paymentOption": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/PaymentOptionModelResponseV3"
+          }
+        }
+      }
+    },
+    "Stamp": {
+      "required": [
+        "hashDocument",
+        "provincialResidence",
+        "stampType"
+      ],
+      "type": "object",
+      "properties": {
+        "hashDocument": {
+          "maxLength": 72,
+          "minLength": 0,
+          "type": "string",
+          "description": "Document hash type is stBase64Binary72 as described in https://github.com/pagopa/pagopa-api."
+        },
+        "stampType": {
+          "maxLength": 2,
+          "minLength": 2,
+          "type": "string",
+          "description": "The type of the stamp"
+        },
+        "provincialResidence": {
+          "pattern": "[A-Z]{2}",
+          "type": "string",
+          "description": "The provincial of the residence"
+        }
+      }
+    },
+    "TransferMetadataModelResponse": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "TransferModelResponse": {
+      "type": "object",
+      "properties": {
+        "organizationFiscalCode": {
+          "type": "string"
+        },
+        "companyName": {
+          "type": "string"
+        },
+        "idTransfer": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "remittanceInformation": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string"
+        },
+        "iban": {
+          "type": "string"
+        },
+        "postalIban": {
+          "type": "string"
+        },
+        "stamp": {
+          "$ref": "#/$defs/Stamp"
+        },
+        "insertedDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "status": {
+          "enum": [
+            "T_UNREPORTED",
+            "T_REPORTED"
+          ],
+          "type": "string"
+        },
+        "lastUpdatedDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "transferMetadata": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/TransferMetadataModelResponse"
+          }
+        }
+      }
+    }
+  }
+}

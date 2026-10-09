@@ -1,0 +1,775 @@
+openapi: 3.2.0
+info:
+  title: Pagopa Debt Position Actions API
+  termsOfService: https://www.pagopa.gov.it/
+  version: '1.0'
+  description: 'Operations tagged Debt Position Actions API across 5 of this provider''s published API definitions: gpd-4-aca.json, gpd.json, pagopa-gpd-aca-openapi.yml, pagopa-gpd-v1-openapi.yml, pagopa-gpd-v3-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.platform.pagopa.it/aca/debt-positions-service/v1
+  description: ACA Production environment
+- url: https://api.platform.pagopa.it/gpd/debt-positions-service/v1
+- url: https://api.platform.pagopa.it/gpd/debt-positions-service/v3
+security:
+- apiKeyHeader: []
+- apiKeyQuery: []
+tags:
+- name: Debt Position Actions API
+paths:
+  /organizations/{organizationfiscalcode}/debtpositions/{iupd}/publish:
+    post:
+      tags:
+      - Debt Position Actions API
+      summary: The Organization publish a debt Position
+      description: The Organization publish a debt Position.
+      operationId: publishPosition
+      parameters:
+      - name: organizationfiscalcode
+        in: path
+        description: Organization fiscal code, the fiscal code of the Organization.
+        required: true
+        schema:
+          type: string
+      - name: iupd
+        in: path
+        description: IUPD (Unique identifier of the debt position). Format could be `<Organization fiscal code + UUID>` this would make it unique within the new PD management system. It's the responsibility of the EC to guarantee uniqueness. The pagoPa system shall verify that this is `true` and if not, notify the EC.
+        required: true
+        schema:
+          type: string
+      - name: X-Request-Id
+        in: header
+        description: This header identifies the call, if not passed it is self-generated. This ID is returned in the response.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Request published.
+          headers:
+            X-Request-Id:
+              description: This header identifies the call
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentPositionModel'
+              example:
+                iupd: string
+                type: F
+                payStandIn: 'true'
+                fiscalCode: string
+                fullName: string
+                streetName: string
+                civicNumber: string
+                postalCode: string
+                city: string
+                province: string
+                region: string
+                country: IT
+                email: email@domain.com
+                phone: string
+                switchToExpired: 'false'
+                companyName: string
+                officeName: string
+                validityDate: string
+                paymentDate: string
+                status: DRAFT
+                paymentOption:
+                - nav: string
+                  iuv: string
+                  amount: 0
+                  description: string
+                  isPartialPayment: true
+                  dueDate: string
+                  retentionDate: string
+                  fee: 0
+                  notificationFee: 0
+                  transfer:
+                  - idTransfer: '1'
+                    amount: 0
+                    organizationFiscalCode: '00000000000'
+                    remittanceInformation: string
+                    category: string
+                    iban: IT0000000000000000000000000
+                    postalIban: IT0000000000000000000000000
+                    stamp:
+                      hashDocument: string
+                      stampType: string
+                      provincialResidence: RM
+                    companyName: string
+                    transferMetadata:
+                    - key: string
+                      value: string
+                  paymentOptionMetadata:
+                  - key: string
+                    value: string
+        '401':
+          description: Wrong or missing function key.
+          headers:
+            X-Request-Id:
+              description: This header identifies the call
+              schema:
+                type: string
+        '403':
+          description: Forbidden
+          headers:
+            X-Request-Id:
+              description: This header identifies the call
+              schema:
+                type: string
+          content:
+            application/json:
+              example:
+                statusCode: 403
+                message: You are not allowed to access this resource.
+        '404':
+          description: No debt position found.
+          headers:
+            X-Request-Id:
+              description: This header identifies the call
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemJson'
+              example:
+                title: string
+                status: 200
+                detail: There was an error processing the request
+        '409':
+          description: 'Conflict: debt position is not in publishable state.'
+          headers:
+            X-Request-Id:
+              description: This header identifies the call
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemJson'
+              example:
+                title: string
+                status: 200
+                detail: There was an error processing the request
+        '500':
+          description: Service unavailable.
+          headers:
+            X-Request-Id:
+              description: This header identifies the call
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemJson'
+              example:
+                title: string
+                status: 200
+                detail: There was an error processing the request
+    servers:
+    - url: https://api.platform.pagopa.it/aca/debt-positions-service/v1
+      description: ACA Production environment
+  /organizations/{organizationfiscalcode}/debtpositions/{iupd}/invalidate:
+    post:
+      tags:
+      - Debt Position Actions API
+      summary: The Organization invalidate a debt Position
+      description: The Organization invalidate a debt Position.
+      operationId: invalidatePosition
+      parameters:
+      - name: organizationfiscalcode
+        in: path
+        description: Organization fiscal code, the fiscal code of the Organization.
+        required: true
+        schema:
+          type: string
+      - name: iupd
+        in: path
+        description: IUPD (Unique identifier of the debt position). Format could be `<Organization fiscal code + UUID>` this would make it unique within the new PD management system. It's the responsibility of the EC to guarantee uniqueness. The pagoPa system shall verify that this is `true` and if not, notify the EC.
+        required: true
+        schema:
+          type: string
+      - name: X-Request-Id
+        in: header
+        description: This header identifies the call, if not passed it is self-generated. This ID is returned in the response.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Request published.
+          headers:
+            X-Request-Id:
+              description: This header identifies the call
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentPositionModel'
+              example:
+                iupd: string
+                type: F
+                payStandIn: 'true'
+                fiscalCode: string
+                fullName: string
+                streetName: string
+                civicNumber: string
+                postalCode: string
+                city: string
+                province: string
+                region: string
+                country: IT
+                email: email@domain.com
+                phone: string
+                switchToExpired: 'false'
+                companyName: string
+                officeName: string
+                validityDate: string
+                paymentDate: string
+                status: DRAFT
+                paymentOption:
+                - nav: string
+                  iuv: string
+                  amount: 0
+                  description: string
+                  isPartialPayment: true
+                  dueDate: string
+                  retentionDate: string
+                  fee: 0
+                  notificationFee: 0
+                  transfer:
+                  - idTransfer: '1'
+                    amount: 0
+                    organizationFiscalCode: '00000000000'
+                    remittanceInformation: string
+                    category: string
+                    iban: IT0000000000000000000000000
+                    postalIban: IT0000000000000000000000000
+                    stamp:
+                      hashDocument: string
+                      stampType: string
+                      provincialResidence: RM
+                    companyName: string
+                    transferMetadata:
+                    - key: string
+                      value: string
+                  paymentOptionMetadata:
+                  - key: string
+                    value: string
+        '401':
+          description: Wrong or missing function key.
+          headers:
+            X-Request-Id:
+              description: This header identifies the call
+              schema:
+                type: string
+        '403':
+          description: Forbidden
+          headers:
+            X-Request-Id:
+              description: This header identifies the call
+              schema:
+                type: string
+          content:
+            application/json:
+              example:
+                statusCode: 403
+                message: You are not allowed to access this resource.
+        '404':
+          description: No debt position found.
+          headers:
+            X-Request-Id:
+              description: This header identifies the call
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemJson'
+              example:
+                title: string
+                status: 200
+                detail: There was an error processing the request
+        '409':
+          description: 'Conflict: debt position is not in invalidable state.'
+          headers:
+            X-Request-Id:
+              description: This header identifies the call
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemJson'
+              example:
+                title: string
+                status: 200
+                detail: There was an error processing the request
+        '500':
+          description: Service unavailable.
+          headers:
+            X-Request-Id:
+              description: This header identifies the call
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemJson'
+              example:
+                title: string
+                status: 200
+                detail: There was an error processing the request
+    servers:
+    - url: https://api.platform.pagopa.it/aca/debt-positions-service/v1
+      description: ACA Production environment
+components:
+  schemas:
+    PaymentPositionModel:
+      required:
+      - companyName
+      - fiscalCode
+      - fullName
+      - iupd
+      - switchToExpired
+      - type
+      type: object
+      properties:
+        iupd:
+          type: string
+        type:
+          enum:
+          - F
+          - G
+          type: string
+        payStandIn:
+          type: boolean
+          description: feature flag to enable a debt position in stand-in mode
+          default: 'true'
+          example: true
+        fiscalCode:
+          type: string
+        fullName:
+          type: string
+        streetName:
+          type: string
+        civicNumber:
+          type: string
+        postalCode:
+          type: string
+        city:
+          type: string
+        province:
+          type: string
+        region:
+          type: string
+        country:
+          pattern: '[A-Z]{2}'
+          type: string
+          example: IT
+        email:
+          type: string
+          example: email@domain.com
+        phone:
+          type: string
+        switchToExpired:
+          type: boolean
+          description: feature flag to enable the debt position to expire after the due date
+          default: 'false'
+          example: false
+        companyName:
+          maxLength: 140
+          minLength: 0
+          type: string
+        officeName:
+          maxLength: 140
+          minLength: 0
+          type: string
+        validityDate:
+          type: string
+          format: date-time
+        paymentDate:
+          type: string
+          format: date-time
+          readOnly: true
+        status:
+          enum:
+          - DRAFT
+          - PUBLISHED
+          - VALID
+          - INVALID
+          - EXPIRED
+          - PARTIALLY_PAID
+          - PAID
+          - REPORTED
+          type: string
+          readOnly: true
+        paymentOption:
+          type: array
+          items:
+            $ref: '#/components/schemas/PaymentOptionModel'
+    PaymentOptionModel:
+      required:
+      - amount
+      - description
+      - dueDate
+      - isPartialPayment
+      - iuv
+      type: object
+      properties:
+        nav:
+          type: string
+        iuv:
+          type: string
+        amount:
+          minimum: 1.0
+          type: integer
+          format: int64
+        description:
+          maxLength: 140
+          minLength: 0
+          type: string
+        isPartialPayment:
+          type: boolean
+        dueDate:
+          type: string
+          format: date-time
+        retentionDate:
+          type: string
+          format: date-time
+        fee:
+          type: integer
+          format: int64
+          readOnly: true
+        notificationFee:
+          type: integer
+          format: int64
+          readOnly: true
+        transfer:
+          maxItems: 5
+          minItems: 1
+          type: array
+          items:
+            $ref: '#/components/schemas/TransferModel'
+        paymentOptionMetadata:
+          maxItems: 10
+          minItems: 0
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/PaymentOptionMetadataModel'
+          description: It can be added a maximum of 10 key-value pairs for metadata. Metadata keys must be unique within the same payment option.
+    PaymentOptionMetadataModel:
+      required:
+      - key
+      - value
+      type: object
+      properties:
+        key:
+          maxLength: 140
+          minLength: 0
+          type: string
+        value:
+          maxLength: 140
+          minLength: 0
+          type: string
+    Stamp:
+      required:
+      - hashDocument
+      - provincialResidence
+      - stampType
+      type: object
+      properties:
+        hashDocument:
+          maxLength: 72
+          minLength: 0
+          type: string
+          description: Document hash type is stBase64Binary72 as described in https://github.com/pagopa/pagopa-api.
+        stampType:
+          maxLength: 2
+          minLength: 2
+          type: string
+          description: The type of the stamp
+        provincialResidence:
+          pattern: '[A-Z]{2}'
+          type: string
+          description: The provincial of the residence
+          example: RM
+    TransferModel:
+      required:
+      - amount
+      - category
+      - idTransfer
+      - remittanceInformation
+      type: object
+      properties:
+        idTransfer:
+          enum:
+          - '1'
+          - '2'
+          - '3'
+          - '4'
+          - '5'
+          type: string
+        amount:
+          minimum: 1.0
+          type: integer
+          format: int64
+        organizationFiscalCode:
+          type: string
+          description: Fiscal code related to the organization targeted by this transfer.
+          example: '00000000000'
+        remittanceInformation:
+          maxLength: 140
+          minLength: 0
+          type: string
+        category:
+          type: string
+        iban:
+          maxLength: 35
+          minLength: 1
+          pattern: ^[A-Za-z0-9]{1,35}$
+          type: string
+          description: mutual exclusive with stamp
+          example: IT0000000000000000000000000
+        postalIban:
+          maxLength: 35
+          minLength: 1
+          pattern: ^$|^[A-Za-z0-9]{1,35}$
+          type: string
+          description: optional - can be combined with iban but not with stamp
+          example: IT0000000000000000000000000
+        stamp:
+          $ref: '#/components/schemas/Stamp'
+        companyName:
+          maxLength: 140
+          minLength: 0
+          type: string
+        transferMetadata:
+          maxItems: 10
+          minItems: 0
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/TransferMetadataModel'
+          description: It can be added a maximum of 10 key-value pairs for metadata. Metadata keys must be unique within the same transfer.
+    ProblemJson:
+      type: object
+      properties:
+        title:
+          type: string
+          description: 'A short, summary of the problem type. Written in english and readable for engineers (usually not suited for non technical stakeholders and not localized); example: Service Unavailable'
+        status:
+          maximum: 600.0
+          minimum: 100.0
+          type: integer
+          description: The HTTP status code generated by the origin server for this occurrence of the problem.
+          format: int32
+          example: 200
+        detail:
+          type: string
+          description: A human readable explanation specific to this occurrence of the problem.
+          example: There was an error processing the request
+    TransferMetadataModel:
+      required:
+      - key
+      - value
+      type: object
+      properties:
+        key:
+          maxLength: 140
+          minLength: 0
+          type: string
+        value:
+          maxLength: 140
+          minLength: 0
+          type: string
+    PaymentOptionModelV3:
+      required:
+      - debtor
+      - installments
+      - switchToExpired
+      type: object
+      properties:
+        description:
+          maxLength: 140
+          minLength: 0
+          type: string
+          writeOnly: true
+        validityDate:
+          type: string
+          format: date-time
+        retentionDate:
+          type: string
+          format: date-time
+        switchToExpired:
+          type: boolean
+          description: feature flag to enable the payment option to expire after the due date
+          default: 'false'
+          example: false
+        debtor:
+          $ref: '#/components/schemas/DebtorModel'
+        installments:
+          maxItems: 100
+          minItems: 1
+          type: array
+          items:
+            $ref: '#/components/schemas/InstallmentModel'
+    DebtorModel:
+      required:
+      - fiscalCode
+      - fullName
+      - type
+      type: object
+      properties:
+        type:
+          enum:
+          - F
+          - G
+          type: string
+        fiscalCode:
+          type: string
+        fullName:
+          type: string
+        streetName:
+          type: string
+        civicNumber:
+          type: string
+        postalCode:
+          type: string
+        city:
+          type: string
+        province:
+          type: string
+        region:
+          type: string
+        country:
+          pattern: '[A-Z]{2}'
+          type: string
+          example: IT
+        email:
+          type: string
+          example: email@domain.com
+        phone:
+          type: string
+    InstallmentMetadataModel:
+      required:
+      - key
+      type: object
+      properties:
+        key:
+          type: string
+        value:
+          type: string
+    PaymentPositionModelV3:
+      required:
+      - companyName
+      - iupd
+      - paymentOption
+      type: object
+      properties:
+        iupd:
+          type: string
+        payStandIn:
+          type: boolean
+          description: feature flag to enable a debt position in stand-in mode
+          default: 'true'
+          example: true
+        companyName:
+          maxLength: 140
+          minLength: 0
+          type: string
+        officeName:
+          maxLength: 140
+          minLength: 0
+          type: string
+        paymentDate:
+          type: string
+          format: date-time
+          readOnly: true
+        status:
+          enum:
+          - DRAFT
+          - PUBLISHED
+          - VALID
+          - UNPAYABLE
+          - PARTIALLY_PAID
+          - PAID
+          type: string
+          readOnly: true
+        paymentOption:
+          maxItems: 100
+          minItems: 1
+          type: array
+          items:
+            $ref: '#/components/schemas/PaymentOptionModelV3'
+    InstallmentModel:
+      required:
+      - amount
+      - description
+      - dueDate
+      - iuv
+      type: object
+      properties:
+        nav:
+          type: string
+        iuv:
+          type: string
+        amount:
+          minimum: 1.0
+          type: integer
+          format: int64
+        description:
+          maxLength: 140
+          minLength: 0
+          type: string
+        dueDate:
+          type: string
+          format: date-time
+        fee:
+          type: integer
+          format: int64
+          readOnly: true
+        notificationFee:
+          type: integer
+          format: int64
+          readOnly: true
+        status:
+          enum:
+          - UNPAID
+          - PAID
+          - PARTIALLY_REPORTED
+          - REPORTED
+          - UNPAYABLE
+          - EXPIRED
+          type: string
+          readOnly: true
+        transfer:
+          maxItems: 5
+          minItems: 1
+          type: array
+          items:
+            $ref: '#/components/schemas/TransferModel'
+        installmentMetadata:
+          maxItems: 10
+          minItems: 0
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/InstallmentMetadataModel'
+          description: It can be added a maximum of 10 key-value pairs for metadata. Metadata keys must be unique within the same installment.
+  securitySchemes:
+    apiKeyHeader:
+      type: apiKey
+      name: Ocp-Apim-Subscription-Key
+      in: header
+    apiKeyQuery:
+      type: apiKey
+      name: subscription-key
+      in: query
+x-refined-from:
+- gpd-4-aca.json
+- gpd.json
+- pagopa-gpd-aca-openapi.yml
+- pagopa-gpd-v1-openapi.yml
+- pagopa-gpd-v3-openapi.yml

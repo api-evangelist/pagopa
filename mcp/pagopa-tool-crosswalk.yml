@@ -1,0 +1,152 @@
+generated: '2026-10-09'
+method: derived
+source: mcp/pagopa-mcp.yml
+surfaces:
+  mcp: https://docs.pagopa.it/home/~gitbook/mcp (live, no auth, docs-only)
+  openapi:
+  - openapi/pagopa-aca-openapi.yml
+  - openapi/pagopa-backoffice-external-ec-openapi.yml
+  - openapi/pagopa-backoffice-external-psp-openapi.yml
+  - openapi/pagopa-biz-events-openapi.yml
+  - openapi/pagopa-checkout-ec-v1-openapi.yml
+  - openapi/pagopa-checkout-ec-v2-openapi.yml
+  - openapi/pagopa-ecommerce-redirect-openapi.yml
+  - openapi/pagopa-fdr-organizations-openapi.yml
+  - openapi/pagopa-fdr-psp-openapi.yml
+  - openapi/pagopa-firma-con-io-issuer-openapi.yml
+  - openapi/pagopa-gpd-aca-massive-v2-openapi.yml
+  - openapi/pagopa-gpd-aca-openapi.yml
+  - openapi/pagopa-gpd-massive-v1-openapi.yml
+  - openapi/pagopa-gpd-massive-v2-openapi.yml
+  - openapi/pagopa-gpd-payments-openapi.yml
+  - openapi/pagopa-gpd-reporting-openapi.yml
+  - openapi/pagopa-gpd-v1-openapi.yml
+  - openapi/pagopa-gpd-v3-openapi.yml
+  - openapi/pagopa-io-services-openapi.yml
+  - openapi/pagopa-marca-da-bollo-v1-openapi.yml
+  - openapi/pagopa-marca-da-bollo-v2-openapi.yml
+  - openapi/pagopa-mdc-citizen-consent-openapi.yml
+  - openapi/pagopa-mdc-payment-openapi.yml
+  - openapi/pagopa-mdc-tpp-message-openapi.yml
+  - openapi/pagopa-mdc-tpp-testing-openapi.yml
+  - openapi/pagopa-pari-ecommerce-openapi.yml
+  - openapi/pagopa-payment-options-organizations-openapi.yml
+  - openapi/pagopa-payment-options-psp-openapi.yml
+  - openapi/pagopa-pdnd-attestation-keychain-mock-openapi.yml
+  - openapi/pagopa-pdnd-attestation-organization-id-openapi.yml
+  - openapi/pagopa-pdnd-attestation-subject-id-openapi.yml
+  - openapi/pagopa-pdnd-interop-v2-openapi.yml
+  - openapi/pagopa-pdnd-interop-v3-openapi.yml
+  - openapi/pagopa-pdnd-signal-hub-pull-openapi.yml
+  - openapi/pagopa-pdnd-signal-hub-push-openapi.yml
+  - openapi/pagopa-pdnd-tracing-openapi.yml
+  - openapi/pagopa-print-payment-notices-openapi.yml
+  - openapi/pagopa-send-b2b-pa-openapi.yml
+  - openapi/pagopa-send-platform-status-openapi.yml
+  - openapi/pagopa-srtp-activation-openapi.yml
+  - openapi/pagopa-srtp-callback-openapi.yml
+  - openapi/pagopa-srtp-payees-openapi.yml
+  - openapi/pagopa-srtp-service-providers-openapi.yml
+  graphql: null
+crosswalk: []
+mcp_only:
+- tool: searchDocumentation
+  reason: GitBook documentation search; no public PagoPA REST operation backs it
+- tool: getPage
+  reason: GitBook page reader; no public PagoPA REST operation backs it
+- tool: sendFeedback
+  reason: GitBook docs feedback; no public PagoPA REST operation backs it
+rest_only:
+- openapi: openapi/pagopa-aca-openapi.yml
+  operations: 1
+- openapi: openapi/pagopa-backoffice-external-ec-openapi.yml
+  operations: 2
+- openapi: openapi/pagopa-backoffice-external-psp-openapi.yml
+  operations: 1
+- openapi: openapi/pagopa-biz-events-openapi.yml
+  operations: 2
+- openapi: openapi/pagopa-checkout-ec-v1-openapi.yml
+  operations: 1
+- openapi: openapi/pagopa-checkout-ec-v2-openapi.yml
+  operations: 1
+- openapi: openapi/pagopa-ecommerce-redirect-openapi.yml
+  operations: 1
+- openapi: openapi/pagopa-fdr-organizations-openapi.yml
+  operations: 3
+- openapi: openapi/pagopa-fdr-psp-openapi.yml
+  operations: 11
+- openapi: openapi/pagopa-firma-con-io-issuer-openapi.yml
+  operations: 11
+- openapi: openapi/pagopa-gpd-aca-massive-v2-openapi.yml
+  operations: 6
+- openapi: openapi/pagopa-gpd-aca-openapi.yml
+  operations: 9
+- openapi: openapi/pagopa-gpd-massive-v1-openapi.yml
+  operations: 6
+- openapi: openapi/pagopa-gpd-massive-v2-openapi.yml
+  operations: 6
+- openapi: openapi/pagopa-gpd-payments-openapi.yml
+  operations: 2
+- openapi: openapi/pagopa-gpd-reporting-openapi.yml
+  operations: 2
+- openapi: openapi/pagopa-gpd-v1-openapi.yml
+  operations: 9
+- openapi: openapi/pagopa-gpd-v3-openapi.yml
+  operations: 6
+- openapi: openapi/pagopa-io-services-openapi.yml
+  operations: 27
+- openapi: openapi/pagopa-marca-da-bollo-v1-openapi.yml
+  operations: 2
+- openapi: openapi/pagopa-marca-da-bollo-v2-openapi.yml
+  operations: 2
+- openapi: openapi/pagopa-mdc-citizen-consent-openapi.yml
+  operations: 4
+- openapi: openapi/pagopa-mdc-payment-openapi.yml
+  operations: 3
+- openapi: openapi/pagopa-mdc-tpp-message-openapi.yml
+  operations: 2
+- openapi: openapi/pagopa-mdc-tpp-testing-openapi.yml
+  operations: 1
+- openapi: openapi/pagopa-pari-ecommerce-openapi.yml
+  operations: 24
+- openapi: openapi/pagopa-payment-options-organizations-openapi.yml
+  operations: 1
+- openapi: openapi/pagopa-payment-options-psp-openapi.yml
+  operations: 1
+- openapi: openapi/pagopa-pdnd-attestation-keychain-mock-openapi.yml
+  operations: 3
+- openapi: openapi/pagopa-pdnd-attestation-organization-id-openapi.yml
+  operations: 8
+- openapi: openapi/pagopa-pdnd-attestation-subject-id-openapi.yml
+  operations: 9
+- openapi: openapi/pagopa-pdnd-interop-v2-openapi.yml
+  operations: 193
+- openapi: openapi/pagopa-pdnd-interop-v3-openapi.yml
+  operations: 213
+- openapi: openapi/pagopa-pdnd-signal-hub-pull-openapi.yml
+  operations: 2
+- openapi: openapi/pagopa-pdnd-signal-hub-push-openapi.yml
+  operations: 2
+- openapi: openapi/pagopa-pdnd-tracing-openapi.yml
+  operations: 6
+- openapi: openapi/pagopa-print-payment-notices-openapi.yml
+  operations: 9
+- openapi: openapi/pagopa-send-b2b-pa-openapi.yml
+  operations: 90
+- openapi: openapi/pagopa-send-platform-status-openapi.yml
+  operations: 4
+- openapi: openapi/pagopa-srtp-activation-openapi.yml
+  operations: 7
+- openapi: openapi/pagopa-srtp-callback-openapi.yml
+  operations: 2
+- openapi: openapi/pagopa-srtp-payees-openapi.yml
+  operations: 1
+- openapi: openapi/pagopa-srtp-service-providers-openapi.yml
+  operations: 1
+coverage:
+  mcp_tools: 3
+  bound_to_rest: 0
+  mcp_only: 3
+  rest_operations: 697
+note: 'An empty crosswalk is the finding: the live MCP server reads the docs and calls none of the platform
+  APIs.'

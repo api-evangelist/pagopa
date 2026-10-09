@@ -1,0 +1,153 @@
+generated: '2026-10-09'
+method: probed
+source: https://docs.pagopa.it/home/~gitbook/mcp
+status: live-docs-server
+deployment:
+  mode: remote
+  endpoint: https://docs.pagopa.it/home/~gitbook/mcp
+  auth: none
+  verified: probed
+search_result:
+  official_hosted_server: documentation-only (GitBook-hosted on docs.pagopa.it)
+  probes:
+  - url: https://docs.pagopa.it/home/~gitbook/mcp
+    method: POST initialize
+    status: 200
+    note: serverInfo name docs.pagopa.it/home/~gitbook/mcp, title "Home MCP Server", version 0.27.2, protocolVersion
+      2025-03-26
+  - url: https://docs.pagopa.it/home/~gitbook/mcp
+    method: POST tools/list
+    status: 200
+    note: 3 tools returned, no auth
+  - url: https://docs.pagopa.it/centrostella-1/~gitbook/mcp
+    method: POST tools/list
+    status: 200
+    note: another GitBook space on the same host also answers; not enumerated
+  - url: https://docs.pagopa.it/pagopa/~gitbook/mcp
+    method: POST tools/list
+    status: 307
+  - url: https://developer.pagopa.it/mcp
+    method: POST tools/list
+    status: 403
+    note: AWS signature error from the edge, not an MCP server
+  - url: https://docs.pagopa.it/mcp
+    method: POST tools/list
+    status: 405
+  - url: https://api.platform.pagopa.it/mcp
+    method: POST tools/list
+    status: 404
+  web_search: '"PagoPA MCP server" returned no PagoPA result (2026-10-09); GitHub repository search for
+    mcp in the pagopa org returned 0.'
+  finding: The only live MCP surface is the docs MCP that GitBook generates for each published space on
+    docs.pagopa.it. It searches and reads documentation and sends feedback. It does NOT call any PagoPA
+    platform API. Nobody ships an MCP server over the pagoPA, SEND, IO or PDND REST APIs. The candidate_tools
+    below are DERIVED from the OpenAPI and are not published by PagoPA.
+server:
+  name: docs.pagopa.it/home/~gitbook/mcp
+  title: Home MCP Server
+  version: 0.27.2
+  transport: streamable-http
+  url: https://docs.pagopa.it/home/~gitbook/mcp
+  platform: GitBook
+tools:
+- name: searchDocumentation
+  inputs:
+  - query
+  description: Search across the documentation to find relevant information, code examples, API references,
+    and guides.
+- name: getPage
+  inputs:
+  - url
+  description: Fetch the full markdown content of a specific documentation page from Home.
+- name: sendFeedback
+  inputs:
+  - content
+  - pageUrl
+  - goal
+  description: Report an issue in the documentation of Home so the team can fix it.
+candidate_tools:
+  status: candidate
+  method: derived
+  note: Proposed REST-backed tools derived from the OpenAPI in this repo. No such server exists.
+  tools:
+  - name: createPosition
+    description: The Organization creates a debt Position.
+    source_operation: openapi/pagopa-gpd-v1-openapi.yml#POST /organizations/{organizationfiscalcode}/debtpositions
+    operationId: createPosition
+  - name: getOrganizationDebtPositions
+    description: Return the list of the organization debt positions. The due dates interval is mutually
+      exclusive with the payment dates interval.
+    source_operation: openapi/pagopa-gpd-v1-openapi.yml#GET /organizations/{organizationfiscalcode}/debtpositions
+    operationId: getOrganizationDebtPositions
+  - name: getOrganizationDebtPositionByIUPD
+    description: Return the details of a specific debt position.
+    source_operation: openapi/pagopa-gpd-v1-openapi.yml#GET /organizations/{organizationfiscalcode}/debtpositions/{iupd}
+    operationId: getOrganizationDebtPositionByIUPD
+  - name: publishPosition
+    description: The Organization publish a debt Position.
+    source_operation: openapi/pagopa-gpd-v1-openapi.yml#POST /organizations/{organizationfiscalcode}/debtpositions/{iupd}/publish
+    operationId: publishPosition
+  - name: invalidatePosition
+    description: The Organization invalidate a debt Position.
+    source_operation: openapi/pagopa-gpd-v1-openapi.yml#POST /organizations/{organizationfiscalcode}/debtpositions/{iupd}/invalidate
+    operationId: invalidatePosition
+  - name: getOrganizationReceiptIur
+    description: The organization get the receipt for the creditor institution using IUR.
+    source_operation: openapi/pagopa-biz-events-openapi.yml#GET /organizations/{organizationfiscalcode}/receipts/{iur}
+    operationId: getOrganizationReceiptIur
+  - name: getPaymentOptionsByNoticeNumber
+    description: Get payment options by noticeNumber
+    source_operation: openapi/pagopa-payment-options-organizations-openapi.yml#POST /payment-options/organizations/{organization-fiscal-code}/notices/{notice-number}
+    operationId: getPaymentOptionsByNoticeNumber
+  - name: generateNotice
+    description: generateNotice
+    source_operation: openapi/pagopa-print-payment-notices-openapi.yml#POST /notices/generate
+    operationId: generateNotice
+  - name: getFolderStatus
+    description: getFolderStatus
+    source_operation: openapi/pagopa-print-payment-notices-openapi.yml#GET /notices/folder/{folder_id}/status
+    operationId: getFolderStatus
+  - name: presignedUploadRequest
+    description: Richiesta di pre-caricamento dei documenti della notifica
+    source_operation: openapi/pagopa-send-b2b-pa-openapi.yml#POST /delivery/attachments/preload
+    operationId: presignedUploadRequest
+  - name: sendNewNotificationV26
+    description: Richiesta invio notifica
+    source_operation: openapi/pagopa-send-b2b-pa-openapi.yml#POST /delivery/v2.6/requests
+    operationId: sendNewNotificationV26
+  - name: retrieveNotificationRequestStatusV26
+    description: Verifica accettazione richiesta notifica
+    source_operation: openapi/pagopa-send-b2b-pa-openapi.yml#GET /delivery/v2.6/requests
+    operationId: retrieveNotificationRequestStatusV26
+  - name: retrieveSentNotificationV29
+    description: 'Mittente: lettura dettagli notifica versione 2'
+    source_operation: openapi/pagopa-send-b2b-pa-openapi.yml#GET /delivery/v2.9/notifications/sent/{iun}
+    operationId: retrieveSentNotificationV29
+  - name: consumeEventStreamV29
+    description: Leggi progressi notifiche v2.9
+    source_operation: openapi/pagopa-send-b2b-pa-openapi.yml#GET /delivery-progresses/v2.9/streams/{streamId}/events
+    operationId: consumeEventStreamV29
+  - name: getResolved
+    description: Recupero disservizi
+    source_operation: openapi/pagopa-send-platform-status-openapi.yml#GET /downtime/v1/resolved
+    operationId: getResolved
+  - name: getProfile
+    description: Get a User Profile
+    source_operation: openapi/pagopa-io-services-openapi.yml#GET /profiles/{fiscal_code}
+    operationId: getProfile
+  - name: submitMessageforUserWithFiscalCodeInBody
+    description: Submit a Message passing the user fiscal_code in the request body
+    source_operation: openapi/pagopa-io-services-openapi.yml#POST /messages
+    operationId: submitMessageforUserWithFiscalCodeInBody
+  - name: getMessage
+    description: Get Message
+    source_operation: openapi/pagopa-io-services-openapi.yml#GET /messages/{fiscal_code}/{id}
+    operationId: getMessage
+  - name: IOrganizationsController_getAllPublishedFlows
+    description: Get all published flow related to creditor institution
+    source_operation: openapi/pagopa-fdr-organizations-openapi.yml#GET /organizations/{organizationId}/fdrs
+    operationId: IOrganizationsController_getAllPublishedFlows
+  - name: PostCartsV2
+    description: PostCartsV2
+    source_operation: openapi/pagopa-checkout-ec-v2-openapi.yml#POST /carts
+    operationId: PostCartsV2

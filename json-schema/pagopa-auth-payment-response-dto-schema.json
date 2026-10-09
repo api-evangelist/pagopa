@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/pagopa/main/json-schema/pagopa-auth-payment-response-dto-schema.json",
+  "title": "AuthPaymentResponseDTO",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/pagopa-pari-ecommerce-openapi.yml#/components/schemas/AuthPaymentResponseDTO",
+  "type": "object",
+  "required": [
+    "id",
+    "trxCode",
+    "initiativeId",
+    "status",
+    "amountCents"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Identificativo del pagamento",
+      "maxLength": 100,
+      "format": "uuid"
+    },
+    "trxCode": {
+      "type": "string",
+      "description": "Codice della transazione",
+      "maxLength": 100,
+      "pattern": "^[a-zA-Z0-9]+$"
+    },
+    "trxDate": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Data della transazione",
+      "maxLength": 255
+    },
+    "initiativeId": {
+      "type": "string",
+      "description": "Identificativo dell'iniziativa",
+      "maxLength": 100,
+      "pattern": "^[A-Za-z0-9_-]+$"
+    },
+    "initiativeName": {
+      "type": "string",
+      "description": "Nome della iniziativa",
+      "maxLength": 1000,
+      "pattern": ".*"
+    },
+    "businessName": {
+      "type": "string",
+      "description": "Nome dell'esercente",
+      "maxLength": 1000,
+      "pattern": ".*"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "CREATED",
+        "IDENTIFIED",
+        "AUTHORIZATION_REQUESTED",
+        "AUTHORIZED"
+      ],
+      "description": "Stato del pagamento [CREATED: Creato, IDENTIFIED: Utente associato, AUTHORIZATION_REQUESTED: autorizzazione richiesta, AUTHORIZED: autorizzato]"
+    },
+    "rewardCents": {
+      "type": "integer",
+      "format": "int64",
+      "minimum": 0,
+      "maximum": 1000000,
+      "description": "Premio generato"
+    },
+    "amountCents": {
+      "type": "integer",
+      "format": "int64",
+      "minimum": 0,
+      "maximum": 1000000,
+      "description": "Importo in centesimi"
+    },
+    "residualBudgetCents": {
+      "type": "integer",
+      "format": "int64",
+      "minimum": 0,
+      "maximum": 1000000,
+      "description": "Budget residuo"
+    },
+    "splitPayment": {
+      "type": "boolean",
+      "description": "TRUE, se la somma autorizzata è inferiore alla somma richiesta o FALSE, se la somma autorizzata è uguale alla somma richiesta."
+    },
+    "residualAmountCents": {
+      "type": "integer",
+      "format": "int64",
+      "minimum": 0,
+      "maximum": 1000000,
+      "description": "Importo restante da pagare nel caso in cui la somma autorizzata sia inferiore alla somma richiesta."
+    }
+  }
+}

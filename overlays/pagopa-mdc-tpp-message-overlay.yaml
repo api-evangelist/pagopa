@@ -1,0 +1,19 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Specifiche Integrazione Messaggi di Cortesia (Server-to-Server)
+  version: 1.0.0
+extends: ../openapi/_original/pagopa-mdc-tpp-message-openapi.yml
+x-apievangelist:
+  generated: '2026-10-09'
+  method: generated
+  source: openapi/pagopa-mdc-tpp-message-openapi.yml
+actions:
+- target: $.info
+  update:
+    x-apievangelist-profile: https://apievangelist.com/
+    x-apievangelist-reviewed: '2026-10-09'
+    x-apievangelist-provider: PagoPA S.p.A.
+    x-apievangelist-operation-count: 2
+    x-apievangelist-notes:
+    - The document declares no servers block, so a downloaded copy cannot be called without consulting
+      the docs.

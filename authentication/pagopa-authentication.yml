@@ -1,0 +1,127 @@
+generated: '2026-10-09'
+method: derived
+source: openapi/pagopa-aca-openapi.yml, openapi/pagopa-backoffice-external-ec-openapi.yml, openapi/pagopa-backoffice-external-psp-openapi.yml, openapi/pagopa-biz-events-openapi.yml, openapi/pagopa-checkout-ec-v1-openapi.yml,
+  openapi/pagopa-checkout-ec-v2-openapi.yml, openapi/pagopa-ecommerce-redirect-openapi.yml, openapi/pagopa-fdr-organizations-openapi.yml, openapi/pagopa-fdr-psp-openapi.yml, openapi/pagopa-firma-con-io-issuer-openapi.yml,
+  openapi/pagopa-gpd-aca-massive-v2-openapi.yml, openapi/pagopa-gpd-aca-openapi.yml ...
+summary:
+  types:
+  - apiKey
+  - http
+  - oauth2
+  api_key_in:
+  - header
+  - query
+  oauth2_flows:
+  - clientCredentials
+schemes:
+- name: apiKeyHeader
+  type: apiKey
+  in: header
+  parameter: Ocp-Apim-Subscription-Key
+  sources:
+  - openapi/pagopa-aca-openapi.yml
+  - openapi/pagopa-backoffice-external-ec-openapi.yml
+  - openapi/pagopa-backoffice-external-psp-openapi.yml
+  - openapi/pagopa-biz-events-openapi.yml
+  - openapi/pagopa-checkout-ec-v1-openapi.yml
+  - openapi/pagopa-checkout-ec-v2-openapi.yml
+  - openapi/pagopa-ecommerce-redirect-openapi.yml
+  - openapi/pagopa-fdr-organizations-openapi.yml
+  - openapi/pagopa-fdr-psp-openapi.yml
+  - openapi/pagopa-firma-con-io-issuer-openapi.yml
+  - openapi/pagopa-gpd-aca-massive-v2-openapi.yml
+  - openapi/pagopa-gpd-aca-openapi.yml
+  - openapi/pagopa-gpd-massive-v1-openapi.yml
+  - openapi/pagopa-gpd-massive-v2-openapi.yml
+  - openapi/pagopa-gpd-payments-openapi.yml
+  - openapi/pagopa-gpd-reporting-openapi.yml
+  - openapi/pagopa-gpd-v1-openapi.yml
+  - openapi/pagopa-gpd-v3-openapi.yml
+  - openapi/pagopa-io-services-openapi.yml
+  - openapi/pagopa-marca-da-bollo-v1-openapi.yml
+  - openapi/pagopa-marca-da-bollo-v2-openapi.yml
+  - openapi/pagopa-payment-options-organizations-openapi.yml
+  - openapi/pagopa-payment-options-psp-openapi.yml
+  - openapi/pagopa-print-payment-notices-openapi.yml
+- name: apiKeyQuery
+  type: apiKey
+  in: query
+  parameter: subscription-key
+  sources:
+  - openapi/pagopa-aca-openapi.yml
+  - openapi/pagopa-backoffice-external-ec-openapi.yml
+  - openapi/pagopa-backoffice-external-psp-openapi.yml
+  - openapi/pagopa-biz-events-openapi.yml
+  - openapi/pagopa-checkout-ec-v1-openapi.yml
+  - openapi/pagopa-checkout-ec-v2-openapi.yml
+  - openapi/pagopa-ecommerce-redirect-openapi.yml
+  - openapi/pagopa-fdr-organizations-openapi.yml
+  - openapi/pagopa-fdr-psp-openapi.yml
+  - openapi/pagopa-gpd-aca-massive-v2-openapi.yml
+  - openapi/pagopa-gpd-aca-openapi.yml
+  - openapi/pagopa-gpd-massive-v1-openapi.yml
+  - openapi/pagopa-gpd-massive-v2-openapi.yml
+  - openapi/pagopa-gpd-payments-openapi.yml
+  - openapi/pagopa-gpd-reporting-openapi.yml
+  - openapi/pagopa-gpd-v1-openapi.yml
+  - openapi/pagopa-gpd-v3-openapi.yml
+  - openapi/pagopa-marca-da-bollo-v1-openapi.yml
+  - openapi/pagopa-marca-da-bollo-v2-openapi.yml
+  - openapi/pagopa-payment-options-psp-openapi.yml
+  - openapi/pagopa-print-payment-notices-openapi.yml
+- name: oAuth2
+  type: oauth2
+  flows:
+  - flow: clientCredentials
+    tokenUrl: /token
+    scopes: 0
+  description: 'A bearer token in the format of a JWS and conforms to the specifications
+
+    included in RFC8725.'
+  sources:
+  - openapi/pagopa-mdc-citizen-consent-openapi.yml
+  - openapi/pagopa-mdc-payment-openapi.yml
+  - openapi/pagopa-mdc-tpp-testing-openapi.yml
+  - openapi/pagopa-pari-ecommerce-openapi.yml
+  - openapi/pagopa-srtp-activation-openapi.yml
+  - openapi/pagopa-srtp-payees-openapi.yml
+  - openapi/pagopa-srtp-service-providers-openapi.yml
+- name: bearerAuth
+  type: http
+  scheme: bearer
+  bearerFormat: JWT
+  sources:
+  - openapi/pagopa-mdc-tpp-message-openapi.yml
+  - openapi/pagopa-pdnd-interop-v2-openapi.yml
+  - openapi/pagopa-pdnd-signal-hub-pull-openapi.yml
+  - openapi/pagopa-pdnd-signal-hub-push-openapi.yml
+  - openapi/pagopa-pdnd-tracing-openapi.yml
+- name: DPoPAuth
+  type: http
+  scheme: DPoP
+  description: 'This Authorization header must be used alongside the DPoP Proof JWT.
+
+    Use:
+
+    Authorization: DPoP <access_token>
+
+
+    The access token generated must also have a cnf field.'
+  sources:
+  - openapi/pagopa-pdnd-interop-v3-openapi.yml
+- name: DPoPProofHeader
+  type: apiKey
+  in: header
+  parameter: DPoP
+  description: DPoP proof JWT for sender-constrained access. Must accompany the DPoP Authorization header.
+  sources:
+  - openapi/pagopa-pdnd-interop-v3-openapi.yml
+- name: ApiKeyAuth
+  type: apiKey
+  in: header
+  parameter: x-api-key
+  sources:
+  - openapi/pagopa-send-b2b-pa-openapi.yml
+docs: https://docs.pagopa.it/manuale-back-office-pagopa/readme/funzionalita/generazione-api-key
+docs_also:
+- https://developer.pagopa.it/it/send/guides/manuale-operativo/mittente/referente-tecnico-operatore/gestione-api-key

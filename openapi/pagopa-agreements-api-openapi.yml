@@ -1,0 +1,1678 @@
+openapi: 3.2.0
+info:
+  title: Pagopa Agreements API
+  contact:
+    name: API Support
+    url: https://github.com/pagopa/pdnd-interop-frontend/issues
+  termsOfService: https://selfcare.interop.pagopa.it/ui/it/termini-di-servizio
+  x-summary: PDND Interoperability API
+  version: '1.0'
+  description: 'Operations tagged agreements across 3 of this provider''s published API definitions: interop-api-v3.yaml, pagopa-pdnd-interop-v2-openapi.yml, pagopa-pdnd-interop-v3-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.interop.pagopa.it/v3
+  description: Production environment
+- url: https://api.interop.pagopa.it/v2
+  description: PROD environment
+tags:
+- name: Agreements
+  description: Agreements routes
+paths:
+  /agreements:
+    get:
+      tags:
+      - Agreements
+      summary: List Agreements
+      description: Retrieve a list of Agreements based on filters
+      operationId: getAgreements
+      parameters:
+      - in: query
+        name: states
+        description: Filter Agreements by states. If not specified, return Agreements in any state
+        required: false
+        schema:
+          type: array
+          items:
+            $ref: '#/components/schemas/AgreementState'
+          default: []
+        explode: false
+      - in: query
+        name: producerIds
+        description: Filter Agreements by producer IDs. If not specified, return Agreements for any producer
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+            format: uuid
+          default: []
+        explode: false
+      - in: query
+        name: consumerIds
+        description: Filter Agreements by consumer IDs. If not specified, return Agreements for any consumer
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+            format: uuid
+          default: []
+        explode: false
+      - in: query
+        name: descriptorIds
+        description: Filter Agreements by Descriptor IDs. If not specified, return Agreements for any Descriptor
+        required: false
+        schema:
+          type: array
+          items:
+            $ref: '#/components/schemas/DescriptorId'
+          default: []
+        explode: false
+      - $ref: '#/components/parameters/EserviceIdsParam'
+      - $ref: '#/components/parameters/OffsetParam'
+      - $ref: '#/components/parameters/LimitParam'
+      responses:
+        '200':
+          description: Agreements retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Agreements'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    post:
+      tags:
+      - Agreements
+      summary: Create a new Agreement
+      description: Create a new Agreement in Draft state
+      operationId: createAgreement
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgreementSeed'
+        required: true
+      responses:
+        '201':
+          description: Agreement created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Agreement'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /agreements/{agreementId}:
+    parameters:
+    - name: agreementId
+      in: path
+      description: The ID of the Agreement
+      required: true
+      schema:
+        $ref: '#/components/schemas/AgreementId'
+    get:
+      tags:
+      - Agreements
+      summary: Retrieve an Agreement
+      operationId: getAgreement
+      responses:
+        '200':
+          description: Agreement retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Agreement'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    delete:
+      tags:
+      - Agreements
+      summary: Delete an Agreement
+      description: Delete an Agreement in Draft, Pending, or MissingCertifiedAttributes state
+      operationId: deleteAgreement
+      responses:
+        '200':
+          description: Agreement deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VoidObject'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /agreements/{agreementId}/purposes:
+    parameters:
+    - name: agreementId
+      in: path
+      description: The ID of the Agreement to retrieve purposes for
+      required: true
+      schema:
+        $ref: '#/components/schemas/AgreementId'
+    get:
+      tags:
+      - Agreements
+      summary: List Purposes for an Agreement
+      description: Retrieve a list of Purposes associated with an Agreement
+      operationId: getAgreementPurposes
+      parameters:
+      - $ref: '#/components/parameters/LimitParam'
+      - $ref: '#/components/parameters/OffsetParam'
+      responses:
+        '200':
+          description: Purposes retrieved for the Agreement
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Purposes'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /agreements/{agreementId}/approve:
+    parameters:
+    - schema:
+        $ref: '#/components/schemas/AgreementId'
+      name: agreementId
+      description: The ID of the Agreement to approve
+      in: path
+      required: true
+    post:
+      tags:
+      - Agreements
+      summary: Approve an Agreement in Pending state
+      description: Approve an Agreement that is in Pending state, transitioning it to Active state
+      operationId: approveAgreement
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DelegationRef'
+      responses:
+        '200':
+          description: Agreement approved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Agreement'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /agreements/{agreementId}/reject:
+    parameters:
+    - schema:
+        $ref: '#/components/schemas/AgreementId'
+      name: agreementId
+      description: The ID of the Agreement to reject
+      in: path
+      required: true
+    post:
+      tags:
+      - Agreements
+      summary: Reject an Agreement in Pending state
+      description: Reject an Agreement that is in Pending state, transitioning it to Rejected state
+      operationId: rejectAgreement
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgreementRejection'
+        required: true
+      responses:
+        '200':
+          description: Agreement rejected
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Agreement'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /agreements/{agreementId}/archive:
+    parameters:
+    - schema:
+        $ref: '#/components/schemas/AgreementId'
+      name: agreementId
+      description: The ID of the Agreement to archive
+      in: path
+      required: true
+    post:
+      tags:
+      - Agreements
+      summary: Archive an Agreement in Active or Suspended state
+      description: 'Archive an Agreement that is in Active or Suspended state, transitioning it to Archived state.
+
+        The Archived state is not reversible.'
+      operationId: archiveAgreement
+      responses:
+        '200':
+          description: Agreement archived
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Agreement'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /agreements/{agreementId}/submit:
+    parameters:
+    - schema:
+        $ref: '#/components/schemas/AgreementId'
+      name: agreementId
+      description: The ID of the Agreement to submit
+      in: path
+      required: true
+    post:
+      tags:
+      - Agreements
+      summary: Submit an Agreement in Draft state
+      description: Submit an Agreement that is in Draft state, transitioning it to Active state if all requirements are satisfied, to Pending otherwise
+      operationId: submitAgreement
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgreementSubmission'
+        description: payload for agreement submission
+        required: true
+      responses:
+        '200':
+          description: Draft agreement submitted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Agreement'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /agreements/{agreementId}/suspend:
+    parameters:
+    - schema:
+        $ref: '#/components/schemas/AgreementId'
+      name: agreementId
+      description: The ID of the Agreement to suspend
+      in: path
+      required: true
+    post:
+      tags:
+      - Agreements
+      summary: Suspend an Agreement in Active or Suspended state
+      description: 'Suspend an Agreement that is in Active or Suspended state, transitioning it to Suspended state
+
+        An Agreement may already be in Suspended state when previously suspended by the consumer or the producer'
+      operationId: suspendAgreement
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DelegationRef'
+      responses:
+        '200':
+          description: Active agreement suspended
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Agreement'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /agreements/{agreementId}/unsuspend:
+    parameters:
+    - schema:
+        $ref: '#/components/schemas/AgreementId'
+      name: agreementId
+      description: The ID of the Agreement to unsuspend
+      in: path
+      required: true
+    post:
+      tags:
+      - Agreements
+      summary: Unsuspend an Agreement in Suspended state
+      description: 'Unsuspend an Agreement that is in Suspended state, transitioning it to Active or Suspended state
+
+        An Agreement may remain in Suspended state when suspended also by the consumer or the producer'
+      operationId: unsuspendAgreement
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DelegationRef'
+      responses:
+        '200':
+          description: Agreement unsuspended
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Agreement'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /agreements/{agreementId}/upgrade:
+    parameters:
+    - name: agreementId
+      in: path
+      description: The ID of the Agreement to upgrade
+      required: true
+      schema:
+        $ref: '#/components/schemas/AgreementId'
+    post:
+      tags:
+      - Agreements
+      summary: Upgrade an Agreement
+      description: 'Upgrade the Agreement to a newer E-Service version, if available
+
+        The current Agreement will be archived and a new Agreement will be created, in the same state'
+      operationId: upgradeAgreement
+      responses:
+        '200':
+          description: Agreement upgraded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Agreement'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /agreements/{agreementId}/clone:
+    parameters:
+    - name: agreementId
+      in: path
+      description: The ID of the Agreement to clone
+      required: true
+      schema:
+        $ref: '#/components/schemas/AgreementId'
+    post:
+      tags:
+      - Agreements
+      summary: Clone an Agreement
+      description: 'Clone a rejected Agreement.
+
+        A new draft Agreement will be created'
+      operationId: cloneAgreement
+      responses:
+        '200':
+          description: Agreement cloned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Agreement'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /agreements/{agreementId}/consumerDocuments:
+    parameters:
+    - name: agreementId
+      in: path
+      description: The ID of the Agreement
+      required: true
+      schema:
+        $ref: '#/components/schemas/AgreementId'
+    post:
+      tags:
+      - Agreements
+      summary: Upload an Agreement Consumer Document
+      description: Upload a Consumer Document for the specified Agreement
+      operationId: uploadAgreementConsumerDocument
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FileUploadMultipart'
+        required: true
+      responses:
+        '201':
+          description: Consumer Document uploaded successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Document'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    get:
+      tags:
+      - Agreements
+      summary: List Agreement Consumer Documents
+      description: Retrieve a list of Consumer Documents for the specified Agreement
+      operationId: getAgreementConsumerDocuments
+      parameters:
+      - $ref: '#/components/parameters/OffsetParam'
+      - $ref: '#/components/parameters/LimitParam'
+      responses:
+        '200':
+          description: Consumer Documents retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Documents'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /agreements/{agreementId}/consumerDocuments/{documentId}:
+    parameters:
+    - name: agreementId
+      in: path
+      description: The ID of the Agreement
+      required: true
+      schema:
+        $ref: '#/components/schemas/AgreementId'
+    - name: documentId
+      in: path
+      description: The ID of the Document to retrieve or delete
+      required: true
+      schema:
+        type: string
+        format: uuid
+    get:
+      tags:
+      - Agreements
+      summary: Download an Agreement Consumer Document
+      description: Download a specific Consumer Document for the specified Agreement
+      operationId: downloadAgreementConsumerDocument
+      responses:
+        '200':
+          description: Consumer Document retrieved, a multipart containing the file and its metadata
+          content:
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/FileDownloadMultipart'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    delete:
+      tags:
+      - Agreements
+      summary: Delete an Agreement Consumer Document
+      description: Delete a specific Consumer Document from the specified Agreement
+      operationId: deleteAgreementConsumerDocument
+      responses:
+        '200':
+          description: Consumer Document deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VoidObject'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+  /agreements/{agreementId}/contract:
+    parameters:
+    - name: agreementId
+      in: path
+      description: The ID of the Agreement
+      required: true
+      schema:
+        $ref: '#/components/schemas/AgreementId'
+    get:
+      tags:
+      - Agreements
+      summary: Download Agreement Consumer Contract
+      description: Download the Consumer Contract for the specified Agreement
+      operationId: downloadAgreementConsumerContract
+      responses:
+        '200':
+          description: Consumer contract retrieved, a multipart containing the file and its metadata
+          content:
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/FileDownloadMultipart'
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: '#/components/headers/RateLimitLimitHeader'
+            X-Rate-Limit-Remaining:
+              $ref: '#/components/headers/RateLimitRemainingHeader'
+            X-Rate-Limit-Interval:
+              $ref: '#/components/headers/RateLimitIntervalHeader'
+            Digest:
+              $ref: '#/components/headers/IntegrityRest02DigestHeader'
+            Agid-JWT-Signature:
+              $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - DPoPAuth: []
+        DPoPProofHeader: []
+    servers:
+    - url: https://api.interop.pagopa.it/v3
+      description: Production environment
+components:
+  schemas:
+    PurposeTemplateId:
+      type: string
+      format: uuid
+      description: The unique identifier of the Purpose Template
+    Documents:
+      type: object
+      additionalProperties: false
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Document'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+      required:
+      - results
+      - pagination
+    Problem:
+      properties:
+        type:
+          description: URI reference of type definition
+          type: string
+        status:
+          description: The HTTP status code generated by the origin server for this occurrence of the problem
+          example: 503
+          format: int32
+          minimum: 100
+          type: integer
+          exclusiveMaximum: 600
+        title:
+          description: A short, summary of the problem type. Written in english and readable
+          example: Service Unavailable
+          maxLength: 64
+          pattern: ^[ -~]{0,64}$
+          type: string
+        correlationId:
+          description: Unique identifier of the request
+          example: 53af4f2d-0c87-41ef-a645-b726a821852b
+          maxLength: 64
+          type: string
+        detail:
+          description: A human readable explanation of the problem
+          example: Request took too long to complete
+          maxLength: 4096
+          pattern: ^.{0,1024}$
+          type: string
+        errors:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/ProblemError'
+      additionalProperties: false
+      required:
+      - type
+      - status
+      - title
+    ProblemError:
+      properties:
+        code:
+          description: Internal code of the error
+          example: 123-4567
+          minLength: 8
+          maxLength: 8
+          pattern: ^[0-9]{3}-[0-9]{4}$
+          type: string
+        detail:
+          description: A human readable explanation specific to this occurrence of the problem
+          example: Parameter not valid
+          maxLength: 4096
+          pattern: ^.{0,1024}$
+          type: string
+      required:
+      - code
+      - detail
+    DescriptorId:
+      type: string
+      format: uuid
+      description: The unique identifier of the Descriptor
+    PurposeVersionState:
+      type: string
+      description: Purpose State
+      enum:
+      - ACTIVE
+      - DRAFT
+      - SUSPENDED
+      - WAITING_FOR_APPROVAL
+      - ARCHIVED
+      - REJECTED
+    Document:
+      type: object
+      additionalProperties: false
+      required:
+      - id
+      - name
+      - prettyName
+      - contentType
+      - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier of the file
+        name:
+          type: string
+          description: The name of the file
+        prettyName:
+          type: string
+          description: A human-readable name for the file
+        contentType:
+          type: string
+          description: The content type of the file
+        createdAt:
+          type: string
+          format: date-time
+          description: The date and time when the file was uploaded
+    AgreementSeed:
+      type: object
+      additionalProperties: false
+      description: Contains the information for agreement creation
+      properties:
+        eserviceId:
+          $ref: '#/components/schemas/EServiceId'
+        descriptorId:
+          $ref: '#/components/schemas/DescriptorId'
+        delegationId:
+          $ref: '#/components/schemas/DelegationId'
+      required:
+      - eserviceId
+      - descriptorId
+    AgreementId:
+      type: string
+      format: uuid
+      description: The unique identifier of the Agreement
+    Agreements:
+      type: object
+      additionalProperties: false
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Agreement'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+      required:
+      - results
+      - pagination
+    VoidObject:
+      type: object
+      additionalProperties: false
+      description: An empty object
+    AgreementRejection:
+      type: object
+      additionalProperties: false
+      description: contains the information for agreement rejection
+      properties:
+        reason:
+          type: string
+          minLength: 20
+          maxLength: 1000
+      required:
+      - reason
+    Agreement:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          format: uuid
+        eserviceId:
+          $ref: '#/components/schemas/EServiceId'
+        descriptorId:
+          $ref: '#/components/schemas/DescriptorId'
+        producerId:
+          type: string
+          format: uuid
+        consumerId:
+          type: string
+          format: uuid
+        delegationId:
+          $ref: '#/components/schemas/DelegationId'
+        state:
+          $ref: '#/components/schemas/AgreementState'
+        suspendedByConsumer:
+          type: boolean
+        suspendedByProducer:
+          type: boolean
+        suspendedByPlatform:
+          type: boolean
+        consumerNotes:
+          type: string
+        rejectionReason:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        suspendedAt:
+          type: string
+          format: date-time
+      required:
+      - id
+      - eserviceId
+      - descriptorId
+      - producerId
+      - consumerId
+      - state
+      - createdAt
+    DelegationId:
+      type: string
+      format: uuid
+      description: The unique identifier of the Delegation
+    EServiceId:
+      type: string
+      format: uuid
+      description: The unique identifier of the E-Service
+    PurposeVersion:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          format: uuid
+        state:
+          $ref: '#/components/schemas/PurposeVersionState'
+        createdAt:
+          type: string
+          format: date-time
+        suspendedAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        firstActivationAt:
+          type: string
+          format: date-time
+        dailyCalls:
+          description: Maximum number of daily calls performed using this version
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 1000000000
+        rejectionReason:
+          type: string
+      required:
+      - id
+      - state
+      - dailyCalls
+      - createdAt
+      description: business representation of a purpose version
+    DelegationRef:
+      type: object
+      additionalProperties: false
+      description: Set the delegation ID in order to operate as a delegate for an active producer or consumer delegation
+      properties:
+        delegationId:
+          $ref: '#/components/schemas/DelegationId'
+    Purposes:
+      type: object
+      additionalProperties: false
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Purpose'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+      required:
+      - results
+      - pagination
+    AgreementSubmission:
+      type: object
+      additionalProperties: false
+      description: contains the information for agreement submission
+      properties:
+        consumerNotes:
+          type: string
+          maxLength: 1000
+    AgreementState:
+      type: string
+      description: Agreement State
+      enum:
+      - DRAFT
+      - ACTIVE
+      - ARCHIVED
+      - PENDING
+      - SUSPENDED
+      - MISSING_CERTIFIED_ATTRIBUTES
+      - REJECTED
+    FileUploadMultipart:
+      type: object
+      additionalProperties: false
+      required:
+      - file
+      - prettyName
+      properties:
+        file:
+          type: string
+          format: binary
+          description: The file to upload
+        prettyName:
+          type: string
+          description: A human-readable name for the file
+    FileDownloadMultipart:
+      type: object
+      additionalProperties: false
+      required:
+      - file
+      - filename
+      - contentType
+      - id
+      properties:
+        file:
+          type: string
+          format: binary
+          description: The file to download
+        filename:
+          type: string
+          description: The name of the file
+        contentType:
+          type: string
+          description: The content type of the file
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier of the file
+        prettyName:
+          type: string
+          description: A human-readable name for the file
+    Purpose:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          format: uuid
+        eserviceId:
+          $ref: '#/components/schemas/EServiceId'
+        consumerId:
+          type: string
+          format: uuid
+        suspendedByConsumer:
+          type: boolean
+        suspendedByProducer:
+          type: boolean
+        title:
+          type: string
+        description:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        isFreeOfCharge:
+          type: boolean
+        freeOfChargeReason:
+          type: string
+        delegationId:
+          $ref: '#/components/schemas/DelegationId'
+        currentVersion:
+          $ref: '#/components/schemas/PurposeVersion'
+        waitingForApprovalVersion:
+          $ref: '#/components/schemas/PurposeVersion'
+        rejectedVersion:
+          $ref: '#/components/schemas/PurposeVersion'
+        purposeTemplateId:
+          $ref: '#/components/schemas/PurposeTemplateId'
+      required:
+      - id
+      - eserviceId
+      - consumerId
+      - title
+      - description
+      - createdAt
+      - isFreeOfCharge
+    Pagination:
+      type: object
+      additionalProperties: false
+      properties:
+        offset:
+          type: integer
+          format: int32
+          minimum: 0
+        limit:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 50
+        totalCount:
+          type: integer
+          format: int32
+          minimum: 0
+      required:
+      - offset
+      - limit
+      - totalCount
+    AgreementSeed_2:
+      type: object
+      additionalProperties: false
+      description: Contains the information for agreement creation
+      properties:
+        eserviceId:
+          type: string
+          format: uuid
+        descriptorId:
+          type: string
+          format: uuid
+        delegationId:
+          type: string
+          format: uuid
+      required:
+      - eserviceId
+      - descriptorId
+    Agreement_2:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          format: uuid
+        eserviceId:
+          type: string
+          format: uuid
+        descriptorId:
+          type: string
+          format: uuid
+        producerId:
+          type: string
+          format: uuid
+        consumerId:
+          type: string
+          format: uuid
+        delegationId:
+          type: string
+          format: uuid
+        state:
+          $ref: '#/components/schemas/AgreementState'
+        suspendedByConsumer:
+          type: boolean
+        suspendedByProducer:
+          type: boolean
+        suspendedByPlatform:
+          type: boolean
+        consumerNotes:
+          type: string
+        rejectionReason:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        suspendedAt:
+          type: string
+          format: date-time
+      required:
+      - id
+      - eserviceId
+      - descriptorId
+      - producerId
+      - consumerId
+      - state
+      - createdAt
+    DelegationRef_2:
+      type: object
+      additionalProperties: false
+      description: Set the delegation ID in order to operate as a delegate for an active producer or consumer delegation
+      properties:
+        delegationId:
+          type: string
+          format: uuid
+    Purpose_2:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          format: uuid
+        eserviceId:
+          type: string
+          format: uuid
+        consumerId:
+          type: string
+          format: uuid
+        suspendedByConsumer:
+          type: boolean
+        suspendedByProducer:
+          type: boolean
+        title:
+          type: string
+        description:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        isRiskAnalysisValid:
+          type: boolean
+        isFreeOfCharge:
+          type: boolean
+        freeOfChargeReason:
+          type: string
+        delegationId:
+          type: string
+          format: uuid
+        currentVersion:
+          $ref: '#/components/schemas/PurposeVersion'
+        waitingForApprovalVersion:
+          $ref: '#/components/schemas/PurposeVersion'
+        rejectedVersion:
+          $ref: '#/components/schemas/PurposeVersion'
+        purposeTemplateId:
+          type: string
+          format: uuid
+      required:
+      - id
+      - eserviceId
+      - consumerId
+      - title
+      - description
+      - createdAt
+      - isRiskAnalysisValid
+      - isFreeOfCharge
+  headers:
+    IntegrityRest02AgidJwtSignatureHeader:
+      description: 'The `Agid-JWT-Signature` header contains a JSON Web Signature (JWS) signed with the PDND API private key.
+
+        It ensures payload integrity and non-repudiation across all responses (both success and error), in compliance with: 1) Linee Guida sull''interoperabilità tecnica delle Pubbliche Amministrazioni - Pattern di sicurezza,  2) RFC 7515 and 3) RFC 7519.
+
+        '
+      schema:
+        type: string
+    RateLimitRemainingHeader:
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+      description: Remaining requests within time interval
+    RateLimitIntervalHeader:
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+      description: Time interval in milliseconds. Allowed requests will be constantly replenished during the interval. At the end of the interval the max allowed requests will be available
+    RateLimitLimitHeader:
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+      description: Max allowed requests within time interval
+    IntegrityRest02DigestHeader:
+      schema:
+        type: string
+        pattern: ^SHA-256=[a-zA-Z0-9+/]{43}=$
+      description: 'Digest of the body using the canonical JSON representation of the response body.
+
+        The digest is calculated using the SHA-256 algorithm on the response body
+
+        exactly as it is sent to the client, encoded in Base64 as per RFC 3230
+
+        '
+  responses:
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+      headers:
+        X-Rate-Limit-Limit:
+          $ref: '#/components/headers/RateLimitLimitHeader'
+        X-Rate-Limit-Remaining:
+          $ref: '#/components/headers/RateLimitRemainingHeader'
+        X-Rate-Limit-Interval:
+          $ref: '#/components/headers/RateLimitIntervalHeader'
+        Digest:
+          $ref: '#/components/headers/IntegrityRest02DigestHeader'
+        Agid-JWT-Signature:
+          $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+    Conflict:
+      description: Conflict
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+      headers:
+        X-Rate-Limit-Limit:
+          $ref: '#/components/headers/RateLimitLimitHeader'
+        X-Rate-Limit-Remaining:
+          $ref: '#/components/headers/RateLimitRemainingHeader'
+        X-Rate-Limit-Interval:
+          $ref: '#/components/headers/RateLimitIntervalHeader'
+        Digest:
+          $ref: '#/components/headers/IntegrityRest02DigestHeader'
+        Agid-JWT-Signature:
+          $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+      headers:
+        X-Rate-Limit-Limit:
+          $ref: '#/components/headers/RateLimitLimitHeader'
+        X-Rate-Limit-Remaining:
+          $ref: '#/components/headers/RateLimitRemainingHeader'
+        X-Rate-Limit-Interval:
+          $ref: '#/components/headers/RateLimitIntervalHeader'
+        Digest:
+          $ref: '#/components/headers/IntegrityRest02DigestHeader'
+        Agid-JWT-Signature:
+          $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+    BadRequest:
+      description: Bad Request
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+      headers:
+        X-Rate-Limit-Limit:
+          $ref: '#/components/headers/RateLimitLimitHeader'
+        X-Rate-Limit-Remaining:
+          $ref: '#/components/headers/RateLimitRemainingHeader'
+        X-Rate-Limit-Interval:
+          $ref: '#/components/headers/RateLimitIntervalHeader'
+        Digest:
+          $ref: '#/components/headers/IntegrityRest02DigestHeader'
+        Agid-JWT-Signature:
+          $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+      headers:
+        X-Rate-Limit-Limit:
+          $ref: '#/components/headers/RateLimitLimitHeader'
+        X-Rate-Limit-Remaining:
+          $ref: '#/components/headers/RateLimitRemainingHeader'
+        X-Rate-Limit-Interval:
+          $ref: '#/components/headers/RateLimitIntervalHeader'
+        Digest:
+          $ref: '#/components/headers/IntegrityRest02DigestHeader'
+        Agid-JWT-Signature:
+          $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+    TooManyRequests:
+      description: Too Many Requests
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+      headers:
+        X-Rate-Limit-Limit:
+          $ref: '#/components/headers/RateLimitLimitHeader'
+        X-Rate-Limit-Remaining:
+          $ref: '#/components/headers/RateLimitRemainingHeader'
+        X-Rate-Limit-Interval:
+          $ref: '#/components/headers/RateLimitIntervalHeader'
+        Digest:
+          $ref: '#/components/headers/IntegrityRest02DigestHeader'
+        Agid-JWT-Signature:
+          $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+  parameters:
+    LimitParam:
+      in: query
+      name: limit
+      description: Maximum number of results to return
+      required: true
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+        maximum: 50
+    EserviceIdsParam:
+      in: query
+      name: eserviceIds
+      description: Filter by E-Service IDs. If not specified, return results for any E-Service
+      required: false
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+          format: uuid
+        default: []
+    OffsetParam:
+      in: query
+      name: offset
+      description: Pagination starting position
+      required: true
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+  securitySchemes:
+    DPoPAuth:
+      type: http
+      scheme: DPoP
+      description: 'This Authorization header must be used alongside the DPoP Proof JWT.
+
+        Use:
+
+        Authorization: DPoP <access_token>
+
+
+        The access token generated must also have a cnf field.
+
+        '
+    DPoPProofHeader:
+      type: apiKey
+      in: header
+      name: DPoP
+      description: 'DPoP proof JWT for sender-constrained access. Must accompany the DPoP Authorization header.
+
+        '
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-refined-from:
+- interop-api-v3.yaml
+- pagopa-pdnd-interop-v2-openapi.yml
+- pagopa-pdnd-interop-v3-openapi.yml

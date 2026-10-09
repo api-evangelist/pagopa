@@ -1,0 +1,208 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/pagopa/main/json-schema/pagopa-payments-model-response-schema.json",
+  "title": "PaymentsModelResponse",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/pagopa-gpd-aca-openapi.yml#/components/schemas/PaymentsModelResponse",
+  "type": "object",
+  "properties": {
+    "nav": {
+      "type": "string"
+    },
+    "iuv": {
+      "type": "string"
+    },
+    "organizationFiscalCode": {
+      "type": "string"
+    },
+    "amount": {
+      "type": "integer",
+      "format": "int64"
+    },
+    "description": {
+      "type": "string"
+    },
+    "isPartialPayment": {
+      "type": "boolean"
+    },
+    "dueDate": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "retentionDate": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "paymentDate": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "reportingDate": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "insertedDate": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "paymentMethod": {
+      "type": "string"
+    },
+    "fee": {
+      "type": "integer",
+      "format": "int64"
+    },
+    "notificationFee": {
+      "type": "integer",
+      "format": "int64"
+    },
+    "pspCompany": {
+      "type": "string"
+    },
+    "idReceipt": {
+      "type": "string"
+    },
+    "idFlowReporting": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "PO_UNPAID",
+        "PO_PAID",
+        "PO_PARTIALLY_REPORTED",
+        "PO_REPORTED"
+      ],
+      "type": "string"
+    },
+    "lastUpdatedDate": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "lastUpdatedDateNotificationFee": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "paymentOptionMetadata": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/PaymentOptionMetadataModelResponse"
+      }
+    },
+    "transfer": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/TransferModelResponse"
+      }
+    },
+    "serviceType": {
+      "type": "string"
+    }
+  },
+  "$defs": {
+    "PaymentOptionMetadataModelResponse": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "Stamp": {
+      "required": [
+        "hashDocument",
+        "provincialResidence",
+        "stampType"
+      ],
+      "type": "object",
+      "properties": {
+        "hashDocument": {
+          "maxLength": 72,
+          "minLength": 0,
+          "type": "string",
+          "description": "Document hash type is stBase64Binary72 as described in https://github.com/pagopa/pagopa-api."
+        },
+        "stampType": {
+          "maxLength": 2,
+          "minLength": 2,
+          "type": "string",
+          "description": "The type of the stamp"
+        },
+        "provincialResidence": {
+          "pattern": "[A-Z]{2}",
+          "type": "string",
+          "description": "The provincial of the residence"
+        }
+      }
+    },
+    "TransferMetadataModelResponse": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "TransferModelResponse": {
+      "type": "object",
+      "properties": {
+        "organizationFiscalCode": {
+          "type": "string"
+        },
+        "companyName": {
+          "type": "string"
+        },
+        "idTransfer": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "remittanceInformation": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string"
+        },
+        "iban": {
+          "type": "string"
+        },
+        "postalIban": {
+          "type": "string"
+        },
+        "stamp": {
+          "$ref": "#/$defs/Stamp"
+        },
+        "insertedDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "status": {
+          "enum": [
+            "T_UNREPORTED",
+            "T_REPORTED"
+          ],
+          "type": "string"
+        },
+        "lastUpdatedDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "transferMetadata": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/TransferMetadataModelResponse"
+          }
+        }
+      }
+    }
+  }
+}

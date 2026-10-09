@@ -1,0 +1,151 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/pagopa/main/json-schema/pagopa-create-flow-request-schema.json",
+  "title": "CreateFlowRequest",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/pagopa-fdr-psp-openapi.yml#/components/schemas/CreateFlowRequest",
+  "required": [
+    "fdr",
+    "fdrDate",
+    "sender",
+    "receiver",
+    "regulation",
+    "regulationDate",
+    "totPayments",
+    "sumPayments"
+  ],
+  "type": "object",
+  "properties": {
+    "fdr": {
+      "pattern": "[a-zA-Z0-9\\-_]{1,35}",
+      "type": "string",
+      "description": "The value of the flow identifier.<br>In the XML request for SOAP primitives, this field is mappable with the tag <b>[NodoInviaFlussoRendicontazione.identificativoFlusso]</b>."
+    },
+    "fdrDate": {
+      "$ref": "#/$defs/Instant"
+    },
+    "sender": {
+      "$ref": "#/$defs/Sender"
+    },
+    "receiver": {
+      "$ref": "#/$defs/Receiver"
+    },
+    "regulation": {
+      "pattern": "^(.{1,35})$",
+      "type": "string",
+      "description": "The description related to the regulation payment related to the flow.<br>In the XML request for SOAP primitives, this field is mappable with the tag <b>[FlussoRiversamento.identificativoUnivocoRegolamento]</b>."
+    },
+    "regulationDate": {
+      "$ref": "#/$defs/LocalDate"
+    },
+    "bicCodePouringBank": {
+      "pattern": "^(.{1,35})$",
+      "type": "string",
+      "description": "The BIC code of the bank where the regulation payment related to the flow will be poured.<br>In the XML request for SOAP primitives, this field is mappable with the tag <b>[FlussoRiversamento.codiceBicBancaDiRiversamento]</b>."
+    },
+    "totPayments": {
+      "minimum": 1.0,
+      "type": "integer",
+      "description": "The total number of payments to be included in the flow during the flow compilation.<br>In the XML request for SOAP primitives, this field is mappable with the tag <b>[FlussoRiversamento.numeroTotalePagamenti]</b>.",
+      "format": "int64"
+    },
+    "sumPayments": {
+      "pattern": "^\\d{1,2147483647}[.]\\d{1,2}?$",
+      "type": "number",
+      "description": "The total amount of payments to be calculated in the flow during the flow compilation.<br>In the XML request for SOAP primitives, this field is mappable with the tag <b>[FlussoRiversamento.importoTotalePagamenti]</b>.",
+      "format": "double"
+    }
+  },
+  "$defs": {
+    "Instant": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "LocalDate": {
+      "type": "string",
+      "format": "date"
+    },
+    "Receiver": {
+      "required": [
+        "id",
+        "organizationId",
+        "organizationName"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "pattern": "^(.{1,35})$",
+          "type": "string",
+          "description": "The identifier of the Creditor Institution receiver entity.<br>In the XML request for SOAP primitives, this field is mappable with the tag <b>[FlussoRiversamento.istitutoRicevente.identificativoUnivocoRicevente.codiceIdentificativoUnivoco]</b>."
+        },
+        "organizationId": {
+          "pattern": "^(.{1,35})$",
+          "type": "string",
+          "description": "The domain identifier of the Creditor Institution receiver entity.<br>In the XML request for SOAP primitives, this field is mappable with the tag <b>[NodoInviaFlussoRendicontazione.identificativoDominio]</b>."
+        },
+        "organizationName": {
+          "pattern": "^(.{1,140})$",
+          "type": "string",
+          "description": "The fiscal name of the Creditor Institution receiver entity.<br>In the XML request for SOAP primitives, this field is mappable with the tag <b>[FlussoRiversamento.istitutoRicevente.denominazioneRicevente]</b>."
+        }
+      }
+    },
+    "Sender": {
+      "required": [
+        "type",
+        "id",
+        "pspId",
+        "pspName",
+        "pspBrokerId",
+        "channelId"
+      ],
+      "type": "object",
+      "properties": {
+        "type": {
+          "$ref": "#/$defs/SenderTypeEnum"
+        },
+        "id": {
+          "pattern": "^(.{1,35})$",
+          "type": "string",
+          "description": "The identifier of the PSP sender entity.<br>In the XML request for SOAP primitives, this field is mappable with the tag <b>[FlussoRiversamento.istitutoMittente.identificativoUnivocoMittente.codiceIdentificativoUnivoco]</b>."
+        },
+        "pspId": {
+          "pattern": "^(.{1,35})$",
+          "type": "string",
+          "description": "The domain identifier of the PSP sender entity.<br>In the XML request for SOAP primitives, this field is mappable with the tag <b>[NodoInviaFlussoRendicontazione.identificativoPSP]</b>."
+        },
+        "pspName": {
+          "pattern": "^(.{3,70})$",
+          "type": "string",
+          "description": "The fiscal name of the PSP sender entity.<br>In the XML request for SOAP primitives, this field is mappable with the tag <b>[FlussoRiversamento.istitutoMittente.denominazioneMittente]</b>."
+        },
+        "pspBrokerId": {
+          "pattern": "^(.{1,35})$",
+          "type": "string",
+          "description": "The domain identifier of the PSP sender entity's Broker.<br>In the XML request for SOAP primitives, this field is mappable with the tag <b>[NodoInviaFlussoRendicontazione.identificativoIntermediarioPSP]</b>."
+        },
+        "channelId": {
+          "pattern": "^(.{1,35})$",
+          "type": "string",
+          "description": "The identifier of the PSP sender entity's Channel.<br>In the XML request for SOAP primitives, this field is mappable with the tag <b>[NodoInviaFlussoRendicontazione.identificativoCanale]</b>."
+        },
+        "password": {
+          "pattern": "^(\\w{8,15})$",
+          "type": "string",
+          "description": "The password of the PSP sender entity's Channel.<br>In the XML request for SOAP primitives, this field is mappable with the tag <b>[NodoInviaFlussoRendicontazione.password]</b>.",
+          "deprecated": true
+        }
+      }
+    },
+    "SenderTypeEnum": {
+      "enum": [
+        "LEGAL_PERSON",
+        "ABI_CODE",
+        "BIC_CODE"
+      ],
+      "type": "string"
+    }
+  }
+}
