@@ -1,0 +1,32 @@
+edges:
+- partner_name: EU Trusted List (eIDAS)
+  partner: null
+  partner_match: register
+  type: contract
+  channel: regulator-register
+  relationship: standard-participant
+  direction: partner-built
+  evidence: https://eidas.agid.gov.it/TL/TSL-IT.xml
+  contract_reference:
+    register: EU List of Trusted Lists (eIDAS qualified trust service providers)
+    spec_file: null
+    role: qualified-trust-service-provider
+    registered_name: PagoPA Spa
+    member_state: IT
+    trusted_list: https://eidas.agid.gov.it/TL/TSL-IT.xml
+    services:
+    - qualified-e-delivery
+    lotl: https://ec.europa.eu/tools/lotl/eu-lotl.xml
+    matched_domain: pagopa.it
+    detected_by: sweep-legal.py
+    detected: '2026-10-14'
+  source: eutl
+  detected_by: sweep-legal.py
+  first_seen: '2026-10-14'
+generated: '2026-10-14'
+method: searched
+checked:
+- https://ec.europa.eu/tools/lotl/eu-lotl.xml
+- https://eidas.agid.gov.it/TL/TSL-IT.xml
+source:
+- https://eidas.agid.gov.it/TL/TSL-IT.xml
