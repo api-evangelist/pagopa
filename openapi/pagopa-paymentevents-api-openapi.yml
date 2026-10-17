@@ -1,14 +1,22 @@
 openapi: 3.2.0
 info:
-  title: Pagopa Payment Events API
+  termsOfService: https://selfcare.notifichedigitali.it/termini-di-servizio
+  x-api-id: api-external-b2b-pa
+  title: 'Piattaforma Notifiche: API B2B per le Pubbliche…'
+  x-summary: 'Piattaforma Notifiche: API B2B per le Pubbliche Amministrazioni'
   version: 1.0.0
+  description: '## Abstract
+
+    API utilizzate dalle pubbliche amministrazioni per __inviare richieste di notifiche__ e
+
+    __ottenere informazioni in modalità pull__ sullo stato della
+
+    _"richiesta di notifica"_ (accettata o rifiutata) e, in caso di richiesta accettata,
+
+    sulle comunicazioni effettuate, o solo tentate, nei confronti dei destinatari della notifica.'
   contact:
     name: 'SEND: supporto enti'
     url: https://pagopa.atlassian.net/servicedesk/customer/portal/5
-  termsOfService: https://selfcare.notifichedigitali.it/termini-di-servizio
-  x-api-id: api-external-b2b-pa
-  x-summary: 'Piattaforma Notifiche: API B2B per le Pubbliche Amministrazioni'
-  description: 'Operations tagged PaymentEvents across 2 of this provider''s published API definitions: send-b2b-pa-bundle.yaml, pagopa-send-b2b-pa-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.notifichedigitali.it
   description: Ambiente di produzione
@@ -55,11 +63,6 @@ paths:
                 $ref: '#/components/schemas/Problem'
       summary: Payment events request pago pa
       x-summary-source: derived
-    servers:
-    - url: https://api.notifichedigitali.it
-      description: Ambiente di produzione
-    - url: https://api.uat.notifichedigitali.it
-      description: Ambiente di collaudo
   /delivery/events/payment/f24:
     post:
       deprecated: true
@@ -96,25 +99,8 @@ paths:
                 $ref: '#/components/schemas/Problem'
       summary: Payment events request F24
       x-summary-source: derived
-    servers:
-    - url: https://api.notifichedigitali.it
-      description: Ambiente di produzione
-    - url: https://api.uat.notifichedigitali.it
-      description: Ambiente di collaudo
 components:
   schemas:
-    PaymentEventsRequestPagoPa:
-      title: Invio eventi di pagamento da PA a PN
-      description: Richiesta contenente un array di eventi di pagamento di tipo PagoPA di cui una Pubblica Amministrazione deve avvisare Piattaforma Notifiche.
-      type: object
-      required:
-      - events
-      properties:
-        events:
-          description: Elenco degli eventi di pagamento
-          type: array
-          items:
-            $ref: '#/components/schemas/PaymentEventPagoPa'
     PaymentEventsRequestF24:
       title: Invio eventi di pagamento da PA a PN
       description: Richiesta contenente un array di eventi di pagamento di tipo F24 di cui una Pubblica Amministrazione deve avvisare Piattaforma Notifiche.
@@ -127,46 +113,12 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/PaymentEventF24'
-    PaymentEventPagoPa:
-      title: Evento di pagamento PagoPa
-      description: "Comprende: <br/>\n  - _noticeCode_: \"codice avviso pagoPA\" di pagamento del sistema pagoPA, usato per pagamento online.<br/>\n  - _creditorTaxId_: codice fiscale dell'ente a cui fa riferimento il \"codice avviso pagoPA\". <br/>\n  - data e ora del pagamento. <br/>\n  - importo del pagamento in eurocent. <br/>"
-      type: object
-      required:
-      - noticeCode
-      - creditorTaxId
-      - paymentDate
-      - amount
-      properties:
-        noticeCode:
-          $ref: '#/components/schemas/noticeCode'
-        creditorTaxId:
-          $ref: '#/components/schemas/paTaxId'
-        paymentDate:
-          type: string
-          pattern: ^([0-9]{4})-([0-9]{2})-([0-9]{2})T([0-9]{2}):([0-9]{2}):([0-9]{2})(\.[0-9]+)?(Z|([+\-][0-9]{2}):([0-9]{2}))$
-          description: data e ora in formato ISO 8601
-        amount:
-          type: integer
-          format: int32
-    TaxId:
-      description: C.F. persona fisica o persona giuridica
-      type: string
-      minLength: 11
-      maxLength: 16
-      pattern: ^([A-Z]{6}[0-9LMNPQRSTUV]{2}[A-Z]{1}[0-9LMNPQRSTUV]{2}[A-Z]{1}[0-9LMNPQRSTUV]{3}[A-Z]{1})|([0-9]{11})$
     noticeCode:
       description: Payment notice number  numero avviso
       example: '302000100000019421'
       type: string
       maxLength: 18
       minLength: 18
-      pattern: ^\d+$
-    paTaxId:
-      description: Payment PA fiscal code
-      example: '77777777777'
-      type: string
-      maxLength: 11
-      minLength: 11
       pattern: ^\d+$
     Problem:
       properties:
@@ -209,6 +161,27 @@ components:
       required:
       - status
       - errors
+    PaymentEventPagoPa:
+      title: Evento di pagamento PagoPa
+      description: "Comprende: <br/>\n  - _noticeCode_: \"codice avviso pagoPA\" di pagamento del sistema pagoPA, usato per pagamento online.<br/>\n  - _creditorTaxId_: codice fiscale dell'ente a cui fa riferimento il \"codice avviso pagoPA\". <br/>\n  - data e ora del pagamento. <br/>\n  - importo del pagamento in eurocent. <br/>"
+      type: object
+      required:
+      - noticeCode
+      - creditorTaxId
+      - paymentDate
+      - amount
+      properties:
+        noticeCode:
+          $ref: '#/components/schemas/noticeCode'
+        creditorTaxId:
+          $ref: '#/components/schemas/paTaxId'
+        paymentDate:
+          type: string
+          pattern: ^([0-9]{4})-([0-9]{2})-([0-9]{2})T([0-9]{2}):([0-9]{2}):([0-9]{2})(\.[0-9]+)?(Z|([+\-][0-9]{2}):([0-9]{2}))$
+          description: data e ora in formato ISO 8601
+        amount:
+          type: integer
+          format: int32
     ProblemError:
       properties:
         code:
@@ -255,11 +228,33 @@ components:
         amount:
           type: integer
           format: int32
+    paTaxId:
+      description: Payment PA fiscal code
+      example: '77777777777'
+      type: string
+      maxLength: 11
+      minLength: 11
+      pattern: ^\d+$
+    TaxId:
+      description: C.F. persona fisica o persona giuridica
+      type: string
+      minLength: 11
+      maxLength: 16
+      pattern: ^([A-Z]{6}[0-9LMNPQRSTUV]{2}[A-Z]{1}[0-9LMNPQRSTUV]{2}[A-Z]{1}[0-9LMNPQRSTUV]{3}[A-Z]{1})|([0-9]{11})$
+    PaymentEventsRequestPagoPa:
+      title: Invio eventi di pagamento da PA a PN
+      description: Richiesta contenente un array di eventi di pagamento di tipo PagoPA di cui una Pubblica Amministrazione deve avvisare Piattaforma Notifiche.
+      type: object
+      required:
+      - events
+      properties:
+        events:
+          description: Elenco degli eventi di pagamento
+          type: array
+          items:
+            $ref: '#/components/schemas/PaymentEventPagoPa'
   securitySchemes:
     ApiKeyAuth:
       type: apiKey
       in: header
       name: x-api-key
-x-refined-from:
-- send-b2b-pa-bundle.yaml
-- pagopa-send-b2b-pa-openapi.yml

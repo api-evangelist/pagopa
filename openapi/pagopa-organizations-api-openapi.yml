@@ -4,7 +4,7 @@ info:
   x-refined-note:
   - x-logo differs across the merged source definitions and was not carried
   version: '1.0'
-  description: 'Operations tagged Organizations across 4 of this provider''s published API definitions: fdr_organization.json, io-functions-services.yaml, pagopa-fdr-organizations-openapi.yml, pagopa-io-services-openapi.yml. Each path carries the servers of the definition it was published in.'
+  description: 'Operations tagged Organizations across 2 of this provider''s published API definitions: fdr_organization.json, io-functions-services.yaml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.platform.pagopa.it/fdr-org/service/v1
 - url: https://api.io.pagopa.it/api/v1
@@ -651,6 +651,175 @@ paths:
     - url: https://api.io.pagopa.it/api/v1
 components:
   schemas:
+    SenderTypeEnum:
+      enum:
+      - LEGAL_PERSON
+      - ABI_CODE
+      - BIC_CODE
+      type: string
+    Receiver:
+      required:
+      - id
+      - organizationId
+      - organizationName
+      type: object
+      properties:
+        id:
+          pattern: ^(.{1,35})$
+          type: string
+          description: The identifier of the Creditor Institution receiver entity.<br>In the XML request for SOAP primitives, this field is mappable with the tag <b>[FlussoRiversamento.istitutoRicevente.identificativoUnivocoRicevente.codiceIdentificativoUnivoco]</b>.
+          example:
+          - APPBIT2B
+        organizationId:
+          pattern: ^(.{1,35})$
+          type: string
+          description: The domain identifier of the Creditor Institution receiver entity.<br>In the XML request for SOAP primitives, this field is mappable with the tag <b>[NodoInviaFlussoRendicontazione.identificativoDominio]</b>.
+          example:
+          - '20000000001'
+        organizationName:
+          pattern: ^(.{1,140})$
+          type: string
+          description: The fiscal name of the Creditor Institution receiver entity.<br>In the XML request for SOAP primitives, this field is mappable with the tag <b>[FlussoRiversamento.istitutoRicevente.denominazioneRicevente]</b>.
+          example:
+          - Comune di Roma
+    ErrorMessage:
+      type: object
+      properties:
+        path:
+          type: string
+          description: The path reference for the specific error clause in the general response.
+          example:
+          - detail.path.if-exist
+        message:
+          type: string
+          description: The descriptive message for the specific error clause in the general response.
+          example:
+          - An unexpected error has occurred. Please contact support.
+    Sender:
+      required:
+      - type
+      - id
+      - pspId
+      - pspName
+      - pspBrokerId
+      - channelId
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/SenderTypeEnum'
+        id:
+          pattern: ^(.{1,35})$
+          type: string
+          description: The identifier of the PSP sender entity.<br>In the XML request for SOAP primitives, this field is mappable with the tag <b>[FlussoRiversamento.istitutoMittente.identificativoUnivocoMittente.codiceIdentificativoUnivoco]</b>.
+          example:
+          - SELBIT2B
+        pspId:
+          pattern: ^(.{1,35})$
+          type: string
+          description: The domain identifier of the PSP sender entity.<br>In the XML request for SOAP primitives, this field is mappable with the tag <b>[NodoInviaFlussoRendicontazione.identificativoPSP]</b>.
+          example:
+          - '60000000001'
+        pspName:
+          pattern: ^(.{3,70})$
+          type: string
+          description: The fiscal name of the PSP sender entity.<br>In the XML request for SOAP primitives, this field is mappable with the tag <b>[FlussoRiversamento.istitutoMittente.denominazioneMittente]</b>.
+          example:
+          - PSP Name
+        pspBrokerId:
+          pattern: ^(.{1,35})$
+          type: string
+          description: The domain identifier of the PSP sender entity's Broker.<br>In the XML request for SOAP primitives, this field is mappable with the tag <b>[NodoInviaFlussoRendicontazione.identificativoIntermediarioPSP]</b>.
+          example:
+          - '70000000001'
+        channelId:
+          pattern: ^(.{1,35})$
+          type: string
+          description: The identifier of the PSP sender entity's Channel.<br>In the XML request for SOAP primitives, this field is mappable with the tag <b>[NodoInviaFlussoRendicontazione.identificativoCanale]</b>.
+          example:
+          - '80000000001'
+        password:
+          pattern: ^(\w{8,15})$
+          type: string
+          description: The password of the PSP sender entity's Channel.<br>In the XML request for SOAP primitives, this field is mappable with the tag <b>[NodoInviaFlussoRendicontazione.password]</b>.
+          example:
+          - password
+          deprecated: true
+    PaginatedFlowsResponse:
+      type: object
+      properties:
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+        count:
+          type: integer
+          description: The number of elements that can be found in this page.
+          format: int64
+          example:
+          - 100
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/FlowByPSP'
+          description: The list of flows that are included in this page. Date-time fields inside each item are defined with UTC time-zone.
+    FlowByPSP:
+      type: object
+      properties:
+        fdr:
+          type: string
+          description: The unique identifier of the flow.
+          example:
+          - 2025-01-0188888888888-0000001
+        pspId:
+          type: string
+          description: The domain identifier of the PSP related to the flow.
+          example:
+          - '88888888888'
+        revision:
+          type: integer
+          description: The revision (or version) of the flow.
+          format: int64
+          example:
+          - 1
+        published:
+          $ref: '#/components/schemas/Instant'
+        flowDate:
+          $ref: '#/components/schemas/Instant'
+    ErrorResponse:
+      type: object
+      properties:
+        errorId:
+          type: string
+          description: The unique identifier that can be used for tracking request and error response.
+          example:
+          - 50905466-1881-457b-b42f-fb7b2bfb1610
+        httpStatusCode:
+          type: integer
+          description: The HTTP status code related to the error message.
+          format: int32
+          example:
+          - 500
+        httpStatusDescription:
+          type: string
+          description: The descriptive name of the HTTP status code.
+          example:
+          - Internal Server Error
+        appErrorCode:
+          type: string
+          description: The operational error code related to the error response
+          example:
+          - FDR-0500
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorMessage'
+          description: The list of specific errors to show for the error response.
+    Instant:
+      type: string
+      format: date-time
+      example:
+      - '2022-03-10T04:15:50.0000000+00:00'
+    LocalDate:
+      type: string
+      format: date
     SingleFlowResponse:
       type: object
       properties:
@@ -717,120 +886,6 @@ components:
           format: double
           example:
           - 100.95
-    PaginatedFlowsResponse:
-      type: object
-      properties:
-        metadata:
-          $ref: '#/components/schemas/Metadata'
-        count:
-          type: integer
-          description: The number of elements that can be found in this page.
-          format: int64
-          example:
-          - 100
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/FlowByPSP'
-          description: The list of flows that are included in this page. Date-time fields inside each item are defined with UTC time-zone.
-    Receiver:
-      required:
-      - id
-      - organizationId
-      - organizationName
-      type: object
-      properties:
-        id:
-          pattern: ^(.{1,35})$
-          type: string
-          description: The identifier of the Creditor Institution receiver entity.<br>In the XML request for SOAP primitives, this field is mappable with the tag <b>[FlussoRiversamento.istitutoRicevente.identificativoUnivocoRicevente.codiceIdentificativoUnivoco]</b>.
-          example:
-          - APPBIT2B
-        organizationId:
-          pattern: ^(.{1,35})$
-          type: string
-          description: The domain identifier of the Creditor Institution receiver entity.<br>In the XML request for SOAP primitives, this field is mappable with the tag <b>[NodoInviaFlussoRendicontazione.identificativoDominio]</b>.
-          example:
-          - '20000000001'
-        organizationName:
-          pattern: ^(.{1,140})$
-          type: string
-          description: The fiscal name of the Creditor Institution receiver entity.<br>In the XML request for SOAP primitives, this field is mappable with the tag <b>[FlussoRiversamento.istitutoRicevente.denominazioneRicevente]</b>.
-          example:
-          - Comune di Roma
-    ErrorMessage:
-      type: object
-      properties:
-        path:
-          type: string
-          description: The path reference for the specific error clause in the general response.
-          example:
-          - detail.path.if-exist
-        message:
-          type: string
-          description: The descriptive message for the specific error clause in the general response.
-          example:
-          - An unexpected error has occurred. Please contact support.
-    ReportingFlowStatusEnum:
-      enum:
-      - CREATED
-      - INSERTED
-      - PUBLISHED
-      type: string
-    Instant:
-      type: string
-      format: date-time
-      example:
-      - '2022-03-10T04:15:50.0000000+00:00'
-    Sender:
-      required:
-      - type
-      - id
-      - pspId
-      - pspName
-      - pspBrokerId
-      - channelId
-      type: object
-      properties:
-        type:
-          $ref: '#/components/schemas/SenderTypeEnum'
-        id:
-          pattern: ^(.{1,35})$
-          type: string
-          description: The identifier of the PSP sender entity.<br>In the XML request for SOAP primitives, this field is mappable with the tag <b>[FlussoRiversamento.istitutoMittente.identificativoUnivocoMittente.codiceIdentificativoUnivoco]</b>.
-          example:
-          - SELBIT2B
-        pspId:
-          pattern: ^(.{1,35})$
-          type: string
-          description: The domain identifier of the PSP sender entity.<br>In the XML request for SOAP primitives, this field is mappable with the tag <b>[NodoInviaFlussoRendicontazione.identificativoPSP]</b>.
-          example:
-          - '60000000001'
-        pspName:
-          pattern: ^(.{3,70})$
-          type: string
-          description: The fiscal name of the PSP sender entity.<br>In the XML request for SOAP primitives, this field is mappable with the tag <b>[FlussoRiversamento.istitutoMittente.denominazioneMittente]</b>.
-          example:
-          - PSP Name
-        pspBrokerId:
-          pattern: ^(.{1,35})$
-          type: string
-          description: The domain identifier of the PSP sender entity's Broker.<br>In the XML request for SOAP primitives, this field is mappable with the tag <b>[NodoInviaFlussoRendicontazione.identificativoIntermediarioPSP]</b>.
-          example:
-          - '70000000001'
-        channelId:
-          pattern: ^(.{1,35})$
-          type: string
-          description: The identifier of the PSP sender entity's Channel.<br>In the XML request for SOAP primitives, this field is mappable with the tag <b>[NodoInviaFlussoRendicontazione.identificativoCanale]</b>.
-          example:
-          - '80000000001'
-        password:
-          pattern: ^(\w{8,15})$
-          type: string
-          description: The password of the PSP sender entity's Channel.<br>In the XML request for SOAP primitives, this field is mappable with the tag <b>[NodoInviaFlussoRendicontazione.password]</b>.
-          example:
-          - password
-          deprecated: true
     PaginatedPaymentsResponse:
       type: object
       properties:
@@ -847,9 +902,6 @@ components:
           items:
             $ref: '#/components/schemas/Payment'
           description: The list of payments that are included in this page. Date-time fields inside each item are defined with UTC time-zone. The original business day is preserved where applicable.
-    LocalDate:
-      type: string
-      format: date
     Metadata:
       type: object
       properties:
@@ -928,73 +980,12 @@ components:
           - EXECUTED
         payDate:
           $ref: '#/components/schemas/Instant'
-    FlowByPSP:
-      type: object
-      properties:
-        fdr:
-          type: string
-          description: The unique identifier of the flow.
-          example:
-          - 2025-01-0188888888888-0000001
-        pspId:
-          type: string
-          description: The domain identifier of the PSP related to the flow.
-          example:
-          - '88888888888'
-        revision:
-          type: integer
-          description: The revision (or version) of the flow.
-          format: int64
-          example:
-          - 1
-        published:
-          $ref: '#/components/schemas/Instant'
-        flowDate:
-          $ref: '#/components/schemas/Instant'
-    SenderTypeEnum:
+    ReportingFlowStatusEnum:
       enum:
-      - LEGAL_PERSON
-      - ABI_CODE
-      - BIC_CODE
+      - CREATED
+      - INSERTED
+      - PUBLISHED
       type: string
-    ErrorResponse:
-      type: object
-      properties:
-        errorId:
-          type: string
-          description: The unique identifier that can be used for tracking request and error response.
-          example:
-          - 50905466-1881-457b-b42f-fb7b2bfb1610
-        httpStatusCode:
-          type: integer
-          description: The HTTP status code related to the error message.
-          format: int32
-          example:
-          - 500
-        httpStatusDescription:
-          type: string
-          description: The descriptive name of the HTTP status code.
-          example:
-          - Internal Server Error
-        appErrorCode:
-          type: string
-          description: The operational error code related to the error response
-          example:
-          - FDR-0500
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/ErrorMessage'
-          description: The list of specific errors to show for the error response.
-    Logo:
-      type: object
-      properties:
-        logo:
-          type: string
-          format: byte
-          minLength: 1
-      required:
-      - logo
     ProblemJson:
       type: object
       properties:
@@ -1034,6 +1025,15 @@ components:
           description: 'An absolute URI that identifies the specific occurrence of the problem.
 
             It may or may not yield further information if dereferenced.'
+    Logo:
+      type: object
+      properties:
+        logo:
+          type: string
+          format: byte
+          minLength: 1
+      required:
+      - logo
   parameters:
     OrganizationFiscalCode:
       name: organization_fiscal_code
@@ -1066,5 +1066,3 @@ components:
 x-refined-from:
 - fdr_organization.json
 - io-functions-services.yaml
-- pagopa-fdr-organizations-openapi.yml
-- pagopa-io-services-openapi.yml

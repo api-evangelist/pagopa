@@ -1,18 +1,19 @@
 openapi: 3.2.0
 info:
-  title: Pagopa Attributes API
+  title: PDND Interoperability Attributes API
+  description: PDND Interoperability API for machine-to-machine interaction with interoperability features
+  x-summary: PDND Interoperability API
+  version: 3.1.0
   contact:
     name: API Support
     url: https://github.com/pagopa/pdnd-interop-frontend/issues
   termsOfService: https://selfcare.interop.pagopa.it/ui/it/termini-di-servizio
-  x-summary: PDND Interoperability API
-  version: '1.0'
-  description: 'Operations tagged attributes across 3 of this provider''s published API definitions: interop-api-v3.yaml, pagopa-pdnd-interop-v2-openapi.yml, pagopa-pdnd-interop-v3-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.interop.pagopa.it/v3
   description: Production environment
-- url: https://api.interop.pagopa.it/v2
-  description: PROD environment
+security:
+- DPoPAuth: []
+  DPoPProofHeader: []
 tags:
 - name: Attributes
   description: Attributes routes
@@ -51,9 +52,6 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
     post:
       tags:
       - Attributes
@@ -100,12 +98,6 @@ paths:
           $ref: '#/components/responses/Conflict'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /certifiedAttributes/{attributeId}:
     parameters:
     - name: attributeId
@@ -145,12 +137,6 @@ paths:
           $ref: '#/components/responses/NotFound'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /declaredAttributes/{attributeId}:
     parameters:
     - name: attributeId
@@ -190,12 +176,6 @@ paths:
           $ref: '#/components/responses/NotFound'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /verifiedAttributes/{attributeId}:
     parameters:
     - name: attributeId
@@ -235,12 +215,6 @@ paths:
           $ref: '#/components/responses/NotFound'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /verifiedAttributes:
     get:
       tags:
@@ -275,9 +249,6 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
     post:
       tags:
       - Attributes
@@ -320,12 +291,6 @@ paths:
           $ref: '#/components/responses/Conflict'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /declaredAttributes:
     get:
       tags:
@@ -360,9 +325,6 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
     post:
       tags:
       - Attributes
@@ -405,51 +367,7 @@ paths:
           $ref: '#/components/responses/Conflict'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
 components:
-  headers:
-    IntegrityRest02AgidJwtSignatureHeader:
-      description: 'The `Agid-JWT-Signature` header contains a JSON Web Signature (JWS) signed with the PDND API private key.
-
-        It ensures payload integrity and non-repudiation across all responses (both success and error), in compliance with: 1) Linee Guida sull''interoperabilità tecnica delle Pubbliche Amministrazioni - Pattern di sicurezza,  2) RFC 7515 and 3) RFC 7519.
-
-        '
-      schema:
-        type: string
-    RateLimitRemainingHeader:
-      schema:
-        type: integer
-        format: int32
-        minimum: 0
-      description: Remaining requests within time interval
-    RateLimitIntervalHeader:
-      schema:
-        type: integer
-        format: int32
-        minimum: 0
-      description: Time interval in milliseconds. Allowed requests will be constantly replenished during the interval. At the end of the interval the max allowed requests will be available
-    RateLimitLimitHeader:
-      schema:
-        type: integer
-        format: int32
-        minimum: 0
-      description: Max allowed requests within time interval
-    IntegrityRest02DigestHeader:
-      schema:
-        type: string
-        pattern: ^SHA-256=[a-zA-Z0-9+/]{43}=$
-      description: 'Digest of the body using the canonical JSON representation of the response body.
-
-        The digest is calculated using the SHA-256 algorithm on the response body
-
-        exactly as it is sent to the client, encoded in Base64 as per RFC 3230
-
-        '
   schemas:
     DeclaredAttribute:
       type: object
@@ -470,14 +388,133 @@ components:
       - name
       - description
       - createdAt
-    CertifiedAttributes:
+    Pagination:
+      type: object
+      additionalProperties: false
+      properties:
+        offset:
+          type: integer
+          format: int32
+          minimum: 0
+        limit:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 50
+        totalCount:
+          type: integer
+          format: int32
+          minimum: 0
+      required:
+      - offset
+      - limit
+      - totalCount
+    VerifiedAttribute:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          format: uuid
+        description:
+          type: string
+        name:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+      - id
+      - name
+      - description
+      - createdAt
+    DeclaredAttributeSeed:
+      type: object
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+          minLength: 3
+          maxLength: 100
+        description:
+          type: string
+          minLength: 10
+          maxLength: 500
+      required:
+      - description
+      - name
+    CertifiedAttribute:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          format: uuid
+        code:
+          type: string
+          description: The identifier of the attribute on the source registry
+        description:
+          type: string
+        origin:
+          type: string
+          description: Identifier of the origin of this attribute, e.g. "IPA"
+        name:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+      - id
+      - name
+      - description
+      - code
+      - origin
+      - createdAt
+    CertifiedAttributeSeed:
+      type: object
+      additionalProperties: false
+      description: Models the attribute registry entry as payload response
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 500
+        description:
+          type: string
+          minLength: 1
+          maxLength: 500
+        code:
+          type: string
+          minLength: 1
+          maxLength: 64
+          description: The identifier of the attribute on the source registry
+      required:
+      - description
+      - name
+      - code
+    VerifiedAttributeSeed:
+      type: object
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+          minLength: 3
+          maxLength: 100
+        description:
+          type: string
+          minLength: 10
+          maxLength: 500
+      required:
+      - description
+      - name
+    DeclaredAttributes:
       type: object
       additionalProperties: false
       properties:
         results:
           type: array
           items:
-            $ref: '#/components/schemas/CertifiedAttribute'
+            $ref: '#/components/schemas/DeclaredAttribute'
         pagination:
           $ref: '#/components/schemas/Pagination'
       required:
@@ -522,6 +559,19 @@ components:
       - type
       - status
       - title
+    VerifiedAttributes:
+      type: object
+      additionalProperties: false
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/VerifiedAttribute'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+      required:
+      - results
+      - pagination
     ProblemError:
       properties:
         code:
@@ -540,192 +590,64 @@ components:
       required:
       - code
       - detail
-    DeclaredAttributeSeed:
+    CertifiedAttributes:
       type: object
       additionalProperties: false
       properties:
-        name:
-          type: string
-          minLength: 3
-          maxLength: 100
-        description:
-          type: string
-          minLength: 10
-          maxLength: 500
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/CertifiedAttribute'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
       required:
-      - description
-      - name
-    VerifiedAttribute:
-      type: object
-      additionalProperties: false
-      properties:
-        id:
-          type: string
-          format: uuid
-        description:
-          type: string
-        name:
-          type: string
-        createdAt:
-          type: string
-          format: date-time
-      required:
-      - id
-      - name
-      - description
-      - createdAt
+      - results
+      - pagination
     AttributeId:
       type: string
       format: uuid
       description: The unique identifier of the Attribute
-    DeclaredAttributes:
-      type: object
-      additionalProperties: false
-      properties:
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/DeclaredAttribute'
-        pagination:
-          $ref: '#/components/schemas/Pagination'
-      required:
-      - results
-      - pagination
-    CertifiedAttributeSeed:
-      type: object
-      additionalProperties: false
-      description: Models the attribute registry entry as payload response
-      properties:
-        name:
-          type: string
-          minLength: 1
-          maxLength: 500
-        description:
-          type: string
-          minLength: 1
-          maxLength: 500
-        code:
-          type: string
-          minLength: 1
-          maxLength: 64
-          description: The identifier of the attribute on the source registry
-      required:
-      - description
-      - name
-      - code
-    VerifiedAttributes:
-      type: object
-      additionalProperties: false
-      properties:
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/VerifiedAttribute'
-        pagination:
-          $ref: '#/components/schemas/Pagination'
-      required:
-      - results
-      - pagination
-    CertifiedAttribute:
-      type: object
-      additionalProperties: false
-      properties:
-        id:
-          type: string
-          format: uuid
-        code:
-          type: string
-          description: The identifier of the attribute on the source registry
-        description:
-          type: string
-        origin:
-          type: string
-          description: Identifier of the origin of this attribute, e.g. "IPA"
-        name:
-          type: string
-        createdAt:
-          type: string
-          format: date-time
-      required:
-      - id
-      - name
-      - description
-      - code
-      - origin
-      - createdAt
-    VerifiedAttributeSeed:
-      type: object
-      additionalProperties: false
-      properties:
-        name:
-          type: string
-          minLength: 3
-          maxLength: 100
-        description:
-          type: string
-          minLength: 10
-          maxLength: 500
-      required:
-      - description
-      - name
-    Pagination:
-      type: object
-      additionalProperties: false
-      properties:
-        offset:
-          type: integer
-          format: int32
-          minimum: 0
-        limit:
-          type: integer
-          format: int32
-          minimum: 1
-          maximum: 50
-        totalCount:
-          type: integer
-          format: int32
-          minimum: 0
-      required:
-      - offset
-      - limit
-      - totalCount
+  headers:
+    RateLimitLimitHeader:
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+      description: Max allowed requests within time interval
+    RateLimitIntervalHeader:
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+      description: Time interval in milliseconds. Allowed requests will be constantly replenished during the interval. At the end of the interval the max allowed requests will be available
+    IntegrityRest02DigestHeader:
+      schema:
+        type: string
+        pattern: ^SHA-256=[a-zA-Z0-9+/]{43}=$
+      description: 'Digest of the body using the canonical JSON representation of the response body.
+
+        The digest is calculated using the SHA-256 algorithm on the response body
+
+        exactly as it is sent to the client, encoded in Base64 as per RFC 3230
+
+        '
+    IntegrityRest02AgidJwtSignatureHeader:
+      description: 'The `Agid-JWT-Signature` header contains a JSON Web Signature (JWS) signed with the PDND API private key.
+
+        It ensures payload integrity and non-repudiation across all responses (both success and error), in compliance with: 1) Linee Guida sull''interoperabilità tecnica delle Pubbliche Amministrazioni - Pattern di sicurezza,  2) RFC 7515 and 3) RFC 7519.
+
+        '
+      schema:
+        type: string
+    RateLimitRemainingHeader:
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+      description: Remaining requests within time interval
   responses:
-    Forbidden:
-      description: Forbidden
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-      headers:
-        X-Rate-Limit-Limit:
-          $ref: '#/components/headers/RateLimitLimitHeader'
-        X-Rate-Limit-Remaining:
-          $ref: '#/components/headers/RateLimitRemainingHeader'
-        X-Rate-Limit-Interval:
-          $ref: '#/components/headers/RateLimitIntervalHeader'
-        Digest:
-          $ref: '#/components/headers/IntegrityRest02DigestHeader'
-        Agid-JWT-Signature:
-          $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
-    Conflict:
-      description: Conflict
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-      headers:
-        X-Rate-Limit-Limit:
-          $ref: '#/components/headers/RateLimitLimitHeader'
-        X-Rate-Limit-Remaining:
-          $ref: '#/components/headers/RateLimitRemainingHeader'
-        X-Rate-Limit-Interval:
-          $ref: '#/components/headers/RateLimitIntervalHeader'
-        Digest:
-          $ref: '#/components/headers/IntegrityRest02DigestHeader'
-        Agid-JWT-Signature:
-          $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
-    Unauthorized:
-      description: Unauthorized
+    NotFound:
+      description: Not Found
       content:
         application/problem+json:
           schema:
@@ -758,23 +680,6 @@ components:
           $ref: '#/components/headers/IntegrityRest02DigestHeader'
         Agid-JWT-Signature:
           $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
-    NotFound:
-      description: Not Found
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-      headers:
-        X-Rate-Limit-Limit:
-          $ref: '#/components/headers/RateLimitLimitHeader'
-        X-Rate-Limit-Remaining:
-          $ref: '#/components/headers/RateLimitRemainingHeader'
-        X-Rate-Limit-Interval:
-          $ref: '#/components/headers/RateLimitIntervalHeader'
-        Digest:
-          $ref: '#/components/headers/IntegrityRest02DigestHeader'
-        Agid-JWT-Signature:
-          $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
     TooManyRequests:
       description: Too Many Requests
       content:
@@ -792,7 +697,67 @@ components:
           $ref: '#/components/headers/IntegrityRest02DigestHeader'
         Agid-JWT-Signature:
           $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+      headers:
+        X-Rate-Limit-Limit:
+          $ref: '#/components/headers/RateLimitLimitHeader'
+        X-Rate-Limit-Remaining:
+          $ref: '#/components/headers/RateLimitRemainingHeader'
+        X-Rate-Limit-Interval:
+          $ref: '#/components/headers/RateLimitIntervalHeader'
+        Digest:
+          $ref: '#/components/headers/IntegrityRest02DigestHeader'
+        Agid-JWT-Signature:
+          $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+    Conflict:
+      description: Conflict
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+      headers:
+        X-Rate-Limit-Limit:
+          $ref: '#/components/headers/RateLimitLimitHeader'
+        X-Rate-Limit-Remaining:
+          $ref: '#/components/headers/RateLimitRemainingHeader'
+        X-Rate-Limit-Interval:
+          $ref: '#/components/headers/RateLimitIntervalHeader'
+        Digest:
+          $ref: '#/components/headers/IntegrityRest02DigestHeader'
+        Agid-JWT-Signature:
+          $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+      headers:
+        X-Rate-Limit-Limit:
+          $ref: '#/components/headers/RateLimitLimitHeader'
+        X-Rate-Limit-Remaining:
+          $ref: '#/components/headers/RateLimitRemainingHeader'
+        X-Rate-Limit-Interval:
+          $ref: '#/components/headers/RateLimitIntervalHeader'
+        Digest:
+          $ref: '#/components/headers/IntegrityRest02DigestHeader'
+        Agid-JWT-Signature:
+          $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
   parameters:
+    OffsetParam:
+      in: query
+      name: offset
+      description: Pagination starting position
+      required: true
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
     LimitParam:
       in: query
       name: limit
@@ -803,15 +768,6 @@ components:
         format: int32
         minimum: 1
         maximum: 50
-    OffsetParam:
-      in: query
-      name: offset
-      description: Pagination starting position
-      required: true
-      schema:
-        type: integer
-        format: int32
-        minimum: 0
   securitySchemes:
     DPoPAuth:
       type: http
@@ -833,11 +789,3 @@ components:
       description: 'DPoP proof JWT for sender-constrained access. Must accompany the DPoP Authorization header.
 
         '
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
-x-refined-from:
-- interop-api-v3.yaml
-- pagopa-pdnd-interop-v2-openapi.yml
-- pagopa-pdnd-interop-v3-openapi.yml

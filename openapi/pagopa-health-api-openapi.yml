@@ -4,14 +4,12 @@ info:
   x-refined-note:
   - x-summary differs across the merged source definitions and was not carried
   version: '1.0'
-  description: 'Operations tagged health across 5 of this provider''s published API definitions: interop-api-v3.yaml, interop-tracing.yaml, pagopa-pdnd-interop-v2-openapi.yml, pagopa-pdnd-interop-v3-openapi.yml, pagopa-pdnd-tracing-openapi.yml. Each path carries the servers of the definition it was published in.'
+  description: 'Operations tagged health across 2 of this provider''s published API definitions: interop-api-v3.yaml, interop-tracing.yaml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.interop.pagopa.it/v3
   description: Production environment
 - url: https://api.tracing.interop.pagopa.it
   description: Tracing Production environment
-- url: https://api.interop.pagopa.it/v2
-  description: PROD environment
 tags:
 - name: Health
   description: Verify service status
@@ -69,24 +67,42 @@ components:
         '
       schema:
         type: string
-    RateLimitLimitHeader:
-      schema:
-        type: integer
-        format: int32
-        minimum: 0
-      description: Max allowed requests within time interval
-    RateLimitIntervalHeader:
-      schema:
-        type: integer
-        format: int32
-        minimum: 0
-      description: Time interval in milliseconds. Allowed requests will be constantly replenished during the interval. At the end of the interval the max allowed requests will be available
     RateLimitRemainingHeader:
       schema:
         type: integer
         format: int32
         minimum: 0
       description: Remaining requests within time interval
+    RateLimitIntervalHeader:
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+      description: Time interval in milliseconds. Allowed requests will be constantly replenished during the interval. At the end of the interval the max allowed requests will be available
+    RateLimitLimitHeader:
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+      description: Max allowed requests within time interval
+  responses:
+    TooManyRequests:
+      description: Too Many Requests
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+      headers:
+        X-Rate-Limit-Limit:
+          $ref: '#/components/headers/RateLimitLimitHeader'
+        X-Rate-Limit-Remaining:
+          $ref: '#/components/headers/RateLimitRemainingHeader'
+        X-Rate-Limit-Interval:
+          $ref: '#/components/headers/RateLimitIntervalHeader'
+        Digest:
+          $ref: '#/components/headers/IntegrityRest02DigestHeader'
+        Agid-JWT-Signature:
+          $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
   schemas:
     Problem:
       properties:
@@ -145,24 +161,6 @@ components:
       required:
       - code
       - detail
-  responses:
-    TooManyRequests:
-      description: Too Many Requests
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-      headers:
-        X-Rate-Limit-Limit:
-          $ref: '#/components/headers/RateLimitLimitHeader'
-        X-Rate-Limit-Remaining:
-          $ref: '#/components/headers/RateLimitRemainingHeader'
-        X-Rate-Limit-Interval:
-          $ref: '#/components/headers/RateLimitIntervalHeader'
-        Digest:
-          $ref: '#/components/headers/IntegrityRest02DigestHeader'
-        Agid-JWT-Signature:
-          $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
   securitySchemes:
     DPoPAuth:
       type: http
@@ -192,6 +190,3 @@ components:
 x-refined-from:
 - interop-api-v3.yaml
 - interop-tracing.yaml
-- pagopa-pdnd-interop-v2-openapi.yml
-- pagopa-pdnd-interop-v3-openapi.yml
-- pagopa-pdnd-tracing-openapi.yml

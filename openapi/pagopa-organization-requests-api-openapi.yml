@@ -1,9 +1,9 @@
 openapi: 3.2.0
 info:
-  title: Pagopa Organization Requests API
-  version: 0.3.3
+  title: GPD Reporting Analysis pagoPA Organization Requests API
+  description: Api GPD Reporting Analysis
   termsOfService: https://www.pagopa.gov.it/
-  description: 'Operations tagged Organization Requests across 2 of this provider''s published API definitions: gpd_fdr.json, pagopa-gpd-reporting-openapi.yml. Each path carries the servers of the definition it was published in.'
+  version: 0.3.3
 servers:
 - url: https://api.platform.pagopa.it/gpd-reporting/api/v1
 security:
@@ -46,8 +46,6 @@ paths:
           description: Error response
           content:
             application/json: {}
-    servers:
-    - url: https://api.platform.pagopa.it/gpd-reporting/api/v1
   /organizations/{organizationId}/reportings/{flowId}/date/{date}:
     get:
       tags:
@@ -87,8 +85,6 @@ paths:
           description: Not Found
           content:
             application/json: {}
-    servers:
-    - url: https://api.platform.pagopa.it/gpd-reporting/api/v1
 components:
   schemas:
     Flow:
@@ -113,6 +109,3 @@ components:
       type: apiKey
       name: subscription-key
       in: query
-x-refined-from:
-- gpd_fdr.json
-- pagopa-gpd-reporting-openapi.yml

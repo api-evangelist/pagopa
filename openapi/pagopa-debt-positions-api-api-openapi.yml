@@ -3,7 +3,7 @@ info:
   title: Pagopa Debt Positions API
   version: 1.0.0
   termsOfService: https://www.pagopa.gov.it/
-  description: 'Operations tagged Debt Positions API across 4 of this provider''s published API definitions: gpd-4-aca.json, gpd.json, pagopa-gpd-aca-openapi.yml, pagopa-gpd-v1-openapi.yml. Each path carries the servers of the definition it was published in.'
+  description: 'Operations tagged Debt Positions API across 2 of this provider''s published API definitions: gpd-4-aca.json, gpd.json. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.platform.pagopa.it/aca/debt-positions-service/v1
   description: ACA Production environment
@@ -1032,6 +1032,218 @@ paths:
     - url: https://api.platform.pagopa.it/gpd/debt-positions-service/v1
 components:
   schemas:
+    PaymentPositionsInfo:
+      required:
+      - page_info
+      - payment_position_list
+      type: object
+      properties:
+        payment_position_list:
+          type: array
+          items:
+            $ref: '#/components/schemas/PaymentPositionModelBaseResponse'
+        page_info:
+          $ref: '#/components/schemas/PageInfo'
+    TransferMetadataModel:
+      required:
+      - key
+      - value
+      type: object
+      properties:
+        key:
+          maxLength: 140
+          minLength: 0
+          type: string
+        value:
+          maxLength: 140
+          minLength: 0
+          type: string
+    PaymentOptionMetadataModel:
+      required:
+      - key
+      - value
+      type: object
+      properties:
+        key:
+          maxLength: 140
+          minLength: 0
+          type: string
+        value:
+          maxLength: 140
+          minLength: 0
+          type: string
+    PaymentOptionModel:
+      required:
+      - amount
+      - description
+      - dueDate
+      - isPartialPayment
+      - iuv
+      type: object
+      properties:
+        nav:
+          type: string
+        iuv:
+          type: string
+        amount:
+          minimum: 1.0
+          type: integer
+          format: int64
+        description:
+          maxLength: 140
+          minLength: 0
+          type: string
+        isPartialPayment:
+          type: boolean
+        dueDate:
+          type: string
+          format: date-time
+        retentionDate:
+          type: string
+          format: date-time
+        fee:
+          type: integer
+          format: int64
+          readOnly: true
+        notificationFee:
+          type: integer
+          format: int64
+          readOnly: true
+        transfer:
+          maxItems: 5
+          minItems: 1
+          type: array
+          items:
+            $ref: '#/components/schemas/TransferModel'
+        paymentOptionMetadata:
+          maxItems: 10
+          minItems: 0
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/PaymentOptionMetadataModel'
+          description: It can be added a maximum of 10 key-value pairs for metadata. Metadata keys must be unique within the same payment option.
+    PaymentOptionModelResponse:
+      type: object
+      properties:
+        nav:
+          type: string
+        iuv:
+          type: string
+        organizationFiscalCode:
+          type: string
+        amount:
+          type: integer
+          format: int64
+        description:
+          type: string
+        isPartialPayment:
+          type: boolean
+        dueDate:
+          type: string
+          format: date-time
+        retentionDate:
+          type: string
+          format: date-time
+        paymentDate:
+          type: string
+          format: date-time
+        reportingDate:
+          type: string
+          format: date-time
+        insertedDate:
+          type: string
+          format: date-time
+        paymentMethod:
+          type: string
+        fee:
+          type: integer
+          format: int64
+        notificationFee:
+          type: integer
+          format: int64
+        pspCompany:
+          type: string
+        idReceipt:
+          type: string
+        idFlowReporting:
+          type: string
+        status:
+          enum:
+          - PO_UNPAID
+          - PO_PAID
+          - PO_PARTIALLY_REPORTED
+          - PO_REPORTED
+          type: string
+        lastUpdatedDate:
+          type: string
+          format: date-time
+        paymentOptionMetadata:
+          type: array
+          items:
+            $ref: '#/components/schemas/PaymentOptionMetadataModelResponse'
+        transfer:
+          type: array
+          items:
+            $ref: '#/components/schemas/TransferModelResponse'
+    TransferModel:
+      required:
+      - amount
+      - category
+      - idTransfer
+      - remittanceInformation
+      type: object
+      properties:
+        idTransfer:
+          enum:
+          - '1'
+          - '2'
+          - '3'
+          - '4'
+          - '5'
+          type: string
+        amount:
+          minimum: 1.0
+          type: integer
+          format: int64
+        organizationFiscalCode:
+          type: string
+          description: Fiscal code related to the organization targeted by this transfer.
+          example: '00000000000'
+        remittanceInformation:
+          maxLength: 140
+          minLength: 0
+          type: string
+        category:
+          type: string
+        iban:
+          maxLength: 35
+          minLength: 1
+          pattern: ^[A-Za-z0-9]{1,35}$
+          type: string
+          description: mutual exclusive with stamp
+          example: IT0000000000000000000000000
+        postalIban:
+          maxLength: 35
+          minLength: 1
+          pattern: ^$|^[A-Za-z0-9]{1,35}$
+          type: string
+          description: optional - can be combined with iban but not with stamp
+          example: IT0000000000000000000000000
+        stamp:
+          $ref: '#/components/schemas/Stamp'
+        companyName:
+          maxLength: 140
+          minLength: 0
+          type: string
+        transferMetadata:
+          maxItems: 10
+          minItems: 0
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/TransferMetadataModel'
+          description: It can be added a maximum of 10 key-value pairs for metadata. Metadata keys must be unique within the same transfer.
     PaymentPositionModel:
       required:
       - companyName
@@ -1115,57 +1327,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/PaymentOptionModel'
-    PaymentOptionModel:
-      required:
-      - amount
-      - description
-      - dueDate
-      - isPartialPayment
-      - iuv
-      type: object
-      properties:
-        nav:
-          type: string
-        iuv:
-          type: string
-        amount:
-          minimum: 1.0
-          type: integer
-          format: int64
-        description:
-          maxLength: 140
-          minLength: 0
-          type: string
-        isPartialPayment:
-          type: boolean
-        dueDate:
-          type: string
-          format: date-time
-        retentionDate:
-          type: string
-          format: date-time
-        fee:
-          type: integer
-          format: int64
-          readOnly: true
-        notificationFee:
-          type: integer
-          format: int64
-          readOnly: true
-        transfer:
-          maxItems: 5
-          minItems: 1
-          type: array
-          items:
-            $ref: '#/components/schemas/TransferModel'
-        paymentOptionMetadata:
-          maxItems: 10
-          minItems: 0
-          uniqueItems: true
-          type: array
-          items:
-            $ref: '#/components/schemas/PaymentOptionMetadataModel'
-          description: It can be added a maximum of 10 key-value pairs for metadata. Metadata keys must be unique within the same payment option.
     TransferModelResponse:
       type: object
       properties:
@@ -1203,13 +1364,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/TransferMetadataModelResponse'
-    TransferMetadataModelResponse:
-      type: object
-      properties:
-        key:
-          type: string
-        value:
-          type: string
     PageInfo:
       required:
       - items_found
@@ -1234,20 +1388,6 @@ components:
           type: integer
           description: Total number of pages
           format: int32
-    PaymentOptionMetadataModel:
-      required:
-      - key
-      - value
-      type: object
-      properties:
-        key:
-          maxLength: 140
-          minLength: 0
-          type: string
-        value:
-          maxLength: 140
-          minLength: 0
-          type: string
     Stamp:
       required:
       - hashDocument
@@ -1270,114 +1410,6 @@ components:
           type: string
           description: The provincial of the residence
           example: RM
-    PaymentOptionMetadataModelResponse:
-      type: object
-      properties:
-        key:
-          type: string
-        value:
-          type: string
-    TransferModel:
-      required:
-      - amount
-      - category
-      - idTransfer
-      - remittanceInformation
-      type: object
-      properties:
-        idTransfer:
-          enum:
-          - '1'
-          - '2'
-          - '3'
-          - '4'
-          - '5'
-          type: string
-        amount:
-          minimum: 1.0
-          type: integer
-          format: int64
-        organizationFiscalCode:
-          type: string
-          description: Fiscal code related to the organization targeted by this transfer.
-          example: '00000000000'
-        remittanceInformation:
-          maxLength: 140
-          minLength: 0
-          type: string
-        category:
-          type: string
-        iban:
-          maxLength: 35
-          minLength: 1
-          pattern: ^[A-Za-z0-9]{1,35}$
-          type: string
-          description: mutual exclusive with stamp
-          example: IT0000000000000000000000000
-        postalIban:
-          maxLength: 35
-          minLength: 1
-          pattern: ^$|^[A-Za-z0-9]{1,35}$
-          type: string
-          description: optional - can be combined with iban but not with stamp
-          example: IT0000000000000000000000000
-        stamp:
-          $ref: '#/components/schemas/Stamp'
-        companyName:
-          maxLength: 140
-          minLength: 0
-          type: string
-        transferMetadata:
-          maxItems: 10
-          minItems: 0
-          uniqueItems: true
-          type: array
-          items:
-            $ref: '#/components/schemas/TransferMetadataModel'
-          description: It can be added a maximum of 10 key-value pairs for metadata. Metadata keys must be unique within the same transfer.
-    PaymentPositionsInfo:
-      required:
-      - page_info
-      - payment_position_list
-      type: object
-      properties:
-        payment_position_list:
-          type: array
-          items:
-            $ref: '#/components/schemas/PaymentPositionModelBaseResponse'
-        page_info:
-          $ref: '#/components/schemas/PageInfo'
-    ProblemJson:
-      type: object
-      properties:
-        title:
-          type: string
-          description: 'A short, summary of the problem type. Written in english and readable for engineers (usually not suited for non technical stakeholders and not localized); example: Service Unavailable'
-        status:
-          maximum: 600.0
-          minimum: 100.0
-          type: integer
-          description: The HTTP status code generated by the origin server for this occurrence of the problem.
-          format: int32
-          example: 200
-        detail:
-          type: string
-          description: A human readable explanation specific to this occurrence of the problem.
-          example: There was an error processing the request
-    TransferMetadataModel:
-      required:
-      - key
-      - value
-      type: object
-      properties:
-        key:
-          maxLength: 140
-          minLength: 0
-          type: string
-        value:
-          maxLength: 140
-          minLength: 0
-          type: string
     PaymentPositionModelBaseResponse:
       type: object
       properties:
@@ -1424,69 +1456,37 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/PaymentOptionModelResponse'
-    PaymentOptionModelResponse:
+    PaymentOptionMetadataModelResponse:
       type: object
       properties:
-        nav:
+        key:
           type: string
-        iuv:
+        value:
           type: string
-        organizationFiscalCode:
+    TransferMetadataModelResponse:
+      type: object
+      properties:
+        key:
           type: string
-        amount:
-          type: integer
-          format: int64
-        description:
+        value:
           type: string
-        isPartialPayment:
-          type: boolean
-        dueDate:
+    ProblemJson:
+      type: object
+      properties:
+        title:
           type: string
-          format: date-time
-        retentionDate:
-          type: string
-          format: date-time
-        paymentDate:
-          type: string
-          format: date-time
-        reportingDate:
-          type: string
-          format: date-time
-        insertedDate:
-          type: string
-          format: date-time
-        paymentMethod:
-          type: string
-        fee:
-          type: integer
-          format: int64
-        notificationFee:
-          type: integer
-          format: int64
-        pspCompany:
-          type: string
-        idReceipt:
-          type: string
-        idFlowReporting:
-          type: string
+          description: 'A short, summary of the problem type. Written in english and readable for engineers (usually not suited for non technical stakeholders and not localized); example: Service Unavailable'
         status:
-          enum:
-          - PO_UNPAID
-          - PO_PAID
-          - PO_PARTIALLY_REPORTED
-          - PO_REPORTED
+          maximum: 600.0
+          minimum: 100.0
+          type: integer
+          description: The HTTP status code generated by the origin server for this occurrence of the problem.
+          format: int32
+          example: 200
+        detail:
           type: string
-        lastUpdatedDate:
-          type: string
-          format: date-time
-        paymentOptionMetadata:
-          type: array
-          items:
-            $ref: '#/components/schemas/PaymentOptionMetadataModelResponse'
-        transfer:
-          type: array
-          items:
-            $ref: '#/components/schemas/TransferModelResponse'
+          description: A human readable explanation specific to this occurrence of the problem.
+          example: There was an error processing the request
     UpdateTransferIbanMassiveModel:
       required:
       - newIban
@@ -1514,5 +1514,3 @@ components:
 x-refined-from:
 - gpd-4-aca.json
 - gpd.json
-- pagopa-gpd-aca-openapi.yml
-- pagopa-gpd-v1-openapi.yml

@@ -1,15 +1,23 @@
 openapi: 3.2.0
 info:
-  title: Pagopa Interop Probing API
+  termsOfService: https://termofservice.it
+  title: Stato della piattaforma SEND Interop Probing API
+  x-summary: Stato della piattaforma SEND
   version: 1.0.0
+  description: '## Abstract
+
+    Queste API vengono utilizzate dai soggetti abilitati all’utilizzo della piattaforma SEND e consentono di:
+
+    - Visualizzare lo stato dei servizi di SEND,
+
+    - Consultare lo storico dei disservizi,
+
+    - Per ogni disservizio è possibile scaricare l''atto opponibile a terzi relativo.'
   contact:
     email: pn@pagopa.it
   license:
     name: Licenza di SEND
     url: https://da-definire/
-  termsOfService: https://termofservice.it
-  x-summary: Stato della piattaforma SEND
-  description: 'Operations tagged interopProbing across 2 of this provider''s published API definitions: send-downtime-logs.yaml, pagopa-send-platform-status-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.notifichedigitali.it
   description: Ambiente di produzione
@@ -42,13 +50,3 @@ paths:
             application/problem+json:
               schema:
                 $ref: ./schemas-pn-errors-v1.yaml#/components/schemas/Problem
-    servers:
-    - url: https://api.notifichedigitali.it
-      description: Ambiente di produzione
-    - url: https://api.uat.notifichedigitali.it
-      description: Ambiente di test
-    - url: https://api.dev.notifichedigitali.it
-      description: Ambiente di sviluppo
-x-refined-from:
-- send-downtime-logs.yaml
-- pagopa-send-platform-status-openapi.yml

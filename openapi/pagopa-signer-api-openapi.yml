@@ -1,8 +1,7 @@
 openapi: 3.2.0
 info:
-  title: Pagopa Signer API
+  title: Firma con IO - Issuer Signer API
   version: 1.2.1
-  description: 'Operations tagged Signer across 2 of this provider''s published API definitions: io-sign-issuer.yaml, pagopa-firma-con-io-issuer-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.io.pagopa.it/api/v1/sign
   description: production
@@ -42,13 +41,34 @@ paths:
           $ref: '#/components/responses/TooManyRequests'
         default:
           $ref: '#/components/responses/Unexpected'
-    servers:
-    - url: https://api.io.pagopa.it/api/v1/sign
-      description: production
-    - url: http://localhost:7071/api/v1/sign
-      description: local
 components:
   schemas:
+    GetSignerByFiscalCodeBody:
+      type: object
+      properties:
+        fiscal_code:
+          $ref: '#/components/schemas/FiscalCode'
+      required:
+      - fiscal_code
+    Id:
+      type: string
+      description: Entity Id
+      format: NonEmptyString
+      example: 01ARZ3NDEKTSV4RRFFQ69G5FAV
+      x-import: '@pagopa/ts-commons/lib/strings'
+    SignerDetailView:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+      required:
+      - id
+    FiscalCode:
+      type: string
+      description: User's fiscal code.
+      format: FiscalCode
+      x-import: '@pagopa/ts-commons/lib/strings'
+      example: SPNDNL80R13C555X
     ProblemDetail:
       type: object
       properties:
@@ -86,33 +106,13 @@ components:
           type: string
           format: uri
           description: An absolute URI that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.
-    Id:
-      type: string
-      description: Entity Id
-      format: NonEmptyString
-      example: 01ARZ3NDEKTSV4RRFFQ69G5FAV
-      x-import: '@pagopa/ts-commons/lib/strings'
-    SignerDetailView:
-      type: object
-      properties:
-        id:
-          $ref: '#/components/schemas/Id'
-      required:
-      - id
-    FiscalCode:
-      type: string
-      description: User's fiscal code.
-      format: FiscalCode
-      x-import: '@pagopa/ts-commons/lib/strings'
-      example: SPNDNL80R13C555X
-    GetSignerByFiscalCodeBody:
-      type: object
-      properties:
-        fiscal_code:
-          $ref: '#/components/schemas/FiscalCode'
-      required:
-      - fiscal_code
   responses:
+    TooManyRequests:
+      description: Too Many Requests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetail'
     Unauthorized:
       description: Unauthorized
       content:
@@ -137,18 +137,9 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ProblemDetail'
-    TooManyRequests:
-      description: Too Many Requests
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ProblemDetail'
   securitySchemes:
     SubscriptionKey:
       type: apiKey
       name: Ocp-Apim-Subscription-Key
       in: header
       description: The API key can be obtained from the reserved area
-x-refined-from:
-- io-sign-issuer.yaml
-- pagopa-firma-con-io-issuer-openapi.yml

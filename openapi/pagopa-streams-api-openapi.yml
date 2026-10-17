@@ -1,14 +1,22 @@
 openapi: 3.2.0
 info:
-  title: Pagopa Streams API
+  termsOfService: https://selfcare.notifichedigitali.it/termini-di-servizio
+  x-api-id: api-external-b2b-pa
+  title: 'Piattaforma Notifiche: API B2B per le Pubbliche…'
+  x-summary: 'Piattaforma Notifiche: API B2B per le Pubbliche Amministrazioni'
   version: 1.0.0
+  description: '## Abstract
+
+    API utilizzate dalle pubbliche amministrazioni per __inviare richieste di notifiche__ e
+
+    __ottenere informazioni in modalità pull__ sullo stato della
+
+    _"richiesta di notifica"_ (accettata o rifiutata) e, in caso di richiesta accettata,
+
+    sulle comunicazioni effettuate, o solo tentate, nei confronti dei destinatari della notifica.'
   contact:
     name: 'SEND: supporto enti'
     url: https://pagopa.atlassian.net/servicedesk/customer/portal/5
-  termsOfService: https://selfcare.notifichedigitali.it/termini-di-servizio
-  x-api-id: api-external-b2b-pa
-  x-summary: 'Piattaforma Notifiche: API B2B per le Pubbliche Amministrazioni'
-  description: 'Operations tagged Streams across 2 of this provider''s published API definitions: send-b2b-pa-bundle.yaml, pagopa-send-b2b-pa-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.notifichedigitali.it
   description: Ambiente di produzione
@@ -92,11 +100,6 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/Problem'
-    servers:
-    - url: https://api.notifichedigitali.it
-      description: Ambiente di produzione
-    - url: https://api.uat.notifichedigitali.it
-      description: Ambiente di collaudo
   /delivery-progresses/v2.9/streams/{streamId}:
     parameters:
     - $ref: '#/components/parameters/pathStreamId'
@@ -213,11 +216,6 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/Problem'
-    servers:
-    - url: https://api.notifichedigitali.it
-      description: Ambiente di produzione
-    - url: https://api.uat.notifichedigitali.it
-      description: Ambiente di collaudo
   /delivery-progresses/v2.9/streams/{streamId}/action/disable:
     post:
       summary: Disabilita uno stream v2.9
@@ -267,11 +265,6 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/Problem'
-    servers:
-    - url: https://api.notifichedigitali.it
-      description: Ambiente di produzione
-    - url: https://api.uat.notifichedigitali.it
-      description: Ambiente di collaudo
   /delivery-progresses/streams:
     post:
       deprecated: true
@@ -333,11 +326,6 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/Problem'
-    servers:
-    - url: https://api.notifichedigitali.it
-      description: Ambiente di produzione
-    - url: https://api.uat.notifichedigitali.it
-      description: Ambiente di collaudo
   /delivery-progresses/streams/{streamId}:
     parameters:
     - $ref: '#/components/parameters/pathStreamId'
@@ -421,11 +409,6 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/Problem'
-    servers:
-    - url: https://api.notifichedigitali.it
-      description: Ambiente di produzione
-    - url: https://api.uat.notifichedigitali.it
-      description: Ambiente di collaudo
   /delivery-progresses/v2.3/streams:
     post:
       deprecated: true
@@ -500,11 +483,6 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/Problem'
-    servers:
-    - url: https://api.notifichedigitali.it
-      description: Ambiente di produzione
-    - url: https://api.uat.notifichedigitali.it
-      description: Ambiente di collaudo
   /delivery-progresses/v2.3/streams/{streamId}:
     parameters:
     - $ref: '#/components/parameters/pathStreamId'
@@ -624,11 +602,6 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/Problem'
-    servers:
-    - url: https://api.notifichedigitali.it
-      description: Ambiente di produzione
-    - url: https://api.uat.notifichedigitali.it
-      description: Ambiente di collaudo
   /delivery-progresses/v2.3/streams/{streamId}/action/disable:
     post:
       deprecated: true
@@ -679,11 +652,6 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/Problem'
-    servers:
-    - url: https://api.notifichedigitali.it
-      description: Ambiente di produzione
-    - url: https://api.uat.notifichedigitali.it
-      description: Ambiente di collaudo
   /delivery-progresses/v2.4/streams:
     post:
       deprecated: true
@@ -758,11 +726,6 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/Problem'
-    servers:
-    - url: https://api.notifichedigitali.it
-      description: Ambiente di produzione
-    - url: https://api.uat.notifichedigitali.it
-      description: Ambiente di collaudo
   /delivery-progresses/v2.4/streams/{streamId}:
     parameters:
     - $ref: '#/components/parameters/pathStreamId'
@@ -882,11 +845,6 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/Problem'
-    servers:
-    - url: https://api.notifichedigitali.it
-      description: Ambiente di produzione
-    - url: https://api.uat.notifichedigitali.it
-      description: Ambiente di collaudo
   /delivery-progresses/v2.4/streams/{streamId}/action/disable:
     post:
       deprecated: true
@@ -937,11 +895,6 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/Problem'
-    servers:
-    - url: https://api.notifichedigitali.it
-      description: Ambiente di produzione
-    - url: https://api.uat.notifichedigitali.it
-      description: Ambiente di collaudo
   /delivery-progresses/v2.5/streams:
     post:
       deprecated: true
@@ -1016,11 +969,6 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/Problem'
-    servers:
-    - url: https://api.notifichedigitali.it
-      description: Ambiente di produzione
-    - url: https://api.uat.notifichedigitali.it
-      description: Ambiente di collaudo
   /delivery-progresses/v2.5/streams/{streamId}:
     parameters:
     - $ref: '#/components/parameters/pathStreamId'
@@ -1140,11 +1088,6 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/Problem'
-    servers:
-    - url: https://api.notifichedigitali.it
-      description: Ambiente di produzione
-    - url: https://api.uat.notifichedigitali.it
-      description: Ambiente di collaudo
   /delivery-progresses/v2.5/streams/{streamId}/action/disable:
     post:
       deprecated: true
@@ -1195,11 +1138,6 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/Problem'
-    servers:
-    - url: https://api.notifichedigitali.it
-      description: Ambiente di produzione
-    - url: https://api.uat.notifichedigitali.it
-      description: Ambiente di collaudo
   /delivery-progresses/v2.6/streams:
     post:
       deprecated: true
@@ -1274,11 +1212,6 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/Problem'
-    servers:
-    - url: https://api.notifichedigitali.it
-      description: Ambiente di produzione
-    - url: https://api.uat.notifichedigitali.it
-      description: Ambiente di collaudo
   /delivery-progresses/v2.6/streams/{streamId}:
     parameters:
     - $ref: '#/components/parameters/pathStreamId'
@@ -1398,11 +1331,6 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/Problem'
-    servers:
-    - url: https://api.notifichedigitali.it
-      description: Ambiente di produzione
-    - url: https://api.uat.notifichedigitali.it
-      description: Ambiente di collaudo
   /delivery-progresses/v2.6/streams/{streamId}/action/disable:
     post:
       deprecated: true
@@ -1453,11 +1381,6 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/Problem'
-    servers:
-    - url: https://api.notifichedigitali.it
-      description: Ambiente di produzione
-    - url: https://api.uat.notifichedigitali.it
-      description: Ambiente di collaudo
   /delivery-progresses/v2.7/streams:
     post:
       deprecated: true
@@ -1532,11 +1455,6 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/Problem'
-    servers:
-    - url: https://api.notifichedigitali.it
-      description: Ambiente di produzione
-    - url: https://api.uat.notifichedigitali.it
-      description: Ambiente di collaudo
   /delivery-progresses/v2.7/streams/{streamId}:
     parameters:
     - $ref: '#/components/parameters/pathStreamId'
@@ -1656,11 +1574,6 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/Problem'
-    servers:
-    - url: https://api.notifichedigitali.it
-      description: Ambiente di produzione
-    - url: https://api.uat.notifichedigitali.it
-      description: Ambiente di collaudo
   /delivery-progresses/v2.7/streams/{streamId}/action/disable:
     post:
       deprecated: true
@@ -1711,11 +1624,6 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/Problem'
-    servers:
-    - url: https://api.notifichedigitali.it
-      description: Ambiente di produzione
-    - url: https://api.uat.notifichedigitali.it
-      description: Ambiente di collaudo
   /delivery-progresses/v2.8/streams:
     post:
       deprecated: true
@@ -1794,11 +1702,6 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/Problem'
-    servers:
-    - url: https://api.notifichedigitali.it
-      description: Ambiente di produzione
-    - url: https://api.uat.notifichedigitali.it
-      description: Ambiente di collaudo
   /delivery-progresses/v2.8/streams/{streamId}:
     parameters:
     - $ref: '#/components/parameters/pathStreamId'
@@ -1924,11 +1827,6 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/Problem'
-    servers:
-    - url: https://api.notifichedigitali.it
-      description: Ambiente di produzione
-    - url: https://api.uat.notifichedigitali.it
-      description: Ambiente di collaudo
   /delivery-progresses/v2.8/streams/{streamId}/action/disable:
     post:
       deprecated: true
@@ -1981,296 +1879,8 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/Problem'
-    servers:
-    - url: https://api.notifichedigitali.it
-      description: Ambiente di produzione
-    - url: https://api.uat.notifichedigitali.it
-      description: Ambiente di collaudo
 components:
   schemas:
-    StreamRequestV24:
-      description: Struttura comune per eventi di creazione/aggiornamento di uno stream di eventi di avanzamento delle notifiche. L'aggiornamento delle proprietà dello stream è soggetta al controllo di autorizzazione dell'apiKey sui gruppi.
-      type: object
-      required:
-      - title
-      - eventType
-      - groups
-      properties:
-        title:
-          description: Nome sintetico dello stream
-          type: string
-          maxLength: 256
-          pattern: ^.*$
-        eventType:
-          description: "Tipo di eventi presenti nel flusso:\n  - _STATUS_: cambiamenti di stato delle notifiche\n  - _TIMELINE_: eventi a granularità fine"
-          type: string
-          enum:
-          - STATUS
-          - TIMELINE
-        groups:
-          description: rappresenta l'elenco degli id gruppi abilitati a richiedere i dettagli. Una apiKey può consumare o modificare uno stream solo se non ha gruppi o se tutti i gruppi dello stream sono presenti nella apiKey. Se viene specificato array vuoto, si noti che solo apiKey senza gruppi potranno consumare o modificare lo stream. Inoltre, nel caso di updateEventStream, la lista dei gruppi presente nello stream deve essere un sottoinsieme dei gruppi passati nella richiesta (in pratica si possono solo aggiungere gruppi a quelli esistenti) oppure entrambi array vuoti.
-          type: array
-          items:
-            allOf:
-            - $ref: '#/components/schemas/StreamGroup'
-            minLength: 0
-        filterValues:
-          description: rappresenta l'elenco degli stati o elementi di timeline che si vogliono filtrare; inserendo un array vuoto [] si riceveranno solo gli elementi relativi alla versione con cui è stato creato lo stream. Se specificati invece, avranno priorità rispetto agli eventi della versione (quindi se sono un sottoinsieme, si riceveranno solo quelli. Se si specificano eventi introdotti in versioni più recenti, questi saranno inviati) Infine, è possibile utilizzare il placeholder "DEFAULT" per specificare l'insieme di eventi più rilevanti di una notifica.
-          type: array
-          items:
-            type: string
-            minLength: 4
-            maxLength: 256
-            pattern: ^[A-Z_]+$
-    StreamCreationRequestV26:
-      description: Richiesta di creazione di uno stream di eventi di avanzamento delle notifiche. Lo stream verrà creato nello stato abilitato
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/StreamRequestV26'
-      - type: object
-        properties:
-          replacedStreamId:
-            description: opzionale, eventuale streamId che viene sostituito da questo. Se specificato, lo stream indicato sarà disabilitato contestualmente alla creazione del nuovo stream, permettendo di consumare tutti gli eventi del vecchio stream senza che ne vengano aggiunti di nuovi. Inoltre, il nuovo stream partirà da un eventId successivo rispetto al vecchio stream (anche se non "esattamente" successivo per evitare sovrapposizioni con eventuali eventi salvati durante il cambio di configurazione). La creazione del nuovo stream è soggetta al controllo di autorizzazione dell'apiKey sui gruppi del precedente stream.
-            type: string
-            format: uuid
-    StreamMetadataResponseV23:
-      description: Configurazioni di un flusso di eventi
-      allOf:
-      - $ref: '#/components/schemas/StreamRequestV23'
-      - type: object
-        required:
-        - streamId
-        - activationDate
-        properties:
-          streamId:
-            description: Identificativo del flusso di eventi
-            type: string
-            format: uuid
-          activationDate:
-            description: Timestamp in cui il flusso di eventi è stato attivato
-            type: string
-            format: date-time
-          disabledDate:
-            description: Timestamp in cui il flusso di eventi è stato disabilitato
-            type: string
-            format: date-time
-          version:
-            description: versione di base dello stream.
-            type: string
-            pattern: ^v\d\d\d?$
-    StreamMetadataResponseV26:
-      description: Configurazioni di un flusso di eventi
-      allOf:
-      - $ref: '#/components/schemas/StreamRequestV26'
-      - type: object
-        required:
-        - streamId
-        - activationDate
-        properties:
-          streamId:
-            description: Identificativo del flusso di eventi
-            type: string
-            format: uuid
-          activationDate:
-            description: Timestamp in cui il flusso di eventi è stato attivato
-            type: string
-            format: date-time
-          disabledDate:
-            description: Timestamp in cui il flusso di eventi è stato disabilitato
-            type: string
-            format: date-time
-          version:
-            description: versione di base dello stream.
-            type: string
-            pattern: ^v\d\d\d?$
-    Problem:
-      properties:
-        type:
-          description: URI reference of type definition
-          type: string
-        status:
-          description: The HTTP status code generated by the origin server for this occurrence of the problem.
-          type: integer
-          format: int32
-          example: 503
-          minimum: 100
-          exclusiveMaximum: 600
-        title:
-          description: A short, summary of the problem type. Written in english and readable
-          example: Service Unavailable
-          maxLength: 64
-          pattern: ^[ -~]{0,64}$
-          type: string
-        detail:
-          description: A human readable explanation of the problem.
-          example: Request took too long to complete.
-          maxLength: 4096
-          pattern: ^.{0,4096}$
-          type: string
-        traceId:
-          description: Internal support identifier associated to error
-          example: 123e4567-e89b-12d3-a456-426614174000
-          type: string
-        timestamp:
-          description: date and time referred to UTC
-          example: '2022-07-27T12:22:33.444Z'
-          type: string
-          format: date-time
-        errors:
-          type: array
-          minItems: 1
-          items:
-            $ref: '#/components/schemas/ProblemError'
-      required:
-      - status
-      - errors
-    ProblemError:
-      properties:
-        code:
-          description: Internal code of the error, in human-readable format
-          example: PN_PARAMETER_TOO_LONG | PN_PARAMETER_TOO_SHORT | PN_DUPLICATE_ENTRY | etc...
-          type: string
-        element:
-          description: Parameter or request body field name for validation error
-          example: body.order.item[2].quantity
-          type: string
-        detail:
-          description: A human readable explanation specific to this occurrence of the problem.
-          example: Parameter not valid
-          maxLength: 1024
-          type: string
-      required:
-      - code
-    StreamMetadataResponseV29:
-      description: Configurazioni di un flusso di eventi
-      allOf:
-      - $ref: '#/components/schemas/StreamRequestV29'
-      - type: object
-        required:
-        - streamId
-        - activationDate
-        properties:
-          streamId:
-            description: Identificativo del flusso di eventi
-            type: string
-            format: uuid
-          activationDate:
-            description: Timestamp in cui il flusso di eventi è stato attivato
-            type: string
-            format: date-time
-          disabledDate:
-            description: Timestamp in cui il flusso di eventi è stato disabilitato
-            type: string
-            format: date-time
-          version:
-            description: versione di base dello stream.
-            type: string
-            pattern: ^v\d\d\d?$
-    StreamCreationRequestV29:
-      description: Richiesta di creazione di uno stream di eventi di avanzamento delle notifiche. Lo stream verrà creato nello stato abilitato
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/StreamRequestV29'
-      - type: object
-        properties:
-          replacedStreamId:
-            description: opzionale, eventuale streamId che viene sostituito da questo. Se specificato, lo stream indicato sarà disabilitato contestualmente alla creazione del nuovo stream, permettendo di consumare tutti gli eventi del vecchio stream senza che ne vengano aggiunti di nuovi. Inoltre, il nuovo stream partirà da un eventId successivo rispetto al vecchio stream (anche se non "esattamente" successivo per evitare sovrapposizioni con eventuali eventi salvati durante il cambio di configurazione). La creazione del nuovo stream è soggetta al controllo di autorizzazione dell'apiKey sui gruppi del precedente stream.
-            type: string
-            format: uuid
-    StreamCreationRequestV23:
-      description: Richiesta di creazione di uno stream di eventi di avanzamento delle notifiche. Lo stream verrà creato nello stato abilitato
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/StreamRequestV23'
-      - type: object
-        properties:
-          replacedStreamId:
-            description: opzionale, eventuale streamId che viene sostituito da questo. Se specificato, lo stream indicato sarà disabilitato contestualmente alla creazione del nuovo stream, permettendo di consumare tutti gli eventi del vecchio stream senza che ne vengano aggiunti di nuovi. Inoltre, il nuovo stream partirà da un eventId successivo rispetto al vecchio stream (anche se non "esattamente" successivo per evitare sovrapposizioni con eventuali eventi salvati durante il cambio di configurazione). La creazione del nuovo stream è soggetta al controllo di autorizzazione dell'apiKey sui gruppi del precedente stream.
-            type: string
-            format: uuid
-    StreamMetadataResponseV28:
-      description: Configurazioni di un flusso di eventi
-      allOf:
-      - $ref: '#/components/schemas/StreamRequestV28'
-      - type: object
-        required:
-        - streamId
-        - activationDate
-        properties:
-          streamId:
-            description: Identificativo del flusso di eventi
-            type: string
-            format: uuid
-          activationDate:
-            description: Timestamp in cui il flusso di eventi è stato attivato
-            type: string
-            format: date-time
-          disabledDate:
-            description: Timestamp in cui il flusso di eventi è stato disabilitato
-            type: string
-            format: date-time
-          version:
-            description: versione di base dello stream.
-            type: string
-            pattern: ^v\d\d\d?$
-    StreamListElement:
-      type: object
-      required:
-      - title
-      - streamId
-      properties:
-        streamId:
-          type: string
-          format: uuid
-        title:
-          type: string
-          maxLength: 256
-          pattern: ^.*$
-    StreamRequestV25:
-      description: Struttura comune per eventi di creazione/aggiornamento di uno stream di eventi di avanzamento delle notifiche. L'aggiornamento delle proprietà dello stream è soggetta al controllo di autorizzazione dell'apiKey sui gruppi.
-      type: object
-      required:
-      - title
-      - eventType
-      - groups
-      properties:
-        title:
-          description: Nome sintetico dello stream
-          type: string
-          maxLength: 256
-          pattern: ^.*$
-        eventType:
-          description: "Tipo di eventi presenti nel flusso:\n  - _STATUS_: cambiamenti di stato delle notifiche\n  - _TIMELINE_: eventi a granularità fine"
-          type: string
-          enum:
-          - STATUS
-          - TIMELINE
-        groups:
-          description: rappresenta l'elenco degli id gruppi abilitati a richiedere i dettagli. Una apiKey può consumare o modificare uno stream solo se non ha gruppi o se tutti i gruppi dello stream sono presenti nella apiKey. Se viene specificato array vuoto, si noti che solo apiKey senza gruppi potranno consumare o modificare lo stream. Inoltre, nel caso di updateEventStream, la lista dei gruppi presente nello stream deve essere un sottoinsieme dei gruppi passati nella richiesta (in pratica si possono solo aggiungere gruppi a quelli esistenti) oppure entrambi array vuoti.
-          type: array
-          items:
-            allOf:
-            - $ref: '#/components/schemas/StreamGroup'
-            minLength: 0
-        filterValues:
-          description: rappresenta l'elenco degli stati o elementi di timeline che si vogliono filtrare; inserendo un array vuoto [] si riceveranno solo gli elementi relativi alla versione con cui è stato creato lo stream. Se specificati invece, avranno priorità rispetto agli eventi della versione (quindi se sono un sottoinsieme, si riceveranno solo quelli. Se si specificano eventi introdotti in versioni più recenti, questi saranno inviati) Infine, è possibile utilizzare il placeholder "DEFAULT" per specificare l'insieme di eventi più rilevanti di una notifica.
-          type: array
-          items:
-            type: string
-            minLength: 4
-            maxLength: 256
-            pattern: ^[A-Z_]+$
-    StreamCreationRequestV24:
-      description: Richiesta di creazione di uno stream di eventi di avanzamento delle notifiche. Lo stream verrà creato nello stato abilitato
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/StreamRequestV24'
-      - type: object
-        properties:
-          replacedStreamId:
-            description: opzionale, eventuale streamId che viene sostituito da questo. Se specificato, lo stream indicato sarà disabilitato contestualmente alla creazione del nuovo stream, permettendo di consumare tutti gli eventi del vecchio stream senza che ne vengano aggiunti di nuovi. Inoltre, il nuovo stream partirà da un eventId successivo rispetto al vecchio stream (anche se non "esattamente" successivo per evitare sovrapposizioni con eventuali eventi salvati durante il cambio di configurazione). La creazione del nuovo stream è soggetta al controllo di autorizzazione dell'apiKey sui gruppi del precedente stream.
-            type: string
-            format: uuid
     StreamRequestV27:
       description: Struttura comune per eventi di creazione/aggiornamento di uno stream di eventi di avanzamento delle notifiche. L'aggiornamento delle proprietà dello stream è soggetta al controllo di autorizzazione dell'apiKey sui gruppi.
       type: object
@@ -2308,13 +1918,38 @@ components:
         waitForAccepted:
           description: 'Stream di tipo TIMELINE: se true pubblica gli eventi sullo stream solo dopo la pubblicazione dell''evento di accettazione/rifiuto della notifica.  Tutti gli eventi dello stato IN_VALIDATION vengono pubblicati senza ritardo. Stream di tipo STATUS: se true pubblica gli stati garantendo che il primo stato sia l''ACCEPTED o il REFUSED'
           type: boolean
-    StreamGroup:
-      type: string
-      description: Identificativo del gruppo.
-    StreamMetadataResponseV27:
+    StreamMetadataResponse:
       description: Configurazioni di un flusso di eventi
       allOf:
-      - $ref: '#/components/schemas/StreamRequestV27'
+      - $ref: '#/components/schemas/StreamCreationRequest'
+      - type: object
+        required:
+        - streamId
+        - activationDate
+        properties:
+          streamId:
+            description: Identificativo del flusso di eventi
+            type: string
+            format: uuid
+          activationDate:
+            description: Timestamp in cui il flusso di eventi è stato attivato
+            type: string
+            format: date-time
+    StreamCreationRequestV28:
+      description: Richiesta di creazione di uno stream di eventi di avanzamento delle notifiche. Lo stream verrà creato nello stato abilitato
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/StreamRequestV28'
+      - type: object
+        properties:
+          replacedStreamId:
+            description: opzionale, eventuale streamId che viene sostituito da questo. Se specificato, lo stream indicato sarà disabilitato contestualmente alla creazione del nuovo stream, permettendo di consumare tutti gli eventi del vecchio stream senza che ne vengano aggiunti di nuovi. Inoltre, il nuovo stream partirà da un eventId successivo rispetto al vecchio stream (anche se non "esattamente" successivo per evitare sovrapposizioni con eventuali eventi salvati durante il cambio di configurazione). La creazione del nuovo stream è soggetta al controllo di autorizzazione dell'apiKey sui gruppi del precedente stream.
+            type: string
+            format: uuid
+    StreamMetadataResponseV28:
+      description: Configurazioni di un flusso di eventi
+      allOf:
+      - $ref: '#/components/schemas/StreamRequestV28'
       - type: object
         required:
         - streamId
@@ -2336,18 +1971,33 @@ components:
             description: versione di base dello stream.
             type: string
             pattern: ^v\d\d\d?$
-    StreamCreationRequestV25:
-      description: Richiesta di creazione di uno stream di eventi di avanzamento delle notifiche. Lo stream verrà creato nello stato abilitato
+    StreamCreationRequest:
+      description: Richiesta di creazione di uno stream di eventi di avanzamento delle notifiche.
       type: object
-      allOf:
-      - $ref: '#/components/schemas/StreamRequestV25'
-      - type: object
-        properties:
-          replacedStreamId:
-            description: opzionale, eventuale streamId che viene sostituito da questo. Se specificato, lo stream indicato sarà disabilitato contestualmente alla creazione del nuovo stream, permettendo di consumare tutti gli eventi del vecchio stream senza che ne vengano aggiunti di nuovi. Inoltre, il nuovo stream partirà da un eventId successivo rispetto al vecchio stream (anche se non "esattamente" successivo per evitare sovrapposizioni con eventuali eventi salvati durante il cambio di configurazione). La creazione del nuovo stream è soggetta al controllo di autorizzazione dell'apiKey sui gruppi del precedente stream.
+      required:
+      - title
+      - eventType
+      properties:
+        title:
+          description: Nome sintetico dello stream
+          type: string
+          maxLength: 256
+          pattern: ^.*$
+        eventType:
+          description: "Tipo di eventi presenti nel flusso:\n  - _STATUS_: cambiamenti di stato delle notifiche\n  - _TIMELINE_: eventi a granularità fine"
+          type: string
+          enum:
+          - STATUS
+          - TIMELINE
+        filterValues:
+          description: rappresenta l'elenco degli stati o elementi di timeline che si vogliono filtrare; inserendo un array vuoto [] si riceveranno solo gli elementi relativi a v1
+          type: array
+          items:
             type: string
-            format: uuid
-    StreamRequestV26:
+            minLength: 4
+            maxLength: 256
+            pattern: ^[A-Z_]+$
+    StreamRequestV25:
       description: Struttura comune per eventi di creazione/aggiornamento di uno stream di eventi di avanzamento delle notifiche. L'aggiornamento delle proprietà dello stream è soggetta al controllo di autorizzazione dell'apiKey sui gruppi.
       type: object
       required:
@@ -2415,10 +2065,35 @@ components:
             minLength: 4
             maxLength: 256
             pattern: ^[A-Z_]+$
-    StreamMetadataResponse:
+    StreamCreationRequestV26:
+      description: Richiesta di creazione di uno stream di eventi di avanzamento delle notifiche. Lo stream verrà creato nello stato abilitato
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/StreamRequestV26'
+      - type: object
+        properties:
+          replacedStreamId:
+            description: opzionale, eventuale streamId che viene sostituito da questo. Se specificato, lo stream indicato sarà disabilitato contestualmente alla creazione del nuovo stream, permettendo di consumare tutti gli eventi del vecchio stream senza che ne vengano aggiunti di nuovi. Inoltre, il nuovo stream partirà da un eventId successivo rispetto al vecchio stream (anche se non "esattamente" successivo per evitare sovrapposizioni con eventuali eventi salvati durante il cambio di configurazione). La creazione del nuovo stream è soggetta al controllo di autorizzazione dell'apiKey sui gruppi del precedente stream.
+            type: string
+            format: uuid
+    StreamCreationRequestV25:
+      description: Richiesta di creazione di uno stream di eventi di avanzamento delle notifiche. Lo stream verrà creato nello stato abilitato
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/StreamRequestV25'
+      - type: object
+        properties:
+          replacedStreamId:
+            description: opzionale, eventuale streamId che viene sostituito da questo. Se specificato, lo stream indicato sarà disabilitato contestualmente alla creazione del nuovo stream, permettendo di consumare tutti gli eventi del vecchio stream senza che ne vengano aggiunti di nuovi. Inoltre, il nuovo stream partirà da un eventId successivo rispetto al vecchio stream (anche se non "esattamente" successivo per evitare sovrapposizioni con eventuali eventi salvati durante il cambio di configurazione). La creazione del nuovo stream è soggetta al controllo di autorizzazione dell'apiKey sui gruppi del precedente stream.
+            type: string
+            format: uuid
+    StreamGroup:
+      type: string
+      description: Identificativo del gruppo.
+    StreamMetadataResponseV24:
       description: Configurazioni di un flusso di eventi
       allOf:
-      - $ref: '#/components/schemas/StreamCreationRequest'
+      - $ref: '#/components/schemas/StreamRequestV24'
       - type: object
         required:
         - streamId
@@ -2432,32 +2107,141 @@ components:
             description: Timestamp in cui il flusso di eventi è stato attivato
             type: string
             format: date-time
-    StreamCreationRequestV28:
+          disabledDate:
+            description: Timestamp in cui il flusso di eventi è stato disabilitato
+            type: string
+            format: date-time
+          version:
+            description: versione di base dello stream.
+            type: string
+            pattern: ^v\d\d\d?$
+    StreamRequestV24:
+      description: Struttura comune per eventi di creazione/aggiornamento di uno stream di eventi di avanzamento delle notifiche. L'aggiornamento delle proprietà dello stream è soggetta al controllo di autorizzazione dell'apiKey sui gruppi.
+      type: object
+      required:
+      - title
+      - eventType
+      - groups
+      properties:
+        title:
+          description: Nome sintetico dello stream
+          type: string
+          maxLength: 256
+          pattern: ^.*$
+        eventType:
+          description: "Tipo di eventi presenti nel flusso:\n  - _STATUS_: cambiamenti di stato delle notifiche\n  - _TIMELINE_: eventi a granularità fine"
+          type: string
+          enum:
+          - STATUS
+          - TIMELINE
+        groups:
+          description: rappresenta l'elenco degli id gruppi abilitati a richiedere i dettagli. Una apiKey può consumare o modificare uno stream solo se non ha gruppi o se tutti i gruppi dello stream sono presenti nella apiKey. Se viene specificato array vuoto, si noti che solo apiKey senza gruppi potranno consumare o modificare lo stream. Inoltre, nel caso di updateEventStream, la lista dei gruppi presente nello stream deve essere un sottoinsieme dei gruppi passati nella richiesta (in pratica si possono solo aggiungere gruppi a quelli esistenti) oppure entrambi array vuoti.
+          type: array
+          items:
+            allOf:
+            - $ref: '#/components/schemas/StreamGroup'
+            minLength: 0
+        filterValues:
+          description: rappresenta l'elenco degli stati o elementi di timeline che si vogliono filtrare; inserendo un array vuoto [] si riceveranno solo gli elementi relativi alla versione con cui è stato creato lo stream. Se specificati invece, avranno priorità rispetto agli eventi della versione (quindi se sono un sottoinsieme, si riceveranno solo quelli. Se si specificano eventi introdotti in versioni più recenti, questi saranno inviati) Infine, è possibile utilizzare il placeholder "DEFAULT" per specificare l'insieme di eventi più rilevanti di una notifica.
+          type: array
+          items:
+            type: string
+            minLength: 4
+            maxLength: 256
+            pattern: ^[A-Z_]+$
+    StreamCreationRequestV29:
       description: Richiesta di creazione di uno stream di eventi di avanzamento delle notifiche. Lo stream verrà creato nello stato abilitato
       type: object
       allOf:
-      - $ref: '#/components/schemas/StreamRequestV28'
+      - $ref: '#/components/schemas/StreamRequestV29'
       - type: object
         properties:
           replacedStreamId:
             description: opzionale, eventuale streamId che viene sostituito da questo. Se specificato, lo stream indicato sarà disabilitato contestualmente alla creazione del nuovo stream, permettendo di consumare tutti gli eventi del vecchio stream senza che ne vengano aggiunti di nuovi. Inoltre, il nuovo stream partirà da un eventId successivo rispetto al vecchio stream (anche se non "esattamente" successivo per evitare sovrapposizioni con eventuali eventi salvati durante il cambio di configurazione). La creazione del nuovo stream è soggetta al controllo di autorizzazione dell'apiKey sui gruppi del precedente stream.
             type: string
             format: uuid
-    StreamCreationRequestV27:
-      description: Richiesta di creazione di uno stream di eventi di avanzamento delle notifiche. Lo stream verrà creato nello stato abilitato
+    StreamRequestV29:
+      description: Struttura comune per eventi di creazione/aggiornamento di uno stream di eventi di avanzamento delle notifiche. L'aggiornamento delle proprietà dello stream è soggetta al controllo di autorizzazione dell'apiKey sui gruppi.
       type: object
-      allOf:
-      - $ref: '#/components/schemas/StreamRequestV27'
-      - type: object
-        properties:
-          replacedStreamId:
-            description: opzionale, eventuale streamId che viene sostituito da questo. Se specificato, lo stream indicato sarà disabilitato contestualmente alla creazione del nuovo stream, permettendo di consumare tutti gli eventi del vecchio stream senza che ne vengano aggiunti di nuovi. Inoltre, il nuovo stream partirà da un eventId successivo rispetto al vecchio stream (anche se non "esattamente" successivo per evitare sovrapposizioni con eventuali eventi salvati durante il cambio di configurazione). La creazione del nuovo stream è soggetta al controllo di autorizzazione dell'apiKey sui gruppi del precedente stream.
+      required:
+      - title
+      - eventType
+      - groups
+      properties:
+        title:
+          description: Nome sintetico dello stream
+          type: string
+          maxLength: 256
+          pattern: ^.*$
+        eventType:
+          description: "Tipo di eventi presenti nel flusso:\n  - _STATUS_: cambiamenti di stato delle notifiche\n  - _TIMELINE_: eventi a granularità fine"
+          type: string
+          enum:
+          - STATUS
+          - TIMELINE
+        groups:
+          description: rappresenta l'elenco degli id gruppi abilitati a richiedere i dettagli. Una apiKey può consumare o modificare uno stream solo se non ha gruppi o se tutti i gruppi dello stream sono presenti nella apiKey. Se viene specificato array vuoto, si noti che solo apiKey senza gruppi potranno consumare o modificare lo stream. Inoltre, nel caso di updateEventStream, la lista dei gruppi presente nello stream deve essere un sottoinsieme dei gruppi passati nella richiesta (in pratica si possono solo aggiungere gruppi a quelli esistenti) oppure entrambi array vuoti.
+          type: array
+          items:
+            allOf:
+            - $ref: '#/components/schemas/StreamGroup'
+            minLength: 0
+        filterValues:
+          description: rappresenta l'elenco degli stati o elementi di timeline che si vogliono filtrare; inserendo un array vuoto [] si riceveranno solo gli elementi relativi alla versione con cui è stato creato lo stream. Se specificati invece, avranno priorità rispetto agli eventi della versione (quindi se sono un sottoinsieme, si riceveranno solo quelli. Se si specificano eventi introdotti in versioni più recenti, questi saranno inviati) Infine, è possibile utilizzare il placeholder "DEFAULT" per specificare l'insieme di eventi più rilevanti di una notifica.
+          type: array
+          items:
             type: string
-            format: uuid
-    StreamMetadataResponseV24:
+            minLength: 4
+            maxLength: 256
+            pattern: ^[A-Z_]+$
+        waitForAccepted:
+          description: 'Stream di tipo TIMELINE: se true pubblica gli eventi sullo stream solo dopo la pubblicazione dell''evento di accettazione/rifiuto della notifica.  Tutti gli eventi dello stato IN_VALIDATION vengono pubblicati senza ritardo. Stream di tipo STATUS: se true pubblica gli stati garantendo che il primo stato sia l''ACCEPTED o il REFUSED'
+          type: boolean
+    Problem:
+      properties:
+        type:
+          description: URI reference of type definition
+          type: string
+        status:
+          description: The HTTP status code generated by the origin server for this occurrence of the problem.
+          type: integer
+          format: int32
+          example: 503
+          minimum: 100
+          exclusiveMaximum: 600
+        title:
+          description: A short, summary of the problem type. Written in english and readable
+          example: Service Unavailable
+          maxLength: 64
+          pattern: ^[ -~]{0,64}$
+          type: string
+        detail:
+          description: A human readable explanation of the problem.
+          example: Request took too long to complete.
+          maxLength: 4096
+          pattern: ^.{0,4096}$
+          type: string
+        traceId:
+          description: Internal support identifier associated to error
+          example: 123e4567-e89b-12d3-a456-426614174000
+          type: string
+        timestamp:
+          description: date and time referred to UTC
+          example: '2022-07-27T12:22:33.444Z'
+          type: string
+          format: date-time
+        errors:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/ProblemError'
+      required:
+      - status
+      - errors
+    StreamMetadataResponseV27:
       description: Configurazioni di un flusso di eventi
       allOf:
-      - $ref: '#/components/schemas/StreamRequestV24'
+      - $ref: '#/components/schemas/StreamRequestV27'
       - type: object
         required:
         - streamId
@@ -2504,7 +2288,84 @@ components:
             description: versione di base dello stream.
             type: string
             pattern: ^v\d\d\d?$
-    StreamRequestV29:
+    StreamListResponse:
+      description: Elenco di flussi di eventi
+      type: array
+      items:
+        $ref: '#/components/schemas/StreamListElement'
+    StreamMetadataResponseV23:
+      description: Configurazioni di un flusso di eventi
+      allOf:
+      - $ref: '#/components/schemas/StreamRequestV23'
+      - type: object
+        required:
+        - streamId
+        - activationDate
+        properties:
+          streamId:
+            description: Identificativo del flusso di eventi
+            type: string
+            format: uuid
+          activationDate:
+            description: Timestamp in cui il flusso di eventi è stato attivato
+            type: string
+            format: date-time
+          disabledDate:
+            description: Timestamp in cui il flusso di eventi è stato disabilitato
+            type: string
+            format: date-time
+          version:
+            description: versione di base dello stream.
+            type: string
+            pattern: ^v\d\d\d?$
+    StreamMetadataResponseV29:
+      description: Configurazioni di un flusso di eventi
+      allOf:
+      - $ref: '#/components/schemas/StreamRequestV29'
+      - type: object
+        required:
+        - streamId
+        - activationDate
+        properties:
+          streamId:
+            description: Identificativo del flusso di eventi
+            type: string
+            format: uuid
+          activationDate:
+            description: Timestamp in cui il flusso di eventi è stato attivato
+            type: string
+            format: date-time
+          disabledDate:
+            description: Timestamp in cui il flusso di eventi è stato disabilitato
+            type: string
+            format: date-time
+          version:
+            description: versione di base dello stream.
+            type: string
+            pattern: ^v\d\d\d?$
+    StreamCreationRequestV24:
+      description: Richiesta di creazione di uno stream di eventi di avanzamento delle notifiche. Lo stream verrà creato nello stato abilitato
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/StreamRequestV24'
+      - type: object
+        properties:
+          replacedStreamId:
+            description: opzionale, eventuale streamId che viene sostituito da questo. Se specificato, lo stream indicato sarà disabilitato contestualmente alla creazione del nuovo stream, permettendo di consumare tutti gli eventi del vecchio stream senza che ne vengano aggiunti di nuovi. Inoltre, il nuovo stream partirà da un eventId successivo rispetto al vecchio stream (anche se non "esattamente" successivo per evitare sovrapposizioni con eventuali eventi salvati durante il cambio di configurazione). La creazione del nuovo stream è soggetta al controllo di autorizzazione dell'apiKey sui gruppi del precedente stream.
+            type: string
+            format: uuid
+    StreamCreationRequestV23:
+      description: Richiesta di creazione di uno stream di eventi di avanzamento delle notifiche. Lo stream verrà creato nello stato abilitato
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/StreamRequestV23'
+      - type: object
+        properties:
+          replacedStreamId:
+            description: opzionale, eventuale streamId che viene sostituito da questo. Se specificato, lo stream indicato sarà disabilitato contestualmente alla creazione del nuovo stream, permettendo di consumare tutti gli eventi del vecchio stream senza che ne vengano aggiunti di nuovi. Inoltre, il nuovo stream partirà da un eventId successivo rispetto al vecchio stream (anche se non "esattamente" successivo per evitare sovrapposizioni con eventuali eventi salvati durante il cambio di configurazione). La creazione del nuovo stream è soggetta al controllo di autorizzazione dell'apiKey sui gruppi del precedente stream.
+            type: string
+            format: uuid
+    StreamRequestV26:
       description: Struttura comune per eventi di creazione/aggiornamento di uno stream di eventi di avanzamento delle notifiche. L'aggiornamento delle proprietà dello stream è soggetta al controllo di autorizzazione dell'apiKey sui gruppi.
       type: object
       required:
@@ -2538,9 +2399,36 @@ components:
             minLength: 4
             maxLength: 256
             pattern: ^[A-Z_]+$
-        waitForAccepted:
-          description: 'Stream di tipo TIMELINE: se true pubblica gli eventi sullo stream solo dopo la pubblicazione dell''evento di accettazione/rifiuto della notifica.  Tutti gli eventi dello stato IN_VALIDATION vengono pubblicati senza ritardo. Stream di tipo STATUS: se true pubblica gli stati garantendo che il primo stato sia l''ACCEPTED o il REFUSED'
-          type: boolean
+    StreamListElement:
+      type: object
+      required:
+      - title
+      - streamId
+      properties:
+        streamId:
+          type: string
+          format: uuid
+        title:
+          type: string
+          maxLength: 256
+          pattern: ^.*$
+    ProblemError:
+      properties:
+        code:
+          description: Internal code of the error, in human-readable format
+          example: PN_PARAMETER_TOO_LONG | PN_PARAMETER_TOO_SHORT | PN_DUPLICATE_ENTRY | etc...
+          type: string
+        element:
+          description: Parameter or request body field name for validation error
+          example: body.order.item[2].quantity
+          type: string
+        detail:
+          description: A human readable explanation specific to this occurrence of the problem.
+          example: Parameter not valid
+          maxLength: 1024
+          type: string
+      required:
+      - code
     StreamRequestV28:
       description: Struttura comune per eventi di creazione/aggiornamento di uno stream di eventi di avanzamento delle notifiche. L'aggiornamento delle proprietà dello stream è soggetta al controllo di autorizzazione dell'apiKey sui gruppi.
       type: object
@@ -2578,37 +2466,42 @@ components:
         waitForAccepted:
           description: 'Stream di tipo TIMELINE: se true pubblica gli eventi sullo stream solo dopo la pubblicazione dell''evento di accettazione/rifiuto della notifica.  Tutti gli eventi dello stato IN_VALIDATION vengono pubblicati senza ritardo. Stream di tipo STATUS: se true pubblica gli stati garantendo che il primo stato sia l''ACCEPTED o il REFUSED'
           type: boolean
-    StreamListResponse:
-      description: Elenco di flussi di eventi
-      type: array
-      items:
-        $ref: '#/components/schemas/StreamListElement'
-    StreamCreationRequest:
-      description: Richiesta di creazione di uno stream di eventi di avanzamento delle notifiche.
-      type: object
-      required:
-      - title
-      - eventType
-      properties:
-        title:
-          description: Nome sintetico dello stream
-          type: string
-          maxLength: 256
-          pattern: ^.*$
-        eventType:
-          description: "Tipo di eventi presenti nel flusso:\n  - _STATUS_: cambiamenti di stato delle notifiche\n  - _TIMELINE_: eventi a granularità fine"
-          type: string
-          enum:
-          - STATUS
-          - TIMELINE
-        filterValues:
-          description: rappresenta l'elenco degli stati o elementi di timeline che si vogliono filtrare; inserendo un array vuoto [] si riceveranno solo gli elementi relativi a v1
-          type: array
-          items:
+    StreamMetadataResponseV26:
+      description: Configurazioni di un flusso di eventi
+      allOf:
+      - $ref: '#/components/schemas/StreamRequestV26'
+      - type: object
+        required:
+        - streamId
+        - activationDate
+        properties:
+          streamId:
+            description: Identificativo del flusso di eventi
             type: string
-            minLength: 4
-            maxLength: 256
-            pattern: ^[A-Z_]+$
+            format: uuid
+          activationDate:
+            description: Timestamp in cui il flusso di eventi è stato attivato
+            type: string
+            format: date-time
+          disabledDate:
+            description: Timestamp in cui il flusso di eventi è stato disabilitato
+            type: string
+            format: date-time
+          version:
+            description: versione di base dello stream.
+            type: string
+            pattern: ^v\d\d\d?$
+    StreamCreationRequestV27:
+      description: Richiesta di creazione di uno stream di eventi di avanzamento delle notifiche. Lo stream verrà creato nello stato abilitato
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/StreamRequestV27'
+      - type: object
+        properties:
+          replacedStreamId:
+            description: opzionale, eventuale streamId che viene sostituito da questo. Se specificato, lo stream indicato sarà disabilitato contestualmente alla creazione del nuovo stream, permettendo di consumare tutti gli eventi del vecchio stream senza che ne vengano aggiunti di nuovi. Inoltre, il nuovo stream partirà da un eventId successivo rispetto al vecchio stream (anche se non "esattamente" successivo per evitare sovrapposizioni con eventuali eventi salvati durante il cambio di configurazione). La creazione del nuovo stream è soggetta al controllo di autorizzazione dell'apiKey sui gruppi del precedente stream.
+            type: string
+            format: uuid
   parameters:
     pathStreamId:
       description: Identificativo dello stream di eventi
@@ -2623,6 +2516,3 @@ components:
       type: apiKey
       in: header
       name: x-api-key
-x-refined-from:
-- send-b2b-pa-bundle.yaml
-- pagopa-send-b2b-pa-openapi.yml

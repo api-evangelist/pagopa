@@ -6,7 +6,7 @@ info:
     name: API Support
     url: https://github.com/pagopa/pdnd-interop-frontend/issues
   termsOfService: https://selfcare.interop.pagopa.it/ui/it/termini-di-servizio
-  description: 'Operations tagged Signals across 4 of this provider''s published API definitions: signalhub-pull.yaml, signalhub-push.yaml, pagopa-pdnd-signal-hub-pull-openapi.yml, pagopa-pdnd-signal-hub-push-openapi.yml. Each path carries the servers of the definition it was published in.'
+  description: 'Operations tagged Signals across 2 of this provider''s published API definitions: pagopa-pdnd-signal-hub-pull-openapi.yml, pagopa-pdnd-signal-hub-push-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.signalhub.interop.pagopa.it/1.0/pull
   description: Production environment
@@ -319,6 +319,36 @@ paths:
       description: Production environment
 components:
   schemas:
+    SignalPullResponse:
+      type: object
+      properties:
+        signals:
+          type: array
+          items:
+            type: object
+            properties:
+              signalType:
+                $ref: '#/components/schemas/signalType'
+              objectId:
+                type: string
+              eserviceId:
+                type: string
+              signalId:
+                type: number
+              objectType:
+                type: string
+            required:
+            - signalType
+            - objectId
+            - eserviceId
+            - signalId
+            - objectType
+        lastSignalId:
+          type:
+          - number
+          - 'null'
+      required:
+      - signals
     problem:
       type: object
       properties:
@@ -352,36 +382,6 @@ components:
       - title
       - detail
       - errors
-    SignalPullResponse:
-      type: object
-      properties:
-        signals:
-          type: array
-          items:
-            type: object
-            properties:
-              signalType:
-                $ref: '#/components/schemas/signalType'
-              objectId:
-                type: string
-              eserviceId:
-                type: string
-              signalId:
-                type: number
-              objectType:
-                type: string
-            required:
-            - signalType
-            - objectId
-            - eserviceId
-            - signalId
-            - objectType
-        lastSignalId:
-          type:
-          - number
-          - 'null'
-      required:
-      - signals
     signalType:
       type: string
       enum:
@@ -389,13 +389,6 @@ components:
       - UPDATE
       - DELETE
       - SEEDUPDATE
-    SignalPushResponse:
-      type: object
-      properties:
-        signalId:
-          type: number
-      required:
-      - signalId
     SignalPayload:
       type: object
       properties:
@@ -415,6 +408,13 @@ components:
       - eserviceId
       - signalId
       - objectType
+    SignalPushResponse:
+      type: object
+      properties:
+        signalId:
+          type: number
+      required:
+      - signalId
   securitySchemes:
     bearerAuth:
       type: http
@@ -422,7 +422,5 @@ components:
       bearerFormat: JWT
       description: A bearer token in the format of a JWS and conformed to the specifications included in [RFC8725](https://tools.ietf.org/html/RFC8725).
 x-refined-from:
-- signalhub-pull.yaml
-- signalhub-push.yaml
 - pagopa-pdnd-signal-hub-pull-openapi.yml
 - pagopa-pdnd-signal-hub-push-openapi.yml

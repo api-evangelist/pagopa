@@ -1,13 +1,19 @@
 openapi: 3.2.0
 info:
-  title: Pagopa Activations API
   version: 4.1.1
+  title: IO API for Public Administration Services Activations API
   contact:
     name: PagoPA S.p.A.
     url: https://docs.pagopa.it/io-guida-tecnica/
   x-logo:
     url: https://io.italia.it/assets/img/io-logo-blue.svg
-  description: 'Operations tagged Activations across 2 of this provider''s published API definitions: io-functions-services.yaml, pagopa-io-services-openapi.yml. Each path carries the servers of the definition it was published in.'
+  description: '# Warning
+
+    **This is an experimental API that is (most probably) going to change as we evolve the IO platform.**
+
+    # Introduction
+
+    This is the documentation of the IO API for 3rd party services.'
 servers:
 - url: https://api.io.pagopa.it/api/v1
 tags:
@@ -100,16 +106,8 @@ paths:
               $ref: '#/components/schemas/ActivationPayload'
       tags:
       - Activations
-    servers:
-    - url: https://api.io.pagopa.it/api/v1
 components:
   schemas:
-    ServiceId:
-      type: string
-      description: 'The ID of the Service. Equals the subscriptionId of a registered
-
-        API user.'
-      minLength: 1
     FiscalCodePayload:
       type: object
       properties:
@@ -127,18 +125,6 @@ components:
       required:
       - fiscal_code
       - status
-    ActivationStatus:
-      type: string
-      x-extensible-enum:
-      - ACTIVE
-      - INACTIVE
-      - PENDING
-    FiscalCode:
-      type: string
-      description: User's fiscal code.
-      format: FiscalCode
-      x-import: '@pagopa/ts-commons/lib/strings'
-      example: SPNDNL80R13C555X
     ProblemJson:
       type: object
       properties:
@@ -178,6 +164,24 @@ components:
           description: 'An absolute URI that identifies the specific occurrence of the problem.
 
             It may or may not yield further information if dereferenced.'
+    ServiceId:
+      type: string
+      description: 'The ID of the Service. Equals the subscriptionId of a registered
+
+        API user.'
+      minLength: 1
+    FiscalCode:
+      type: string
+      description: User's fiscal code.
+      format: FiscalCode
+      x-import: '@pagopa/ts-commons/lib/strings'
+      example: SPNDNL80R13C555X
+    ActivationStatus:
+      type: string
+      x-extensible-enum:
+      - ACTIVE
+      - INACTIVE
+      - PENDING
     Activation:
       type: object
       properties:
@@ -206,6 +210,3 @@ components:
       name: Ocp-Apim-Subscription-Key
       in: header
       description: The `manage` API key obtained through the Backoffice IO.
-x-refined-from:
-- io-functions-services.yaml
-- pagopa-io-services-openapi.yml

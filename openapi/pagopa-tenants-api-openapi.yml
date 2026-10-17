@@ -1,18 +1,19 @@
 openapi: 3.2.0
 info:
-  title: Pagopa Tenants API
+  title: PDND Interoperability Tenants API
+  description: PDND Interoperability API for machine-to-machine interaction with interoperability features
+  x-summary: PDND Interoperability API
+  version: 3.1.0
   contact:
     name: API Support
     url: https://github.com/pagopa/pdnd-interop-frontend/issues
   termsOfService: https://selfcare.interop.pagopa.it/ui/it/termini-di-servizio
-  x-summary: PDND Interoperability API
-  version: '1.0'
-  description: 'Operations tagged tenants across 3 of this provider''s published API definitions: interop-api-v3.yaml, pagopa-pdnd-interop-v2-openapi.yml, pagopa-pdnd-interop-v3-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.interop.pagopa.it/v3
   description: Production environment
-- url: https://api.interop.pagopa.it/v2
-  description: PROD environment
+security:
+- DPoPAuth: []
+  DPoPProofHeader: []
 tags:
 - name: Tenants
   description: Tenants routes
@@ -77,12 +78,6 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /tenants/{tenantId}:
     parameters:
     - name: tenantId
@@ -122,12 +117,6 @@ paths:
           $ref: '#/components/responses/NotFound'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /tenants/{tenantId}/declaredAttributes:
     parameters:
     - name: tenantId
@@ -177,9 +166,6 @@ paths:
           $ref: '#/components/responses/NotFound'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
     post:
       tags:
       - Tenants
@@ -219,12 +205,6 @@ paths:
           $ref: '#/components/responses/NotFound'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /tenants/{tenantId}/declaredAttributes/{attributeId}:
     parameters:
     - name: tenantId
@@ -272,12 +252,6 @@ paths:
           $ref: '#/components/responses/NotFound'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /tenants/{tenantId}/certifiedAttributes:
     parameters:
     - name: tenantId
@@ -321,9 +295,6 @@ paths:
           $ref: '#/components/responses/NotFound'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
     post:
       tags:
       - Tenants
@@ -365,12 +336,6 @@ paths:
           $ref: '#/components/responses/Conflict'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /tenants/{tenantId}/certifiedAttributes/{attributeId}:
     parameters:
     - name: tenantId
@@ -420,12 +385,6 @@ paths:
           $ref: '#/components/responses/Conflict'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /tenants/{tenantId}/verifiedAttributes:
     parameters:
     - name: tenantId
@@ -469,9 +428,6 @@ paths:
           $ref: '#/components/responses/NotFound'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
     post:
       tags:
       - Tenants
@@ -512,12 +468,6 @@ paths:
           $ref: '#/components/responses/NotFound'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /tenants/{tenantId}/verifiedAttributes/{attributeId}:
     parameters:
     - name: tenantId
@@ -578,12 +528,6 @@ paths:
           $ref: '#/components/responses/Conflict'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /tenants/{tenantId}/verifiedAttributes/{attributeId}/verifiers:
     parameters:
     - name: tenantId
@@ -633,12 +577,6 @@ paths:
           $ref: '#/components/responses/NotFound'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /tenants/{tenantId}/verifiedAttributes/{attributeId}/revokers:
     parameters:
     - name: tenantId
@@ -688,14 +626,210 @@ paths:
           $ref: '#/components/responses/NotFound'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
 components:
   schemas:
+    AgreementId:
+      type: string
+      format: uuid
+      description: The unique identifier of the Agreement
+    Pagination:
+      type: object
+      additionalProperties: false
+      properties:
+        offset:
+          type: integer
+          format: int32
+          minimum: 0
+        limit:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 50
+        totalCount:
+          type: integer
+          format: int32
+          minimum: 0
+      required:
+      - offset
+      - limit
+      - totalCount
+    TenantVerifiedAttributeRevoker:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          format: uuid
+        verifiedAt:
+          type: string
+          format: date-time
+        expiresAt:
+          type: string
+          format: date-time
+        extendedAt:
+          type: string
+          format: date-time
+        revokedAt:
+          type: string
+          format: date-time
+        delegationId:
+          $ref: '#/components/schemas/DelegationId'
+      required:
+      - id
+      - verifiedAt
+      - revokedAt
+    TenantVerifiedAttributeVerifiers:
+      type: object
+      additionalProperties: false
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/TenantVerifiedAttributeVerifier'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+      required:
+      - results
+      - pagination
+    TenantSubUnitType:
+      type: string
+      enum:
+      - AOO
+      - UO
+    TenantKind:
+      type: string
+      enum:
+      - PA
+      - PRIVATE
+      - GSP
+      - SCP
+    TenantDeclaredAttributeSeed:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          format: uuid
+        delegationId:
+          $ref: '#/components/schemas/DelegationId'
+      required:
+      - id
+    Tenant:
+      description: Tenant model
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          format: uuid
+        externalId:
+          $ref: '#/components/schemas/ExternalId'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        name:
+          type: string
+        kind:
+          $ref: '#/components/schemas/TenantKind'
+        onboardedAt:
+          type: string
+          format: date-time
+        subUnitType:
+          $ref: '#/components/schemas/TenantSubUnitType'
+        selfcareInstitutionType:
+          type: string
+      required:
+      - id
+      - certifier
+      - externalId
+      - attributes
+      - createdAt
+      - mails
+      - name
+    ExternalId:
+      properties:
+        origin:
+          type: string
+          minLength: 3
+          maxLength: 64
+        value:
+          type: string
+      required:
+      - origin
+      - value
+    TenantVerifiedAttribute:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          format: uuid
+        assignedAt:
+          type: string
+          format: date-time
+      required:
+      - id
+      - assignedAt
+    TenantCertifiedAttributeSeed:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          format: uuid
+      required:
+      - id
+    DelegationId:
+      type: string
+      format: uuid
+      description: The unique identifier of the Delegation
+    TenantCertifiedAttribute:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          format: uuid
+        assignedAt:
+          type: string
+          format: date-time
+        revokedAt:
+          type: string
+          format: date-time
+      required:
+      - id
+      - assignedAt
+    TenantVerifiedAttributeSeed:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          format: uuid
+        agreementId:
+          $ref: '#/components/schemas/AgreementId'
+        expirationDate:
+          type: string
+          format: date-time
+      required:
+      - id
+      - agreementId
+    TenantCertifiedAttributes:
+      type: object
+      additionalProperties: false
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/TenantCertifiedAttribute'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+      required:
+      - results
+      - pagination
     TenantVerifiedAttributeRevokers:
       type: object
       additionalProperties: false
@@ -704,19 +838,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/TenantVerifiedAttributeRevoker'
-        pagination:
-          $ref: '#/components/schemas/Pagination'
-      required:
-      - results
-      - pagination
-    TenantDeclaredAttributes:
-      type: object
-      additionalProperties: false
-      properties:
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/TenantDeclaredAttribute'
         pagination:
           $ref: '#/components/schemas/Pagination'
       required:
@@ -761,6 +882,49 @@ components:
       - type
       - status
       - title
+    TenantId:
+      type: string
+      format: uuid
+      description: The unique identifier of the Tenant
+    Tenants:
+      type: object
+      additionalProperties: false
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tenant'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+      required:
+      - results
+      - pagination
+    TenantVerifiedAttributes:
+      type: object
+      additionalProperties: false
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/TenantVerifiedAttribute'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+      required:
+      - results
+      - pagination
+    TenantDeclaredAttributes:
+      type: object
+      additionalProperties: false
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/TenantDeclaredAttribute'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+      required:
+      - results
+      - pagination
     ProblemError:
       properties:
         code:
@@ -779,206 +943,6 @@ components:
       required:
       - code
       - detail
-    TenantSubUnitType:
-      type: string
-      enum:
-      - AOO
-      - UO
-    Tenants:
-      type: object
-      additionalProperties: false
-      properties:
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/Tenant'
-        pagination:
-          $ref: '#/components/schemas/Pagination'
-      required:
-      - results
-      - pagination
-    TenantId:
-      type: string
-      format: uuid
-      description: The unique identifier of the Tenant
-    ExternalId:
-      properties:
-        origin:
-          type: string
-          minLength: 3
-          maxLength: 64
-        value:
-          type: string
-      required:
-      - origin
-      - value
-    TenantCertifiedAttributes:
-      type: object
-      additionalProperties: false
-      properties:
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/TenantCertifiedAttribute'
-        pagination:
-          $ref: '#/components/schemas/Pagination'
-      required:
-      - results
-      - pagination
-    Tenant:
-      description: Tenant model
-      type: object
-      additionalProperties: false
-      properties:
-        id:
-          type: string
-          format: uuid
-        externalId:
-          $ref: '#/components/schemas/ExternalId'
-        createdAt:
-          type: string
-          format: date-time
-        updatedAt:
-          type: string
-          format: date-time
-        name:
-          type: string
-        kind:
-          $ref: '#/components/schemas/TenantKind'
-        onboardedAt:
-          type: string
-          format: date-time
-        subUnitType:
-          $ref: '#/components/schemas/TenantSubUnitType'
-        selfcareInstitutionType:
-          type: string
-      required:
-      - id
-      - certifier
-      - externalId
-      - attributes
-      - createdAt
-      - mails
-      - name
-    TenantCertifiedAttribute:
-      type: object
-      additionalProperties: false
-      properties:
-        id:
-          type: string
-          format: uuid
-        assignedAt:
-          type: string
-          format: date-time
-        revokedAt:
-          type: string
-          format: date-time
-      required:
-      - id
-      - assignedAt
-    AttributeId:
-      type: string
-      format: uuid
-      description: The unique identifier of the Attribute
-    TenantDeclaredAttributeSeed:
-      type: object
-      additionalProperties: false
-      properties:
-        id:
-          type: string
-          format: uuid
-        delegationId:
-          $ref: '#/components/schemas/DelegationId'
-      required:
-      - id
-    AgreementId:
-      type: string
-      format: uuid
-      description: The unique identifier of the Agreement
-    DelegationId:
-      type: string
-      format: uuid
-      description: The unique identifier of the Delegation
-    TenantVerifiedAttributeSeed:
-      type: object
-      additionalProperties: false
-      properties:
-        id:
-          type: string
-          format: uuid
-        agreementId:
-          $ref: '#/components/schemas/AgreementId'
-        expirationDate:
-          type: string
-          format: date-time
-      required:
-      - id
-      - agreementId
-    TenantCertifiedAttributeSeed:
-      type: object
-      additionalProperties: false
-      properties:
-        id:
-          type: string
-          format: uuid
-      required:
-      - id
-    TenantDeclaredAttribute:
-      type: object
-      additionalProperties: false
-      properties:
-        id:
-          type: string
-          format: uuid
-        assignedAt:
-          type: string
-          format: date-time
-        revokedAt:
-          type: string
-          format: date-time
-        delegationId:
-          $ref: '#/components/schemas/DelegationId'
-      required:
-      - id
-      - assignedAt
-    TenantVerifiedAttributeRevoker:
-      type: object
-      additionalProperties: false
-      properties:
-        id:
-          type: string
-          format: uuid
-        verifiedAt:
-          type: string
-          format: date-time
-        expiresAt:
-          type: string
-          format: date-time
-        extendedAt:
-          type: string
-          format: date-time
-        revokedAt:
-          type: string
-          format: date-time
-        delegationId:
-          $ref: '#/components/schemas/DelegationId'
-      required:
-      - id
-      - verifiedAt
-      - revokedAt
-    TenantVerifiedAttribute:
-      type: object
-      additionalProperties: false
-      properties:
-        id:
-          type: string
-          format: uuid
-        assignedAt:
-          type: string
-          format: date-time
-      required:
-      - id
-      - assignedAt
     TenantVerifiedAttributeVerifier:
       type: object
       additionalProperties: false
@@ -1000,148 +964,11 @@ components:
       required:
       - id
       - verifiedAt
-    TenantVerifiedAttributes:
-      type: object
-      additionalProperties: false
-      properties:
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/TenantVerifiedAttribute'
-        pagination:
-          $ref: '#/components/schemas/Pagination'
-      required:
-      - results
-      - pagination
-    TenantKind:
+    AttributeId:
       type: string
-      enum:
-      - PA
-      - PRIVATE
-      - GSP
-      - SCP
-    TenantVerifiedAttributeVerifiers:
-      type: object
-      additionalProperties: false
-      properties:
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/TenantVerifiedAttributeVerifier'
-        pagination:
-          $ref: '#/components/schemas/Pagination'
-      required:
-      - results
-      - pagination
-    Pagination:
-      type: object
-      additionalProperties: false
-      properties:
-        offset:
-          type: integer
-          format: int32
-          minimum: 0
-        limit:
-          type: integer
-          format: int32
-          minimum: 1
-          maximum: 50
-        totalCount:
-          type: integer
-          format: int32
-          minimum: 0
-      required:
-      - offset
-      - limit
-      - totalCount
-    Tenant_2:
-      description: Tenant model
-      type: object
-      additionalProperties: false
-      properties:
-        id:
-          type: string
-          format: uuid
-        externalId:
-          $ref: '#/components/schemas/ExternalId'
-        createdAt:
-          type: string
-          format: date-time
-        updatedAt:
-          type: string
-          format: date-time
-        name:
-          type: string
-        kind:
-          $ref: '#/components/schemas/TenantKind'
-        onboardedAt:
-          type: string
-          format: date-time
-        subUnitType:
-          $ref: '#/components/schemas/TenantSubUnitType'
-      required:
-      - id
-      - certifier
-      - externalId
-      - attributes
-      - createdAt
-      - mails
-      - name
-    TenantDeclaredAttributeSeed_2:
-      type: object
-      additionalProperties: false
-      properties:
-        id:
-          type: string
-          format: uuid
-        delegationId:
-          type: string
-          format: uuid
-      required:
-      - id
-    TenantVerifiedAttributeSeed_2:
-      type: object
-      additionalProperties: false
-      properties:
-        id:
-          type: string
-          format: uuid
-        agreementId:
-          type: string
-          format: uuid
-        expirationDate:
-          type: string
-          format: date-time
-      required:
-      - id
-      - agreementId
-    TenantVerifiedAttributeRevoker_2:
-      type: object
-      additionalProperties: false
-      properties:
-        id:
-          type: string
-          format: uuid
-        verifiedAt:
-          type: string
-          format: date-time
-        expiresAt:
-          type: string
-          format: date-time
-        extendedAt:
-          type: string
-          format: date-time
-        revokedAt:
-          type: string
-          format: date-time
-        delegationId:
-          type: string
-          format: uuid
-      required:
-      - id
-      - verifiedAt
-      - revokedAt
-    TenantDeclaredAttribute_2:
+      format: uuid
+      description: The unique identifier of the Attribute
+    TenantDeclaredAttribute:
       type: object
       additionalProperties: false
       properties:
@@ -1155,34 +982,34 @@ components:
           type: string
           format: date-time
         delegationId:
-          type: string
-          format: uuid
+          $ref: '#/components/schemas/DelegationId'
       required:
       - id
       - assignedAt
-    TenantVerifiedAttributeVerifier_2:
-      type: object
-      additionalProperties: false
-      properties:
-        id:
-          type: string
-          format: uuid
-        verifiedAt:
-          type: string
-          format: date-time
-        expiresAt:
-          type: string
-          format: date-time
-        extendedAt:
-          type: string
-          format: date-time
-        delegationId:
-          type: string
-          format: uuid
-      required:
-      - id
-      - verifiedAt
   headers:
+    RateLimitLimitHeader:
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+      description: Max allowed requests within time interval
+    RateLimitIntervalHeader:
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+      description: Time interval in milliseconds. Allowed requests will be constantly replenished during the interval. At the end of the interval the max allowed requests will be available
+    IntegrityRest02DigestHeader:
+      schema:
+        type: string
+        pattern: ^SHA-256=[a-zA-Z0-9+/]{43}=$
+      description: 'Digest of the body using the canonical JSON representation of the response body.
+
+        The digest is calculated using the SHA-256 algorithm on the response body
+
+        exactly as it is sent to the client, encoded in Base64 as per RFC 3230
+
+        '
     IntegrityRest02AgidJwtSignatureHeader:
       description: 'The `Agid-JWT-Signature` header contains a JSON Web Signature (JWS) signed with the PDND API private key.
 
@@ -1197,66 +1024,9 @@ components:
         format: int32
         minimum: 0
       description: Remaining requests within time interval
-    RateLimitIntervalHeader:
-      schema:
-        type: integer
-        format: int32
-        minimum: 0
-      description: Time interval in milliseconds. Allowed requests will be constantly replenished during the interval. At the end of the interval the max allowed requests will be available
-    RateLimitLimitHeader:
-      schema:
-        type: integer
-        format: int32
-        minimum: 0
-      description: Max allowed requests within time interval
-    IntegrityRest02DigestHeader:
-      schema:
-        type: string
-        pattern: ^SHA-256=[a-zA-Z0-9+/]{43}=$
-      description: 'Digest of the body using the canonical JSON representation of the response body.
-
-        The digest is calculated using the SHA-256 algorithm on the response body
-
-        exactly as it is sent to the client, encoded in Base64 as per RFC 3230
-
-        '
   responses:
-    Forbidden:
-      description: Forbidden
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-      headers:
-        X-Rate-Limit-Limit:
-          $ref: '#/components/headers/RateLimitLimitHeader'
-        X-Rate-Limit-Remaining:
-          $ref: '#/components/headers/RateLimitRemainingHeader'
-        X-Rate-Limit-Interval:
-          $ref: '#/components/headers/RateLimitIntervalHeader'
-        Digest:
-          $ref: '#/components/headers/IntegrityRest02DigestHeader'
-        Agid-JWT-Signature:
-          $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
-    Conflict:
-      description: Conflict
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-      headers:
-        X-Rate-Limit-Limit:
-          $ref: '#/components/headers/RateLimitLimitHeader'
-        X-Rate-Limit-Remaining:
-          $ref: '#/components/headers/RateLimitRemainingHeader'
-        X-Rate-Limit-Interval:
-          $ref: '#/components/headers/RateLimitIntervalHeader'
-        Digest:
-          $ref: '#/components/headers/IntegrityRest02DigestHeader'
-        Agid-JWT-Signature:
-          $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
-    Unauthorized:
-      description: Unauthorized
+    NotFound:
+      description: Not Found
       content:
         application/problem+json:
           schema:
@@ -1289,23 +1059,6 @@ components:
           $ref: '#/components/headers/IntegrityRest02DigestHeader'
         Agid-JWT-Signature:
           $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
-    NotFound:
-      description: Not Found
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-      headers:
-        X-Rate-Limit-Limit:
-          $ref: '#/components/headers/RateLimitLimitHeader'
-        X-Rate-Limit-Remaining:
-          $ref: '#/components/headers/RateLimitRemainingHeader'
-        X-Rate-Limit-Interval:
-          $ref: '#/components/headers/RateLimitIntervalHeader'
-        Digest:
-          $ref: '#/components/headers/IntegrityRest02DigestHeader'
-        Agid-JWT-Signature:
-          $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
     TooManyRequests:
       description: Too Many Requests
       content:
@@ -1323,7 +1076,67 @@ components:
           $ref: '#/components/headers/IntegrityRest02DigestHeader'
         Agid-JWT-Signature:
           $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+      headers:
+        X-Rate-Limit-Limit:
+          $ref: '#/components/headers/RateLimitLimitHeader'
+        X-Rate-Limit-Remaining:
+          $ref: '#/components/headers/RateLimitRemainingHeader'
+        X-Rate-Limit-Interval:
+          $ref: '#/components/headers/RateLimitIntervalHeader'
+        Digest:
+          $ref: '#/components/headers/IntegrityRest02DigestHeader'
+        Agid-JWT-Signature:
+          $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+    Conflict:
+      description: Conflict
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+      headers:
+        X-Rate-Limit-Limit:
+          $ref: '#/components/headers/RateLimitLimitHeader'
+        X-Rate-Limit-Remaining:
+          $ref: '#/components/headers/RateLimitRemainingHeader'
+        X-Rate-Limit-Interval:
+          $ref: '#/components/headers/RateLimitIntervalHeader'
+        Digest:
+          $ref: '#/components/headers/IntegrityRest02DigestHeader'
+        Agid-JWT-Signature:
+          $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+      headers:
+        X-Rate-Limit-Limit:
+          $ref: '#/components/headers/RateLimitLimitHeader'
+        X-Rate-Limit-Remaining:
+          $ref: '#/components/headers/RateLimitRemainingHeader'
+        X-Rate-Limit-Interval:
+          $ref: '#/components/headers/RateLimitIntervalHeader'
+        Digest:
+          $ref: '#/components/headers/IntegrityRest02DigestHeader'
+        Agid-JWT-Signature:
+          $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
   parameters:
+    OffsetParam:
+      in: query
+      name: offset
+      description: Pagination starting position
+      required: true
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
     LimitParam:
       in: query
       name: limit
@@ -1334,15 +1147,6 @@ components:
         format: int32
         minimum: 1
         maximum: 50
-    OffsetParam:
-      in: query
-      name: offset
-      description: Pagination starting position
-      required: true
-      schema:
-        type: integer
-        format: int32
-        minimum: 0
   securitySchemes:
     DPoPAuth:
       type: http
@@ -1364,11 +1168,3 @@ components:
       description: 'DPoP proof JWT for sender-constrained access. Must accompany the DPoP Authorization header.
 
         '
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
-x-refined-from:
-- interop-api-v3.yaml
-- pagopa-pdnd-interop-v2-openapi.yml
-- pagopa-pdnd-interop-v3-openapi.yml

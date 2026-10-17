@@ -1,15 +1,23 @@
 openapi: 3.2.0
 info:
-  title: Pagopa Downtime API
+  termsOfService: https://termofservice.it
+  title: Stato della piattaforma SEND Downtime API
+  x-summary: Stato della piattaforma SEND
   version: 1.0.0
+  description: '## Abstract
+
+    Queste API vengono utilizzate dai soggetti abilitati all’utilizzo della piattaforma SEND e consentono di:
+
+    - Visualizzare lo stato dei servizi di SEND,
+
+    - Consultare lo storico dei disservizi,
+
+    - Per ogni disservizio è possibile scaricare l''atto opponibile a terzi relativo.'
   contact:
     email: pn@pagopa.it
   license:
     name: Licenza di SEND
     url: https://da-definire/
-  termsOfService: https://termofservice.it
-  x-summary: Stato della piattaforma SEND
-  description: 'Operations tagged Downtime across 2 of this provider''s published API definitions: send-downtime-logs.yaml, pagopa-send-platform-status-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.notifichedigitali.it
   description: Ambiente di produzione
@@ -47,13 +55,6 @@ paths:
             application/problem+json:
               schema:
                 $ref: ./schemas-pn-errors-v1.yaml#/components/schemas/Problem
-    servers:
-    - url: https://api.notifichedigitali.it
-      description: Ambiente di produzione
-    - url: https://api.uat.notifichedigitali.it
-      description: Ambiente di test
-    - url: https://api.dev.notifichedigitali.it
-      description: Ambiente di sviluppo
   /downtime/v1/legal-facts/{legalFactId}:
     get:
       summary: Ottieni atto opponibile a terzi
@@ -107,24 +108,8 @@ paths:
             application/problem+json:
               schema:
                 $ref: ./schemas-pn-errors-v1.yaml#/components/schemas/Problem
-    servers:
-    - url: https://api.notifichedigitali.it
-      description: Ambiente di produzione
-    - url: https://api.uat.notifichedigitali.it
-      description: Ambiente di test
-    - url: https://api.dev.notifichedigitali.it
-      description: Ambiente di sviluppo
 components:
   parameters:
-    queryYear:
-      name: year
-      in: query
-      required: false
-      description: anno di ricerca dei disservizi risolti. Se non presente si intende l'anno corrente.
-      schema:
-        type: integer
-        minimum: 2023
-      example: 2024
     queryMonth:
       name: month
       in: query
@@ -135,6 +120,12 @@ components:
         minimum: 1
         maximum: 12
       example: 3
-x-refined-from:
-- send-downtime-logs.yaml
-- pagopa-send-platform-status-openapi.yml
+    queryYear:
+      name: year
+      in: query
+      required: false
+      description: anno di ricerca dei disservizi risolti. Se non presente si intende l'anno corrente.
+      schema:
+        type: integer
+        minimum: 2023
+      example: 2024

@@ -1,9 +1,20 @@
 openapi: 3.2.0
 info:
-  title: Pagopa Payment Options API
-  version: 0.6.5
+  title: pagoPA for PSP Payment Options API
+  description: 'pagoPA Payment Options service for PSP
+
+    ### APP ERROR CODES ###
+
+
+    Details
+
+    **NAME** | **HTTP STATUS CODE** | **DESCRIPTION**
+
+    - | - | -
+
+    **ODP-001** | *Bad Request* | ODP-SINTASSI.'
   termsOfService: https://www.pagopa.gov.it/
-  description: 'Operations tagged Payment Options across 2 of this provider''s published API definitions: psp_payment_options.json, pagopa-payment-options-psp-openapi.yml. Each path carries the servers of the definition it was published in.'
+  version: 0.6.5
 servers:
 - url: https://api.uat.platform.pagopa.it/odp/service/v1
 security:
@@ -127,30 +138,8 @@ paths:
                     validFrom: '2024-09-30T11:59:59.0000000+00:00'
                     status: non pagato
                     status reason: desc
-    servers:
-    - url: https://api.uat.platform.pagopa.it/odp/service/v1
 components:
   schemas:
-    Installment:
-      type: object
-      properties:
-        nav:
-          type: string
-        iuv:
-          type: string
-        amount:
-          type: integer
-          format: int64
-        description:
-          type: string
-        dueDate:
-          type: string
-        validFrom:
-          type: string
-        status:
-          $ref: '#/components/schemas/InstallmentEnum'
-        statusReason:
-          type: string
     PaymentOptionStatusEnum:
       enum:
       - PO_UNPAID
@@ -160,21 +149,6 @@ components:
       - PO_EXPIRED_UNPAID
       - PO_INVALID
       type: string
-    PaymentOptionsResponse:
-      type: object
-      properties:
-        organizationFiscalCode:
-          type: string
-        companyName:
-          type: string
-        officeName:
-          type: string
-        standin:
-          type: boolean
-        paymentOptions:
-          type: array
-          items:
-            $ref: '#/components/schemas/PaymentOption'
     InstallmentEnum:
       enum:
       - POI_UNPAID
@@ -199,6 +173,41 @@ components:
           type: integer
           format: int64
         dateTime:
+          type: string
+    PaymentOptionsResponse:
+      type: object
+      properties:
+        organizationFiscalCode:
+          type: string
+        companyName:
+          type: string
+        officeName:
+          type: string
+        standin:
+          type: boolean
+        paymentOptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/PaymentOption'
+    Installment:
+      type: object
+      properties:
+        nav:
+          type: string
+        iuv:
+          type: string
+        amount:
+          type: integer
+          format: int64
+        description:
+          type: string
+        dueDate:
+          type: string
+        validFrom:
+          type: string
+        status:
+          $ref: '#/components/schemas/InstallmentEnum'
+        statusReason:
           type: string
     PaymentOption:
       type: object
@@ -234,6 +243,3 @@ components:
       type: apiKey
       name: subscription-key
       in: query
-x-refined-from:
-- psp_payment_options.json
-- pagopa-payment-options-psp-openapi.yml

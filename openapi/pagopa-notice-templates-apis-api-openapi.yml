@@ -1,9 +1,9 @@
 openapi: 3.2.0
 info:
-  title: Pagopa Notice Templates APIs API
-  version: 0.9.8
+  title: External Payment Notices Print Service Notice Templates…
+  description: External Payment Notices Print Service APIs
   termsOfService: https://www.pagopa.gov.it/
-  description: 'Operations tagged Notice Templates APIs across 2 of this provider''s published API definitions: print-payment-notice-service.json, pagopa-print-payment-notices-openapi.yml. Each path carries the servers of the definition it was published in.'
+  version: 0.9.8
 servers:
 - url: https://api.platform.pagopa.it/print-payment-notice-service/external/v1
 security:
@@ -124,8 +124,6 @@ paths:
                 detail: There was an error processing the request
                 status: 200
                 title: string
-    servers:
-    - url: https://api.platform.pagopa.it/print-payment-notice-service/external/v1
   /notices/templates/{template_id}:
     get:
       tags:
@@ -236,8 +234,6 @@ paths:
                 detail: There was an error processing the request
                 status: 200
                 title: string
-    servers:
-    - url: https://api.platform.pagopa.it/print-payment-notice-service/external/v1
 components:
   schemas:
     ProblemJson:
@@ -282,6 +278,3 @@ components:
       type: apiKey
       name: subscription-key
       in: query
-x-refined-from:
-- print-payment-notice-service.json
-- pagopa-print-payment-notices-openapi.yml

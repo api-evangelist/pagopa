@@ -1,18 +1,19 @@
 openapi: 3.2.0
 info:
-  title: Pagopa Agreements API
+  title: PDND Interoperability Agreements API
+  description: PDND Interoperability API for machine-to-machine interaction with interoperability features
+  x-summary: PDND Interoperability API
+  version: 3.1.0
   contact:
     name: API Support
     url: https://github.com/pagopa/pdnd-interop-frontend/issues
   termsOfService: https://selfcare.interop.pagopa.it/ui/it/termini-di-servizio
-  x-summary: PDND Interoperability API
-  version: '1.0'
-  description: 'Operations tagged agreements across 3 of this provider''s published API definitions: interop-api-v3.yaml, pagopa-pdnd-interop-v2-openapi.yml, pagopa-pdnd-interop-v3-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.interop.pagopa.it/v3
   description: Production environment
-- url: https://api.interop.pagopa.it/v2
-  description: PROD environment
+security:
+- DPoPAuth: []
+  DPoPProofHeader: []
 tags:
 - name: Agreements
   description: Agreements routes
@@ -94,9 +95,6 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
     post:
       tags:
       - Agreements
@@ -137,12 +135,6 @@ paths:
           $ref: '#/components/responses/Conflict'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /agreements/{agreementId}:
     parameters:
     - name: agreementId
@@ -184,9 +176,6 @@ paths:
           $ref: '#/components/responses/NotFound'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
     delete:
       tags:
       - Agreements
@@ -221,12 +210,6 @@ paths:
           $ref: '#/components/responses/NotFound'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /agreements/{agreementId}/purposes:
     parameters:
     - name: agreementId
@@ -272,12 +255,6 @@ paths:
           $ref: '#/components/responses/NotFound'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /agreements/{agreementId}/approve:
     parameters:
     - schema:
@@ -327,12 +304,6 @@ paths:
           $ref: '#/components/responses/Conflict'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /agreements/{agreementId}/reject:
     parameters:
     - schema:
@@ -381,12 +352,6 @@ paths:
           $ref: '#/components/responses/NotFound'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /agreements/{agreementId}/archive:
     parameters:
     - schema:
@@ -431,12 +396,6 @@ paths:
           $ref: '#/components/responses/NotFound'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /agreements/{agreementId}/submit:
     parameters:
     - schema:
@@ -488,12 +447,6 @@ paths:
           $ref: '#/components/responses/Conflict'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /agreements/{agreementId}/suspend:
     parameters:
     - schema:
@@ -543,12 +496,6 @@ paths:
           $ref: '#/components/responses/NotFound'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /agreements/{agreementId}/unsuspend:
     parameters:
     - schema:
@@ -598,12 +545,6 @@ paths:
           $ref: '#/components/responses/NotFound'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /agreements/{agreementId}/upgrade:
     parameters:
     - name: agreementId
@@ -648,12 +589,6 @@ paths:
           $ref: '#/components/responses/NotFound'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /agreements/{agreementId}/clone:
     parameters:
     - name: agreementId
@@ -700,12 +635,6 @@ paths:
           $ref: '#/components/responses/Conflict'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /agreements/{agreementId}/consumerDocuments:
     parameters:
     - name: agreementId
@@ -756,9 +685,6 @@ paths:
           $ref: '#/components/responses/Conflict'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
     get:
       tags:
       - Agreements
@@ -796,12 +722,6 @@ paths:
           $ref: '#/components/responses/NotFound'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /agreements/{agreementId}/consumerDocuments/{documentId}:
     parameters:
     - name: agreementId
@@ -851,9 +771,6 @@ paths:
           $ref: '#/components/responses/NotFound'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
     delete:
       tags:
       - Agreements
@@ -888,12 +805,6 @@ paths:
           $ref: '#/components/responses/NotFound'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /agreements/{agreementId}/contract:
     parameters:
     - name: agreementId
@@ -936,175 +847,8 @@ paths:
           $ref: '#/components/responses/NotFound'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
 components:
   schemas:
-    PurposeTemplateId:
-      type: string
-      format: uuid
-      description: The unique identifier of the Purpose Template
-    Documents:
-      type: object
-      additionalProperties: false
-      properties:
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/Document'
-        pagination:
-          $ref: '#/components/schemas/Pagination'
-      required:
-      - results
-      - pagination
-    Problem:
-      properties:
-        type:
-          description: URI reference of type definition
-          type: string
-        status:
-          description: The HTTP status code generated by the origin server for this occurrence of the problem
-          example: 503
-          format: int32
-          minimum: 100
-          type: integer
-          exclusiveMaximum: 600
-        title:
-          description: A short, summary of the problem type. Written in english and readable
-          example: Service Unavailable
-          maxLength: 64
-          pattern: ^[ -~]{0,64}$
-          type: string
-        correlationId:
-          description: Unique identifier of the request
-          example: 53af4f2d-0c87-41ef-a645-b726a821852b
-          maxLength: 64
-          type: string
-        detail:
-          description: A human readable explanation of the problem
-          example: Request took too long to complete
-          maxLength: 4096
-          pattern: ^.{0,1024}$
-          type: string
-        errors:
-          type: array
-          minItems: 1
-          items:
-            $ref: '#/components/schemas/ProblemError'
-      additionalProperties: false
-      required:
-      - type
-      - status
-      - title
-    ProblemError:
-      properties:
-        code:
-          description: Internal code of the error
-          example: 123-4567
-          minLength: 8
-          maxLength: 8
-          pattern: ^[0-9]{3}-[0-9]{4}$
-          type: string
-        detail:
-          description: A human readable explanation specific to this occurrence of the problem
-          example: Parameter not valid
-          maxLength: 4096
-          pattern: ^.{0,1024}$
-          type: string
-      required:
-      - code
-      - detail
-    DescriptorId:
-      type: string
-      format: uuid
-      description: The unique identifier of the Descriptor
-    PurposeVersionState:
-      type: string
-      description: Purpose State
-      enum:
-      - ACTIVE
-      - DRAFT
-      - SUSPENDED
-      - WAITING_FOR_APPROVAL
-      - ARCHIVED
-      - REJECTED
-    Document:
-      type: object
-      additionalProperties: false
-      required:
-      - id
-      - name
-      - prettyName
-      - contentType
-      - createdAt
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: Unique identifier of the file
-        name:
-          type: string
-          description: The name of the file
-        prettyName:
-          type: string
-          description: A human-readable name for the file
-        contentType:
-          type: string
-          description: The content type of the file
-        createdAt:
-          type: string
-          format: date-time
-          description: The date and time when the file was uploaded
-    AgreementSeed:
-      type: object
-      additionalProperties: false
-      description: Contains the information for agreement creation
-      properties:
-        eserviceId:
-          $ref: '#/components/schemas/EServiceId'
-        descriptorId:
-          $ref: '#/components/schemas/DescriptorId'
-        delegationId:
-          $ref: '#/components/schemas/DelegationId'
-      required:
-      - eserviceId
-      - descriptorId
-    AgreementId:
-      type: string
-      format: uuid
-      description: The unique identifier of the Agreement
-    Agreements:
-      type: object
-      additionalProperties: false
-      properties:
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/Agreement'
-        pagination:
-          $ref: '#/components/schemas/Pagination'
-      required:
-      - results
-      - pagination
-    VoidObject:
-      type: object
-      additionalProperties: false
-      description: An empty object
-    AgreementRejection:
-      type: object
-      additionalProperties: false
-      description: contains the information for agreement rejection
-      properties:
-        reason:
-          type: string
-          minLength: 20
-          maxLength: 1000
-      required:
-      - reason
     Agreement:
       type: object
       additionalProperties: false
@@ -1153,14 +897,233 @@ components:
       - consumerId
       - state
       - createdAt
-    DelegationId:
+    Document:
+      type: object
+      additionalProperties: false
+      required:
+      - id
+      - name
+      - prettyName
+      - contentType
+      - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier of the file
+        name:
+          type: string
+          description: The name of the file
+        prettyName:
+          type: string
+          description: A human-readable name for the file
+        contentType:
+          type: string
+          description: The content type of the file
+        createdAt:
+          type: string
+          format: date-time
+          description: The date and time when the file was uploaded
+    AgreementId:
       type: string
       format: uuid
-      description: The unique identifier of the Delegation
+      description: The unique identifier of the Agreement
+    FileUploadMultipart:
+      type: object
+      additionalProperties: false
+      required:
+      - file
+      - prettyName
+      properties:
+        file:
+          type: string
+          format: binary
+          description: The file to upload
+        prettyName:
+          type: string
+          description: A human-readable name for the file
+    Pagination:
+      type: object
+      additionalProperties: false
+      properties:
+        offset:
+          type: integer
+          format: int32
+          minimum: 0
+        limit:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 50
+        totalCount:
+          type: integer
+          format: int32
+          minimum: 0
+      required:
+      - offset
+      - limit
+      - totalCount
+    FileDownloadMultipart:
+      type: object
+      additionalProperties: false
+      required:
+      - file
+      - filename
+      - contentType
+      - id
+      properties:
+        file:
+          type: string
+          format: binary
+          description: The file to download
+        filename:
+          type: string
+          description: The name of the file
+        contentType:
+          type: string
+          description: The content type of the file
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier of the file
+        prettyName:
+          type: string
+          description: A human-readable name for the file
     EServiceId:
       type: string
       format: uuid
       description: The unique identifier of the E-Service
+    Documents:
+      type: object
+      additionalProperties: false
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Document'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+      required:
+      - results
+      - pagination
+    AgreementSubmission:
+      type: object
+      additionalProperties: false
+      description: contains the information for agreement submission
+      properties:
+        consumerNotes:
+          type: string
+          maxLength: 1000
+    AgreementSeed:
+      type: object
+      additionalProperties: false
+      description: Contains the information for agreement creation
+      properties:
+        eserviceId:
+          $ref: '#/components/schemas/EServiceId'
+        descriptorId:
+          $ref: '#/components/schemas/DescriptorId'
+        delegationId:
+          $ref: '#/components/schemas/DelegationId'
+      required:
+      - eserviceId
+      - descriptorId
+    AgreementRejection:
+      type: object
+      additionalProperties: false
+      description: contains the information for agreement rejection
+      properties:
+        reason:
+          type: string
+          minLength: 20
+          maxLength: 1000
+      required:
+      - reason
+    DelegationRef:
+      type: object
+      additionalProperties: false
+      description: Set the delegation ID in order to operate as a delegate for an active producer or consumer delegation
+      properties:
+        delegationId:
+          $ref: '#/components/schemas/DelegationId'
+    Purposes:
+      type: object
+      additionalProperties: false
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Purpose'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+      required:
+      - results
+      - pagination
+    DelegationId:
+      type: string
+      format: uuid
+      description: The unique identifier of the Delegation
+    VoidObject:
+      type: object
+      additionalProperties: false
+      description: An empty object
+    DescriptorId:
+      type: string
+      format: uuid
+      description: The unique identifier of the Descriptor
+    Problem:
+      properties:
+        type:
+          description: URI reference of type definition
+          type: string
+        status:
+          description: The HTTP status code generated by the origin server for this occurrence of the problem
+          example: 503
+          format: int32
+          minimum: 100
+          type: integer
+          exclusiveMaximum: 600
+        title:
+          description: A short, summary of the problem type. Written in english and readable
+          example: Service Unavailable
+          maxLength: 64
+          pattern: ^[ -~]{0,64}$
+          type: string
+        correlationId:
+          description: Unique identifier of the request
+          example: 53af4f2d-0c87-41ef-a645-b726a821852b
+          maxLength: 64
+          type: string
+        detail:
+          description: A human readable explanation of the problem
+          example: Request took too long to complete
+          maxLength: 4096
+          pattern: ^.{0,1024}$
+          type: string
+        errors:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/ProblemError'
+      additionalProperties: false
+      required:
+      - type
+      - status
+      - title
+    PurposeVersionState:
+      type: string
+      description: Purpose State
+      enum:
+      - ACTIVE
+      - DRAFT
+      - SUSPENDED
+      - WAITING_FOR_APPROVAL
+      - ARCHIVED
+      - REJECTED
+    PurposeTemplateId:
+      type: string
+      format: uuid
+      description: The unique identifier of the Purpose Template
     PurposeVersion:
       type: object
       additionalProperties: false
@@ -1196,85 +1159,6 @@ components:
       - dailyCalls
       - createdAt
       description: business representation of a purpose version
-    DelegationRef:
-      type: object
-      additionalProperties: false
-      description: Set the delegation ID in order to operate as a delegate for an active producer or consumer delegation
-      properties:
-        delegationId:
-          $ref: '#/components/schemas/DelegationId'
-    Purposes:
-      type: object
-      additionalProperties: false
-      properties:
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/Purpose'
-        pagination:
-          $ref: '#/components/schemas/Pagination'
-      required:
-      - results
-      - pagination
-    AgreementSubmission:
-      type: object
-      additionalProperties: false
-      description: contains the information for agreement submission
-      properties:
-        consumerNotes:
-          type: string
-          maxLength: 1000
-    AgreementState:
-      type: string
-      description: Agreement State
-      enum:
-      - DRAFT
-      - ACTIVE
-      - ARCHIVED
-      - PENDING
-      - SUSPENDED
-      - MISSING_CERTIFIED_ATTRIBUTES
-      - REJECTED
-    FileUploadMultipart:
-      type: object
-      additionalProperties: false
-      required:
-      - file
-      - prettyName
-      properties:
-        file:
-          type: string
-          format: binary
-          description: The file to upload
-        prettyName:
-          type: string
-          description: A human-readable name for the file
-    FileDownloadMultipart:
-      type: object
-      additionalProperties: false
-      required:
-      - file
-      - filename
-      - contentType
-      - id
-      properties:
-        file:
-          type: string
-          format: binary
-          description: The file to download
-        filename:
-          type: string
-          description: The name of the file
-        contentType:
-          type: string
-          description: The content type of the file
-        id:
-          type: string
-          format: uuid
-          description: Unique identifier of the file
-        prettyName:
-          type: string
-          description: A human-readable name for the file
     Purpose:
       type: object
       additionalProperties: false
@@ -1323,158 +1207,72 @@ components:
       - description
       - createdAt
       - isFreeOfCharge
-    Pagination:
+    Agreements:
       type: object
       additionalProperties: false
       properties:
-        offset:
-          type: integer
-          format: int32
-          minimum: 0
-        limit:
-          type: integer
-          format: int32
-          minimum: 1
-          maximum: 50
-        totalCount:
-          type: integer
-          format: int32
-          minimum: 0
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Agreement'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
       required:
-      - offset
-      - limit
-      - totalCount
-    AgreementSeed_2:
-      type: object
-      additionalProperties: false
-      description: Contains the information for agreement creation
+      - results
+      - pagination
+    AgreementState:
+      type: string
+      description: Agreement State
+      enum:
+      - DRAFT
+      - ACTIVE
+      - ARCHIVED
+      - PENDING
+      - SUSPENDED
+      - MISSING_CERTIFIED_ATTRIBUTES
+      - REJECTED
+    ProblemError:
       properties:
-        eserviceId:
+        code:
+          description: Internal code of the error
+          example: 123-4567
+          minLength: 8
+          maxLength: 8
+          pattern: ^[0-9]{3}-[0-9]{4}$
           type: string
-          format: uuid
-        descriptorId:
+        detail:
+          description: A human readable explanation specific to this occurrence of the problem
+          example: Parameter not valid
+          maxLength: 4096
+          pattern: ^.{0,1024}$
           type: string
-          format: uuid
-        delegationId:
-          type: string
-          format: uuid
       required:
-      - eserviceId
-      - descriptorId
-    Agreement_2:
-      type: object
-      additionalProperties: false
-      properties:
-        id:
-          type: string
-          format: uuid
-        eserviceId:
-          type: string
-          format: uuid
-        descriptorId:
-          type: string
-          format: uuid
-        producerId:
-          type: string
-          format: uuid
-        consumerId:
-          type: string
-          format: uuid
-        delegationId:
-          type: string
-          format: uuid
-        state:
-          $ref: '#/components/schemas/AgreementState'
-        suspendedByConsumer:
-          type: boolean
-        suspendedByProducer:
-          type: boolean
-        suspendedByPlatform:
-          type: boolean
-        consumerNotes:
-          type: string
-        rejectionReason:
-          type: string
-        createdAt:
-          type: string
-          format: date-time
-        updatedAt:
-          type: string
-          format: date-time
-        suspendedAt:
-          type: string
-          format: date-time
-      required:
-      - id
-      - eserviceId
-      - descriptorId
-      - producerId
-      - consumerId
-      - state
-      - createdAt
-    DelegationRef_2:
-      type: object
-      additionalProperties: false
-      description: Set the delegation ID in order to operate as a delegate for an active producer or consumer delegation
-      properties:
-        delegationId:
-          type: string
-          format: uuid
-    Purpose_2:
-      type: object
-      additionalProperties: false
-      properties:
-        id:
-          type: string
-          format: uuid
-        eserviceId:
-          type: string
-          format: uuid
-        consumerId:
-          type: string
-          format: uuid
-        suspendedByConsumer:
-          type: boolean
-        suspendedByProducer:
-          type: boolean
-        title:
-          type: string
-        description:
-          type: string
-        createdAt:
-          type: string
-          format: date-time
-        updatedAt:
-          type: string
-          format: date-time
-        isRiskAnalysisValid:
-          type: boolean
-        isFreeOfCharge:
-          type: boolean
-        freeOfChargeReason:
-          type: string
-        delegationId:
-          type: string
-          format: uuid
-        currentVersion:
-          $ref: '#/components/schemas/PurposeVersion'
-        waitingForApprovalVersion:
-          $ref: '#/components/schemas/PurposeVersion'
-        rejectedVersion:
-          $ref: '#/components/schemas/PurposeVersion'
-        purposeTemplateId:
-          type: string
-          format: uuid
-      required:
-      - id
-      - eserviceId
-      - consumerId
-      - title
-      - description
-      - createdAt
-      - isRiskAnalysisValid
-      - isFreeOfCharge
+      - code
+      - detail
   headers:
+    RateLimitLimitHeader:
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+      description: Max allowed requests within time interval
+    RateLimitIntervalHeader:
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+      description: Time interval in milliseconds. Allowed requests will be constantly replenished during the interval. At the end of the interval the max allowed requests will be available
+    IntegrityRest02DigestHeader:
+      schema:
+        type: string
+        pattern: ^SHA-256=[a-zA-Z0-9+/]{43}=$
+      description: 'Digest of the body using the canonical JSON representation of the response body.
+
+        The digest is calculated using the SHA-256 algorithm on the response body
+
+        exactly as it is sent to the client, encoded in Base64 as per RFC 3230
+
+        '
     IntegrityRest02AgidJwtSignatureHeader:
       description: 'The `Agid-JWT-Signature` header contains a JSON Web Signature (JWS) signed with the PDND API private key.
 
@@ -1489,66 +1287,9 @@ components:
         format: int32
         minimum: 0
       description: Remaining requests within time interval
-    RateLimitIntervalHeader:
-      schema:
-        type: integer
-        format: int32
-        minimum: 0
-      description: Time interval in milliseconds. Allowed requests will be constantly replenished during the interval. At the end of the interval the max allowed requests will be available
-    RateLimitLimitHeader:
-      schema:
-        type: integer
-        format: int32
-        minimum: 0
-      description: Max allowed requests within time interval
-    IntegrityRest02DigestHeader:
-      schema:
-        type: string
-        pattern: ^SHA-256=[a-zA-Z0-9+/]{43}=$
-      description: 'Digest of the body using the canonical JSON representation of the response body.
-
-        The digest is calculated using the SHA-256 algorithm on the response body
-
-        exactly as it is sent to the client, encoded in Base64 as per RFC 3230
-
-        '
   responses:
-    Forbidden:
-      description: Forbidden
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-      headers:
-        X-Rate-Limit-Limit:
-          $ref: '#/components/headers/RateLimitLimitHeader'
-        X-Rate-Limit-Remaining:
-          $ref: '#/components/headers/RateLimitRemainingHeader'
-        X-Rate-Limit-Interval:
-          $ref: '#/components/headers/RateLimitIntervalHeader'
-        Digest:
-          $ref: '#/components/headers/IntegrityRest02DigestHeader'
-        Agid-JWT-Signature:
-          $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
-    Conflict:
-      description: Conflict
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-      headers:
-        X-Rate-Limit-Limit:
-          $ref: '#/components/headers/RateLimitLimitHeader'
-        X-Rate-Limit-Remaining:
-          $ref: '#/components/headers/RateLimitRemainingHeader'
-        X-Rate-Limit-Interval:
-          $ref: '#/components/headers/RateLimitIntervalHeader'
-        Digest:
-          $ref: '#/components/headers/IntegrityRest02DigestHeader'
-        Agid-JWT-Signature:
-          $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
-    Unauthorized:
-      description: Unauthorized
+    NotFound:
+      description: Not Found
       content:
         application/problem+json:
           schema:
@@ -1581,23 +1322,6 @@ components:
           $ref: '#/components/headers/IntegrityRest02DigestHeader'
         Agid-JWT-Signature:
           $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
-    NotFound:
-      description: Not Found
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-      headers:
-        X-Rate-Limit-Limit:
-          $ref: '#/components/headers/RateLimitLimitHeader'
-        X-Rate-Limit-Remaining:
-          $ref: '#/components/headers/RateLimitRemainingHeader'
-        X-Rate-Limit-Interval:
-          $ref: '#/components/headers/RateLimitIntervalHeader'
-        Digest:
-          $ref: '#/components/headers/IntegrityRest02DigestHeader'
-        Agid-JWT-Signature:
-          $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
     TooManyRequests:
       description: Too Many Requests
       content:
@@ -1615,17 +1339,67 @@ components:
           $ref: '#/components/headers/IntegrityRest02DigestHeader'
         Agid-JWT-Signature:
           $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+      headers:
+        X-Rate-Limit-Limit:
+          $ref: '#/components/headers/RateLimitLimitHeader'
+        X-Rate-Limit-Remaining:
+          $ref: '#/components/headers/RateLimitRemainingHeader'
+        X-Rate-Limit-Interval:
+          $ref: '#/components/headers/RateLimitIntervalHeader'
+        Digest:
+          $ref: '#/components/headers/IntegrityRest02DigestHeader'
+        Agid-JWT-Signature:
+          $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+    Conflict:
+      description: Conflict
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+      headers:
+        X-Rate-Limit-Limit:
+          $ref: '#/components/headers/RateLimitLimitHeader'
+        X-Rate-Limit-Remaining:
+          $ref: '#/components/headers/RateLimitRemainingHeader'
+        X-Rate-Limit-Interval:
+          $ref: '#/components/headers/RateLimitIntervalHeader'
+        Digest:
+          $ref: '#/components/headers/IntegrityRest02DigestHeader'
+        Agid-JWT-Signature:
+          $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+      headers:
+        X-Rate-Limit-Limit:
+          $ref: '#/components/headers/RateLimitLimitHeader'
+        X-Rate-Limit-Remaining:
+          $ref: '#/components/headers/RateLimitRemainingHeader'
+        X-Rate-Limit-Interval:
+          $ref: '#/components/headers/RateLimitIntervalHeader'
+        Digest:
+          $ref: '#/components/headers/IntegrityRest02DigestHeader'
+        Agid-JWT-Signature:
+          $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
   parameters:
-    LimitParam:
+    OffsetParam:
       in: query
-      name: limit
-      description: Maximum number of results to return
+      name: offset
+      description: Pagination starting position
       required: true
       schema:
         type: integer
         format: int32
-        minimum: 1
-        maximum: 50
+        minimum: 0
     EserviceIdsParam:
       in: query
       name: eserviceIds
@@ -1638,15 +1412,16 @@ components:
           type: string
           format: uuid
         default: []
-    OffsetParam:
+    LimitParam:
       in: query
-      name: offset
-      description: Pagination starting position
+      name: limit
+      description: Maximum number of results to return
       required: true
       schema:
         type: integer
         format: int32
-        minimum: 0
+        minimum: 1
+        maximum: 50
   securitySchemes:
     DPoPAuth:
       type: http
@@ -1668,11 +1443,3 @@ components:
       description: 'DPoP proof JWT for sender-constrained access. Must accompany the DPoP Authorization header.
 
         '
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
-x-refined-from:
-- interop-api-v3.yaml
-- pagopa-pdnd-interop-v2-openapi.yml
-- pagopa-pdnd-interop-v3-openapi.yml

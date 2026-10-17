@@ -5,7 +5,7 @@ info:
   contact:
     name: PagoPA S.p.A.
     email: rtp@pagopa.it
-  description: 'Operations tagged read across 6 of this provider''s published API definitions: srtp-activation.yaml, srtp-payees.yaml, srtp-service-providers.yaml, pagopa-srtp-activation-openapi.yml, pagopa-srtp-payees-openapi.yml, pagopa-srtp-service-providers-openapi.yml. Each path carries the servers of the definition it was published in.'
+  description: 'Operations tagged read across 3 of this provider''s published API definitions: pagopa-srtp-activation-openapi.yml, pagopa-srtp-payees-openapi.yml, pagopa-srtp-service-providers-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - description: Development/Test
   url: https://api-rtp.dev.cstar.pagopa.it/rtp/activation
@@ -310,13 +310,21 @@ paths:
       x-internal: false
 components:
   schemas:
-    StatusCode:
-      description: HTTP status code.
-      type: integer
-      format: int32
-      minimum: 0
-      maximum: 999
-      example: 401
+    Type2Error:
+      description: Error details returned by the APIM.
+      type: object
+      additionalProperties: false
+      properties:
+        statusCode:
+          $ref: '#/components/schemas/StatusCode'
+        message:
+          $ref: '#/components/schemas/ErrorDescription'
+      required:
+      - statusCode
+      - message
+      example:
+        statusCode: 401
+        message: Invalid JWT.
     PayerStatus:
       description: Activation status of a Payer.
       type: object
@@ -331,25 +339,262 @@ components:
       - isActive
       example:
         isActive: true
-    EffectiveActivationDate:
-      description: 'Effective activation date (B035).
+    PageMetadata:
+      description: Metadata of a page of data.
+      type: object
+      additionalProperties: false
+      properties:
+        nextActivationId:
+          $ref: '#/components/schemas/NextActivationId'
+        size:
+          $ref: '#/components/schemas/PageSize'
+      required:
+      - size
+      example:
+        nextActivationId: bd615b4a-066d-443e-8dd2-a28a39931fef
+        size: 20
+    RequestId:
+      description: Identifier of the request.
+      type: string
+      format: uuid
+      pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+      minLength: 36
+      maxLength: 36
+      example: bd615b4a-066d-443e-8dd2-a28a39931fef
+    AccessControlAllowOrigin:
+      description: 'Indicates whether the response can be shared with requesting code from
 
-
-        Date and time at which activation has been stored.
+        the given origin.
 
         '
       type: string
-      format: date-time
-      minLength: 19
-      maxLength: 29
-      pattern: ^((?:(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2}:\d{2}(?:\.\d+)?))(Z|[\+-]\d{2}:\d{2})?)$
-      example: '2024-10-30T16:39:34.123+01:00'
+      pattern: ^[ -~]{1,2048}$
+      minLength: 1
+      maxLength: 2048
+    Type1Error:
+      description: List of errors returned by the application.
+      type: object
+      additionalProperties: false
+      properties:
+        errors:
+          type: array
+          minItems: 1
+          maxItems: 32
+          items:
+            $ref: '#/components/schemas/Error'
+      required:
+      - errors
+      example:
+        errors:
+        - code: 01021000E
+          description: Wrong party identifier
+    PageSize:
+      description: Size of the page.
+      type: integer
+      format: int32
+      minimum: 1
+      maximum: 128
+      example: 20
+    NextActivationId:
+      description: 'Identifier for the next page. Use this UUID as `NextActivationId` header in the next request to continue pagination. Null if there are no more pages.
+
+        '
+      type: string
+      format: uuid
+      pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+      minLength: 36
+      maxLength: 36
+      example: d0d654e6-97da-4848-b568-99fedccb642b
+    Activations:
+      description: List of RTP activations.
+      type: array
+      minItems: 0
+      maxItems: 128
+      items:
+        $ref: '#/components/schemas/Activation'
+      example:
+      - id: d0d654e6-97da-4848-b568-99fedccb642b
+        effectiveActivationDate: '2024-10-30T16:39:34+01:00'
+        payer:
+          fiscalCode: RSSMRA85T10A562S
+          rtpSpId: '12345678911'
+    RetryAfter:
+      description: 'The number of seconds to wait before allowing a follow-up request.
+
+        '
+      type: integer
+      format: int32
+      minimum: 1
+      maximum: 240
+    PartyId:
+      description: 'Unique and unambiguous identification of a party.
+
+
+        It is used as identifier of the Payer''s RTP Service Provider (N001) and
+
+        for Payee''s RTP Service Provider (N002).
+
+
+        A Service Provider is identified by its BIC (Bank Identification Code)
+
+        if it is a PSP, otherwise it is identified by its VAT identification
+
+        number (Value Added Tax id).
+
+        '
+      oneOf:
+      - $ref: '#/components/schemas/Bic'
+      - $ref: '#/components/schemas/Vat'
+    ActivationId:
+      description: Identifier of the RTP activation resource.
+      type: string
+      format: uuid
+      pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+      minLength: 36
+      maxLength: 36
+      example: d0d654e6-97da-4848-b568-99fedccb642b
+    Activation:
+      allOf:
+      - type: object
+        properties:
+          id:
+            $ref: '#/components/schemas/ActivationId'
+          effectiveActivationDate:
+            $ref: '#/components/schemas/EffectiveActivationDate'
+        required:
+        - id
+        - effectiveActivationDate
+      - $ref: '#/components/schemas/ActivationReq'
+      example:
+        id: d0d654e6-97da-4848-b568-99fedccb642b
+        effectiveActivationDate: '2024-10-30T16:39:34+01:00'
+        payer:
+          fiscalCode: RSSMRA85T10A562S
+          rtpSpId: '12345678911'
     RateLimitReset:
       description: The number of seconds left in the current period.
       type: integer
       format: int32
       minimum: 1
       maximum: 60
+    ActivationReq:
+      description: 'Data of a RTP activation.
+
+        '
+      type: object
+      properties:
+        payer:
+          $ref: '#/components/schemas/Payer'
+      required:
+      - payer
+      example:
+        payer:
+          fiscalCode: RSSMRA85T10A562S
+          rtpSpId: '12345678911'
+    Version:
+      description: Version of the required API.
+      type: string
+      pattern: ^[ -~]{1,64}$
+      minLength: 1
+      maxLength: 64
+      example: v1
+    Error:
+      description: Error details.
+      type: object
+      additionalProperties: false
+      properties:
+        code:
+          $ref: '#/components/schemas/ErrorCode'
+        description:
+          $ref: '#/components/schemas/ErrorDescription'
+      required:
+      - code
+      - description
+      example:
+        code: 01021000E
+        description: Wrong party identifier
+    Payer:
+      description: 'Payer data.
+
+        '
+      type: object
+      additionalProperties: false
+      properties:
+        fiscalCode:
+          $ref: '#/components/schemas/FiscalCode'
+        rtpSpId:
+          $ref: '#/components/schemas/PartyId'
+      required:
+      - fiscalCode
+      - rtpSpId
+      example:
+        fiscalCode: RSSMRA85T10A562S
+        rtpSpId: '12345678911'
+    Vat:
+      description: Value Added Tax.
+      type: string
+      pattern: ^[0-9]{11}$
+      minLength: 11
+      maxLength: 11
+      example: '12345678911'
+    PageOfActivations:
+      description: Page of RTP activations.
+      type: object
+      additionalProperties: false
+      properties:
+        activations:
+          $ref: '#/components/schemas/Activations'
+        metadata:
+          $ref: '#/components/schemas/PageMetadata'
+      required:
+      - activations
+      - metadata
+      example:
+        activations:
+        - id: d0d654e6-97da-4848-b568-99fedccb642b
+          effectiveActivationDate: '2024-10-30T16:39:34+01:00'
+          payer:
+            fiscalCode: RSSMRA85T10A562S
+            rtpSpId: '12345678911'
+        metadata:
+          nextActivationId: d0d654e6-97da-4848-b568-99fedccb642b
+          size: 1
+    Bic:
+      description: Bank Identification Code.
+      type: string
+      pattern: ^[A-Z0-9]{4}[A-Z]{2}[A-Z0-9]{2}([A-Z0-9]{3}){0,1}$
+      minLength: 8
+      maxLength: 11
+      example: UNCRITMM
+    FiscalCode:
+      description: 'Fiscal code.
+
+
+        It is used as identifier of the Payer (P009) and of the Payee (E005).
+
+        '
+      type: string
+      pattern: ^(?:(?:[A-Z][AEIOUX][AEIOUX]|[B-DF-HJ-NP-TV-Z]{2}[A-Z]){2}(?:[\dLMNP-V]{2}(?:[A-EHLMPR-T](?:[04LQ][1-9MNP-V]|[15MR][\dLMNP-V]|[26NS][0-8LMNP-U])|[DHPS][37PT][0L]|[ACELMRT][37PT][01LM]|[AC-EHLMPR-T][26NS][9V])|(?:[02468LNQSU][048LQU]|[13579MPRTV][26NS])B[26NS][9V])(?:[A-MZ][1-9MNP-V][\dLMNP-V]{2}|[A-M][0L](?:[1-9MNP-V][\dLMNP-V]|[0L][1-9MNP-V]))[A-Z]|\d{11})$
+      minLength: 11
+      maxLength: 16
+      example: RSSMRA85T10A562S
+    Errors:
+      description: 'Error details.
+
+        The format depends on the component which returns it.
+
+        '
+      oneOf:
+      - $ref: '#/components/schemas/Type1Error'
+      - $ref: '#/components/schemas/Type2Error'
+      - $ref: '#/components/schemas/Type3Error'
+    StatusCode:
+      description: HTTP status code.
+      type: integer
+      format: int32
+      minimum: 0
+      maximum: 999
+      example: 401
     ErrorCode:
       description: "Error code following the format ZZXXKYYYT where:\n  - ZZ: Domain identifier\n  - XX: Error category (01=Authentication, 02=Validation, etc.)\n  - K: Method type (1=POST, etc.)\n  - YYY: Detailed error code\n  - T: Severity (F=Fatal, E=Error, W=Warning)\n"
       type: string
@@ -386,139 +631,19 @@ components:
       minLength: 9
       maxLength: 9
       example: 01021000E
-    Error:
-      description: Error details.
-      type: object
-      additionalProperties: false
-      properties:
-        code:
-          $ref: '#/components/schemas/ErrorCode'
-        description:
-          $ref: '#/components/schemas/ErrorDescription'
-      required:
-      - code
-      - description
-      example:
-        code: 01021000E
-        description: Wrong party identifier
-    RetryAfter:
-      description: 'The number of seconds to wait before allowing a follow-up request.
-
-        '
-      type: integer
-      format: int32
-      minimum: 1
-      maximum: 240
-    Errors:
-      description: 'Error details.
-
-        The format depends on the component which returns it.
-
-        '
-      oneOf:
-      - $ref: '#/components/schemas/Type1Error'
-      - $ref: '#/components/schemas/Type2Error'
-      - $ref: '#/components/schemas/Type3Error'
-    RateLimitLimit:
-      description: The number of allowed requests in the current period.
-      type: integer
-      format: int32
-      minimum: 1
-      maximum: 240
-    PageSize:
-      description: Size of the page.
-      type: integer
-      format: int32
-      minimum: 1
-      maximum: 128
-      example: 20
-    Type2Error:
-      description: Error details returned by the APIM.
-      type: object
-      additionalProperties: false
-      properties:
-        statusCode:
-          $ref: '#/components/schemas/StatusCode'
-        message:
-          $ref: '#/components/schemas/ErrorDescription'
-      required:
-      - statusCode
-      - message
-      example:
-        statusCode: 401
-        message: Invalid JWT.
-    PartyId:
-      description: 'Unique and unambiguous identification of a party.
+    EffectiveActivationDate:
+      description: 'Effective activation date (B035).
 
 
-        It is used as identifier of the Payer''s RTP Service Provider (N001) and
-
-        for Payee''s RTP Service Provider (N002).
-
-
-        A Service Provider is identified by its BIC (Bank Identification Code)
-
-        if it is a PSP, otherwise it is identified by its VAT identification
-
-        number (Value Added Tax id).
-
-        '
-      oneOf:
-      - $ref: '#/components/schemas/Bic'
-      - $ref: '#/components/schemas/Vat'
-    PageOfActivations:
-      description: Page of RTP activations.
-      type: object
-      additionalProperties: false
-      properties:
-        activations:
-          $ref: '#/components/schemas/Activations'
-        metadata:
-          $ref: '#/components/schemas/PageMetadata'
-      required:
-      - activations
-      - metadata
-      example:
-        activations:
-        - id: d0d654e6-97da-4848-b568-99fedccb642b
-          effectiveActivationDate: '2024-10-30T16:39:34+01:00'
-          payer:
-            fiscalCode: RSSMRA85T10A562S
-            rtpSpId: '12345678911'
-        metadata:
-          nextActivationId: d0d654e6-97da-4848-b568-99fedccb642b
-          size: 1
-    Bic:
-      description: Bank Identification Code.
-      type: string
-      pattern: ^[A-Z0-9]{4}[A-Z]{2}[A-Z0-9]{2}([A-Z0-9]{3}){0,1}$
-      minLength: 8
-      maxLength: 11
-      example: UNCRITMM
-    ErrorDescription:
-      description: Error description.
-      type: string
-      pattern: ^[ -~]{0,256}$
-      minLength: 0
-      maxLength: 256
-      example: Wrong party identifier
-    AccessControlAllowOrigin:
-      description: 'Indicates whether the response can be shared with requesting code from
-
-        the given origin.
+        Date and time at which activation has been stored.
 
         '
       type: string
-      pattern: ^[ -~]{1,2048}$
-      minLength: 1
-      maxLength: 2048
-    Vat:
-      description: Value Added Tax.
-      type: string
-      pattern: ^[0-9]{11}$
-      minLength: 11
-      maxLength: 11
-      example: '12345678911'
+      format: date-time
+      minLength: 19
+      maxLength: 29
+      pattern: ^((?:(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2}:\d{2}(?:\.\d+)?))(Z|[\+-]\d{2}:\d{2})?)$
+      example: '2024-10-30T16:39:34.123+01:00'
     Type3Error:
       description: Error details returned by the framework.
       type: object
@@ -559,164 +684,41 @@ components:
         status: 415
         error: Unsupported Media Type
         requestId: 3fb00d0f-416
-    ActivationId:
-      description: Identifier of the RTP activation resource.
+    RateLimitLimit:
+      description: The number of allowed requests in the current period.
+      type: integer
+      format: int32
+      minimum: 1
+      maximum: 240
+    ErrorDescription:
+      description: Error description.
       type: string
-      format: uuid
-      pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
-      minLength: 36
-      maxLength: 36
-      example: d0d654e6-97da-4848-b568-99fedccb642b
-    PageMetadata:
-      description: Metadata of a page of data.
+      pattern: ^[ -~]{0,256}$
+      minLength: 0
+      maxLength: 256
+      example: Wrong party identifier
+    Type2Error_2:
+      description: An error originating from the API Management (APIM) layer.
       type: object
       additionalProperties: false
       properties:
-        nextActivationId:
-          $ref: '#/components/schemas/NextActivationId'
-        size:
-          $ref: '#/components/schemas/PageSize'
+        statusCode:
+          $ref: '#/components/schemas/StatusCode_2'
+        message:
+          $ref: '#/components/schemas/ErrorDescription_2'
       required:
-      - size
+      - statusCode
+      - message
       example:
-        nextActivationId: bd615b4a-066d-443e-8dd2-a28a39931fef
-        size: 20
-    ActivationReq:
-      description: 'Data of a RTP activation.
-
-        '
-      type: object
-      properties:
-        payer:
-          $ref: '#/components/schemas/Payer'
-      required:
-      - payer
-      example:
-        payer:
-          fiscalCode: RSSMRA85T10A562S
-          rtpSpId: '12345678911'
-    Type1Error:
-      description: List of errors returned by the application.
-      type: object
-      additionalProperties: false
-      properties:
-        errors:
-          type: array
-          minItems: 1
-          maxItems: 32
-          items:
-            $ref: '#/components/schemas/Error'
-      required:
-      - errors
-      example:
-        errors:
-        - code: 01021000E
-          description: Wrong party identifier
-    NextActivationId:
-      description: 'Identifier for the next page. Use this UUID as `NextActivationId` header in the next request to continue pagination. Null if there are no more pages.
-
-        '
-      type: string
-      format: uuid
-      pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
-      minLength: 36
-      maxLength: 36
-      example: d0d654e6-97da-4848-b568-99fedccb642b
-    Payer:
-      description: 'Payer data.
-
-        '
-      type: object
-      additionalProperties: false
-      properties:
-        fiscalCode:
-          $ref: '#/components/schemas/FiscalCode'
-        rtpSpId:
-          $ref: '#/components/schemas/PartyId'
-      required:
-      - fiscalCode
-      - rtpSpId
-      example:
-        fiscalCode: RSSMRA85T10A562S
-        rtpSpId: '12345678911'
-    FiscalCode:
-      description: 'Fiscal code.
-
-
-        It is used as identifier of the Payer (P009) and of the Payee (E005).
-
-        '
-      type: string
-      pattern: ^(?:(?:[A-Z][AEIOUX][AEIOUX]|[B-DF-HJ-NP-TV-Z]{2}[A-Z]){2}(?:[\dLMNP-V]{2}(?:[A-EHLMPR-T](?:[04LQ][1-9MNP-V]|[15MR][\dLMNP-V]|[26NS][0-8LMNP-U])|[DHPS][37PT][0L]|[ACELMRT][37PT][01LM]|[AC-EHLMPR-T][26NS][9V])|(?:[02468LNQSU][048LQU]|[13579MPRTV][26NS])B[26NS][9V])(?:[A-MZ][1-9MNP-V][\dLMNP-V]{2}|[A-M][0L](?:[1-9MNP-V][\dLMNP-V]|[0L][1-9MNP-V]))[A-Z]|\d{11})$
-      minLength: 11
-      maxLength: 16
-      example: RSSMRA85T10A562S
-    Activations:
-      description: List of RTP activations.
-      type: array
-      minItems: 0
-      maxItems: 128
-      items:
-        $ref: '#/components/schemas/Activation'
-      example:
-      - id: d0d654e6-97da-4848-b568-99fedccb642b
-        effectiveActivationDate: '2024-10-30T16:39:34+01:00'
-        payer:
-          fiscalCode: RSSMRA85T10A562S
-          rtpSpId: '12345678911'
-    RequestId:
-      description: Identifier of the request.
-      type: string
-      format: uuid
-      pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
-      minLength: 36
-      maxLength: 36
-      example: bd615b4a-066d-443e-8dd2-a28a39931fef
-    Activation:
-      allOf:
-      - type: object
-        properties:
-          id:
-            $ref: '#/components/schemas/ActivationId'
-          effectiveActivationDate:
-            $ref: '#/components/schemas/EffectiveActivationDate'
-        required:
-        - id
-        - effectiveActivationDate
-      - $ref: '#/components/schemas/ActivationReq'
-      example:
-        id: d0d654e6-97da-4848-b568-99fedccb642b
-        effectiveActivationDate: '2024-10-30T16:39:34+01:00'
-        payer:
-          fiscalCode: RSSMRA85T10A562S
-          rtpSpId: '12345678911'
-    Version:
-      description: Version of the required API.
+        statusCode: 401
+        message: Invalid JWT.
+    Name:
+      description: The official registered name of the Payee.
       type: string
       pattern: ^[ -~]{1,64}$
       minLength: 1
       maxLength: 64
-      example: v1
-    StatusCode_2:
-      description: The HTTP status code associated with the error.
-      type: integer
-      format: int32
-      minimum: 0
-      maximum: 999
-      example: 401
-    RateLimitReset_2:
-      description: The number of seconds remaining until the rate limit window resets.
-      type: integer
-      format: int32
-      minimum: 1
-      maximum: 60
-    ErrorCode_2:
-      description: A unique, machine-readable code identifying the specific error.
-      type: string
-      pattern: ^[A-F0-9]{9}$
-      minLength: 9
-      maxLength: 9
-      example: 01000000F
+      example: Roma Capitale
     PageOfPayees:
       description: A single page from the registry results, containing a list of Payees and pagination metadata.
       type: object
@@ -740,13 +742,109 @@ components:
           totalPages: 2
           page: 1
           size: 1
-    Name:
-      description: The official registered name of the Payee.
+    PageMetadata_2:
+      description: Contains metadata for navigating the paginated registry query results.
+      type: object
+      additionalProperties: false
+      properties:
+        totalElements:
+          $ref: '#/components/schemas/TotalElements'
+        totalPages:
+          $ref: '#/components/schemas/TotalPages'
+        page:
+          $ref: '#/components/schemas/PageNumber'
+        size:
+          $ref: '#/components/schemas/PageSize_2'
+      required:
+      - totalElements
+      - totalPages
+      - page
+      - size
+      example:
+        totalElements: 198
+        totalPages: 10
+        page: 5
+        size: 20
+    RequestId_2:
+      description: A unique identifier for tracking a single request across system boundaries, essential for logging and debugging.
       type: string
-      pattern: ^[ -~]{1,64}$
+      format: uuid
+      pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+      minLength: 36
+      maxLength: 36
+      example: bd615b4a-066d-443e-8dd2-a28a39931fef
+    AccessControlAllowOrigin_2:
+      description: 'The `Access-Control-Allow-Origin` response header indicates whether the response can be shared with requesting code from the given origin.
+
+        '
+      type: string
+      pattern: ^[ -~]{1,2048}$
       minLength: 1
-      maxLength: 64
-      example: Roma Capitale
+      maxLength: 2048
+    Type1Error_2:
+      description: An error originating from the business logic of the application. Contains a list of specific errors.
+      type: object
+      additionalProperties: false
+      properties:
+        errors:
+          type: array
+          minItems: 1
+          maxItems: 32
+          items:
+            $ref: '#/components/schemas/Error_2'
+      required:
+      - errors
+      example:
+        errors:
+        - code: 01000000F
+          description: Wrong party identifier
+    PageSize_2:
+      description: The number of registry entries to include per page.
+      type: integer
+      format: int32
+      minimum: 1
+      maximum: 128
+      example: 20
+    PageNumber:
+      description: The page number to retrieve (0-indexed).
+      type: integer
+      format: int32
+      minimum: 0
+      maximum: 2147483647
+      example: 1
+    RetryAfter_2:
+      description: 'The number of seconds to wait before making a new request, typically sent with 429 (Too Many Requests) responses.
+
+        '
+      type: integer
+      format: int32
+      minimum: 1
+      maximum: 240
+    RateLimitReset_2:
+      description: The number of seconds remaining until the rate limit window resets.
+      type: integer
+      format: int32
+      minimum: 1
+      maximum: 60
+    Payees:
+      description: A list of Payee entries from the registry.
+      type: array
+      minItems: 0
+      maxItems: 128
+      items:
+        $ref: '#/components/schemas/Payee'
+      example:
+      - payeeId: 02438750586
+        name: Roma Capitale
+      - payeeId: '80015010723'
+        name: Comune di Bari
+    Version_2:
+      description: The version of the API being requested.
+      type: string
+      pattern: ^v[1-9]\d{0,63}$
+      minLength: 1
+      maxLength: 65
+      example: v1
     Error_2:
       description: A single, detailed error object.
       type: object
@@ -762,22 +860,6 @@ components:
       example:
         code: 01000000F
         description: Wrong party identifier
-    RetryAfter_2:
-      description: 'The number of seconds to wait before making a new request, typically sent with 429 (Too Many Requests) responses.
-
-        '
-      type: integer
-      format: int32
-      minimum: 1
-      maximum: 240
-    Errors_2:
-      description: 'A generic error response container. The structure of the error can vary depending on where it originates (e.g., Application, API Gateway, or underlying Framework).
-
-        '
-      oneOf:
-      - $ref: '#/components/schemas/Type1Error_2'
-      - $ref: '#/components/schemas/Type2Error_2'
-      - $ref: '#/components/schemas/Type3Error_2'
     PayeeId:
       description: The unique identifier of the Payee in the registry. This is the Italian 11-digit VAT number (*Partita IVA*) or 16-digit fiscal code (*Codice Fiscale*).
       type: string
@@ -785,41 +867,13 @@ components:
       minLength: 11
       maxLength: 16
       example: 02438750586
-    RateLimitLimit_2:
-      description: The maximum number of requests that the consumer is permitted to make in a time window.
+    TotalElements:
+      description: The total number of elements available across all pages in the registry.
       type: integer
-      format: int32
-      minimum: 1
-      maximum: 240
-    PageSize_2:
-      description: The number of registry entries to include per page.
-      type: integer
-      format: int32
-      minimum: 1
-      maximum: 128
+      format: int64
+      minimum: 0
+      maximum: 9223372036854775807
       example: 20
-    Version_2:
-      description: The version of the API being requested.
-      type: string
-      pattern: ^v[1-9]\d{0,63}$
-      minLength: 1
-      maxLength: 65
-      example: v1
-    Type2Error_2:
-      description: An error originating from the API Management (APIM) layer.
-      type: object
-      additionalProperties: false
-      properties:
-        statusCode:
-          $ref: '#/components/schemas/StatusCode_2'
-        message:
-          $ref: '#/components/schemas/ErrorDescription_2'
-      required:
-      - statusCode
-      - message
-      example:
-        statusCode: 401
-        message: Invalid JWT.
     Payee:
       description: Represents a single Payee entry in the registry.
       type: object
@@ -835,40 +889,35 @@ components:
       example:
         payeeId: 02438750586
         name: Roma Capitale
-    Payees:
-      description: A list of Payee entries from the registry.
-      type: array
-      minItems: 0
-      maxItems: 128
-      items:
-        $ref: '#/components/schemas/Payee'
-      example:
-      - payeeId: 02438750586
-        name: Roma Capitale
-      - payeeId: '80015010723'
-        name: Comune di Bari
-    ErrorDescription_2:
-      description: A human-readable description of the error.
-      type: string
-      pattern: ^[ -~]{0,256}$
-      minLength: 0
-      maxLength: 256
-      example: Wrong party identifier
-    AccessControlAllowOrigin_2:
-      description: 'The `Access-Control-Allow-Origin` response header indicates whether the response can be shared with requesting code from the given origin.
+    Errors_2:
+      description: 'A generic error response container. The structure of the error can vary depending on where it originates (e.g., Application, API Gateway, or underlying Framework).
 
         '
-      type: string
-      pattern: ^[ -~]{1,2048}$
-      minLength: 1
-      maxLength: 2048
-    PageNumber:
-      description: The page number to retrieve (0-indexed).
+      oneOf:
+      - $ref: '#/components/schemas/Type1Error_2'
+      - $ref: '#/components/schemas/Type2Error_2'
+      - $ref: '#/components/schemas/Type3Error_2'
+    StatusCode_2:
+      description: The HTTP status code associated with the error.
       type: integer
       format: int32
       minimum: 0
-      maximum: 2147483647
-      example: 1
+      maximum: 999
+      example: 401
+    ErrorCode_2:
+      description: A unique, machine-readable code identifying the specific error.
+      type: string
+      pattern: ^[A-F0-9]{9}$
+      minLength: 9
+      maxLength: 9
+      example: 01000000F
+    TotalPages:
+      description: The total number of pages available based on the current page size.
+      type: integer
+      format: int64
+      minimum: 0
+      maximum: 9223372036854775807
+      example: 20
     Type3Error_2:
       description: A generic error originating from the underlying web framework.
       type: object
@@ -909,68 +958,121 @@ components:
         status: 415
         error: Unsupported Media Type
         requestId: 3fb00d0f-416
-    PageMetadata_2:
-      description: Contains metadata for navigating the paginated registry query results.
-      type: object
-      additionalProperties: false
-      properties:
-        totalElements:
-          $ref: '#/components/schemas/TotalElements'
-        totalPages:
-          $ref: '#/components/schemas/TotalPages'
-        page:
-          $ref: '#/components/schemas/PageNumber'
-        size:
-          $ref: '#/components/schemas/PageSize_2'
-      required:
-      - totalElements
-      - totalPages
-      - page
-      - size
-      example:
-        totalElements: 198
-        totalPages: 10
-        page: 5
-        size: 20
-    TotalElements:
-      description: The total number of elements available across all pages in the registry.
+    RateLimitLimit_2:
+      description: The maximum number of requests that the consumer is permitted to make in a time window.
       type: integer
-      format: int64
-      minimum: 0
-      maximum: 9223372036854775807
-      example: 20
-    Type1Error_2:
-      description: An error originating from the business logic of the application. Contains a list of specific errors.
-      type: object
-      additionalProperties: false
-      properties:
-        errors:
-          type: array
-          minItems: 1
-          maxItems: 32
-          items:
-            $ref: '#/components/schemas/Error_2'
-      required:
-      - errors
-      example:
-        errors:
-        - code: 01000000F
-          description: Wrong party identifier
-    RequestId_2:
-      description: A unique identifier for tracking a single request across system boundaries, essential for logging and debugging.
+      format: int32
+      minimum: 1
+      maximum: 240
+    ErrorDescription_2:
+      description: A human-readable description of the error.
       type: string
-      format: uuid
-      pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
-      minLength: 36
-      maxLength: 36
-      example: bd615b4a-066d-443e-8dd2-a28a39931fef
-    TotalPages:
-      description: The total number of pages available based on the current page size.
+      pattern: ^[ -~]{0,256}$
+      minLength: 0
+      maxLength: 256
+      example: Wrong party identifier
+    ProviderId:
+      description: A unique identifier assigned to the Service Provider.
+      type: string
+      pattern: ^[ -~]{1,64}$
+      minLength: 1
+      maxLength: 64
+      example: PROVIDER123
+    SPs:
+      description: A list of Service Providers (SPs).
+      type: array
+      minItems: 0
+      maxItems: 128
+      items:
+        $ref: '#/components/schemas/SP'
+      example:
+      - id: SP001
+        name: Example Service Provider 1
+        tsp_id: TSP001
+        role: ADMIN
+      - id: SP002
+        name: Example Service Provider 2
+        tsp_id: TSP002
+        role: ADMIN
+    Name_2:
+      description: Name of the service provider.
+      type: string
+      pattern: ^[ -~]{1,64}$
+      minLength: 1
+      maxLength: 64
+      example: Example Provider
+    TSPs:
+      description: A list of Technical Service Providers (TSPs).
+      type: array
+      minItems: 0
+      maxItems: 128
+      items:
+        $ref: '#/components/schemas/TSP'
+      example:
+      - id: TSP001
+        name: Example TSP 1
+        service_endpoint: https://api.example.org/v1/service1
+        certificate_serial_number: A1B2C3D4E5F67890
+        mtls_enabled: true
+      - id: TSP002
+        name: Example TSP 2
+        service_endpoint: https://api.example.org/v1/service2
+        certificate_serial_number: F6E5D4C3B2A10987
+        mtls_enabled: true
+    SP:
+      description: Represents a Service Provider, a business entity that offers services to end-users by leveraging a Technical Service Provider.
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          $ref: '#/components/schemas/ProviderId'
+        name:
+          description: The ID of the Technical Service Provider that this SP is associated with.
+          $ref: '#/components/schemas/Name_2'
+        tsp_id:
+          $ref: '#/components/schemas/ProviderId'
+        role:
+          $ref: '#/components/schemas/Role'
+      required:
+      - id
+      - name
+      - tsp_id
+      example:
+        id: SP001
+        name: Example Service Provider
+        tsp_id: TSP001
+        role: ADMIN
+    AccessControlAllowOrigin_3:
+      description: 'The `Access-Control-Allow-Origin` response header indicates whether the response can be shared with requesting code from the given origin.
+
+        '
+      type: string
+      pattern: ^[ -~]{1,2048}$
+      minLength: 1
+      maxLength: 2048
+    ServiceEndpoint:
+      description: The base URL where the provider's API services are exposed.
+      type: string
+      format: uri
+      pattern: ^https://[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9](?:\.[a-zA-Z]{2,})+(/[a-zA-Z0-9._~:/?#[\]@!$&'()*+,;=]*)?$
+      minLength: 1
+      maxLength: 256
+      example: https://api.example.org/v1/service
+    Role:
+      description: Defines the permissions or role of the Service Provider within the platform (e.g., 'ADMIN').
+      type: string
+      pattern: ^[ -~]{1,64}$
+      minLength: 1
+      maxLength: 64
+      example: ADMIN
+    RetryAfter_3:
+      description: 'The number of seconds to wait before making a new request, typically sent with 429 (Too Many Requests) responses.
+
+        '
       type: integer
-      format: int64
-      minimum: 0
-      maximum: 9223372036854775807
-      example: 20
+      format: int32
+      minimum: 1
+      maximum: 240
     TSP:
       description: Represents a Technical Service Provider, an entity that provides the technical infrastructure and services for one or more Service Providers.
       type: object
@@ -1000,57 +1102,56 @@ components:
         service_endpoint: https://api.example.org/v1/service
         certificate_serial_number: A1B2C3D4E5F67890
         mtls_enabled: true
+    MtlsEnabled:
+      description: Mutual TLS (mTLS) is enabled for the provider. If true, a client certificate is required for communication.
+      type: boolean
+      example: true
     RateLimitReset_3:
       description: The number of seconds remaining until the rate limit window resets.
       type: integer
       format: int32
       minimum: 1
       maximum: 60
-    ServiceEndpoint:
-      description: The base URL where the provider's API services are exposed.
+    Version_3:
+      description: Version of the required API.
       type: string
-      format: uri
-      pattern: ^https://[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9](?:\.[a-zA-Z]{2,})+(/[a-zA-Z0-9._~:/?#[\]@!$&'()*+,;=]*)?$
+      pattern: ^v[1-9]\d{0,63}$
       minLength: 1
-      maxLength: 256
-      example: https://api.example.org/v1/service
-    ErrorCode_3:
-      description: Error code.
-      type: string
-      pattern: ^[A-F0-9]{9}$
-      minLength: 9
-      maxLength: 9
-      example: 01000000F
-    SP:
-      description: Represents a Service Provider, a business entity that offers services to end-users by leveraging a Technical Service Provider.
+      maxLength: 65
+      example: v1
+    ServiceProviders:
+      description: A top-level object containing lists of all Technical Service Providers (TSPs) and Service Providers (SPs).
       type: object
       additionalProperties: false
       properties:
-        id:
-          $ref: '#/components/schemas/ProviderId'
-        name:
-          description: The ID of the Technical Service Provider that this SP is associated with.
-          $ref: '#/components/schemas/Name_2'
-        tsp_id:
-          $ref: '#/components/schemas/ProviderId'
-        role:
-          $ref: '#/components/schemas/Role'
+        tsps:
+          $ref: '#/components/schemas/TSPs'
+        sps:
+          $ref: '#/components/schemas/SPs'
       required:
-      - id
-      - name
-      - tsp_id
+      - tsps
+      - sps
       example:
-        id: SP001
-        name: Example Service Provider
-        tsp_id: TSP001
-        role: ADMIN
-    Name_2:
-      description: Name of the service provider.
-      type: string
-      pattern: ^[ -~]{1,64}$
-      minLength: 1
-      maxLength: 64
-      example: Example Provider
+        tsps:
+        - id: TSP001
+          name: Example TSP 1
+          service_endpoint: https://api.example.org/v1/service1
+          certificate_serial_number: A1B2C3D4E5F67890
+          mtls_enabled: true
+        - id: TSP002
+          name: Example TSP 2
+          service_endpoint: https://api.example.org/v1/service2
+          certificate_serial_number: F6E5D4C3B2A10987
+          mtls_enabled: true
+        sps:
+        - id: SP001
+          name: Example Service Provider 1
+          tsp_id: TSP001
+          role: ADMIN
+        - id: SP002
+          name: Example Service Provider 2
+          tsp_id: TSP002
+          role: ADMIN
     Error_3:
       description: Body of an error response.
       type: object
@@ -1066,45 +1167,28 @@ components:
       - code
       - description
       - status
-    RetryAfter_3:
-      description: 'The number of seconds to wait before making a new request, typically sent with 429 (Too Many Requests) responses.
-
-        '
-      type: integer
-      format: int32
-      minimum: 1
-      maximum: 240
-    Errors_3:
-      description: 'A generic error response container. The structure of the error can vary depending on where it originates (e.g., Application, API Gateway, or underlying Framework).
-
-        '
-      oneOf:
-      - $ref: '#/components/schemas/Error_3'
-      - $ref: '#/components/schemas/ApimError'
-    RateLimitLimit_3:
-      description: The maximum number of requests that the consumer is permitted to make in a time window.
-      type: integer
-      format: int32
-      minimum: 1
-      maximum: 240
-    TSPs:
-      description: A list of Technical Service Providers (TSPs).
-      type: array
-      minItems: 0
-      maxItems: 128
-      items:
-        $ref: '#/components/schemas/TSP'
+    CertificateSerialNumber:
+      description: The serial number of the public key certificate used for mTLS authentication, in hexadecimal format.
+      type: string
+      pattern: ^[A-F0-9]{1,64}$
+      minLength: 1
+      maxLength: 64
+      example: A1B2C3D4E5F67890
+    ApimError:
+      description: An error originating from the API Management (APIM) layer.
+      type: object
+      additionalProperties: false
+      properties:
+        statusCode:
+          $ref: '#/components/schemas/StatusCode'
+        message:
+          $ref: '#/components/schemas/ErrorDescription'
+      required:
+      - statusCode
+      - message
       example:
-      - id: TSP001
-        name: Example TSP 1
-        service_endpoint: https://api.example.org/v1/service1
-        certificate_serial_number: A1B2C3D4E5F67890
-        mtls_enabled: true
-      - id: TSP002
-        name: Example TSP 2
-        service_endpoint: https://api.example.org/v1/service2
-        certificate_serial_number: F6E5D4C3B2A10987
-        mtls_enabled: true
+        statusCode: 401
+        message: Invalid JWT.
     OAuth2Config:
       description: Configuration details required to obtain an OAuth2 access token for communicating with the provider's service.
       type: object
@@ -1167,451 +1251,39 @@ components:
       required:
       - token_endpoint
       - method
-    MtlsEnabled:
-      description: Mutual TLS (mTLS) is enabled for the provider. If true, a client certificate is required for communication.
-      type: boolean
-      example: true
-    AccessControlAllowOrigin_3:
-      description: 'The `Access-Control-Allow-Origin` response header indicates whether the response can be shared with requesting code from the given origin.
-
-        '
-      type: string
-      pattern: ^[ -~]{1,2048}$
-      minLength: 1
-      maxLength: 2048
-    SPs:
-      description: A list of Service Providers (SPs).
-      type: array
-      minItems: 0
-      maxItems: 128
-      items:
-        $ref: '#/components/schemas/SP'
-      example:
-      - id: SP001
-        name: Example Service Provider 1
-        tsp_id: TSP001
-        role: ADMIN
-      - id: SP002
-        name: Example Service Provider 2
-        tsp_id: TSP002
-        role: ADMIN
-    Role:
-      description: Defines the permissions or role of the Service Provider within the platform (e.g., 'ADMIN').
-      type: string
-      pattern: ^[ -~]{1,64}$
-      minLength: 1
-      maxLength: 64
-      example: ADMIN
-    ServiceProviders:
-      description: A top-level object containing lists of all Technical Service Providers (TSPs) and Service Providers (SPs).
-      type: object
-      additionalProperties: false
-      properties:
-        tsps:
-          $ref: '#/components/schemas/TSPs'
-        sps:
-          $ref: '#/components/schemas/SPs'
-      required:
-      - tsps
-      - sps
-      example:
-        tsps:
-        - id: TSP001
-          name: Example TSP 1
-          service_endpoint: https://api.example.org/v1/service1
-          certificate_serial_number: A1B2C3D4E5F67890
-          mtls_enabled: true
-        - id: TSP002
-          name: Example TSP 2
-          service_endpoint: https://api.example.org/v1/service2
-          certificate_serial_number: F6E5D4C3B2A10987
-          mtls_enabled: true
-        sps:
-        - id: SP001
-          name: Example Service Provider 1
-          tsp_id: TSP001
-          role: ADMIN
-        - id: SP002
-          name: Example Service Provider 2
-          tsp_id: TSP002
-          role: ADMIN
-    ApimError:
-      description: An error originating from the API Management (APIM) layer.
-      type: object
-      additionalProperties: false
-      properties:
-        statusCode:
-          $ref: '#/components/schemas/StatusCode'
-        message:
-          $ref: '#/components/schemas/ErrorDescription'
-      required:
-      - statusCode
-      - message
-      example:
-        statusCode: 401
-        message: Invalid JWT.
-    ProviderId:
-      description: A unique identifier assigned to the Service Provider.
-      type: string
-      pattern: ^[ -~]{1,64}$
-      minLength: 1
-      maxLength: 64
-      example: PROVIDER123
-    CertificateSerialNumber:
-      description: The serial number of the public key certificate used for mTLS authentication, in hexadecimal format.
-      type: string
-      pattern: ^[A-F0-9]{1,64}$
-      minLength: 1
-      maxLength: 64
-      example: A1B2C3D4E5F67890
-    Version_3:
-      description: Version of the required API.
-      type: string
-      pattern: ^v[1-9]\d{0,63}$
-      minLength: 1
-      maxLength: 65
-      example: v1
-    StatusCode_3:
-      description: The HTTP status code associated with the error.
-      type: integer
-      format: int32
-      minimum: 0
-      maximum: 999
-      example: 401
-    RateLimitReset_4:
-      description: The number of seconds remaining until the rate limit window resets.
-      type: integer
-      format: int32
-      minimum: 1
-      maximum: 60
-    ErrorCode_4:
-      description: A unique, machine-readable code identifying the specific error.
-      type: string
-      pattern: ^[A-F0-9]{9}$
-      minLength: 9
-      maxLength: 9
-      example: 01000000F
-    PageOfPayees_2:
-      description: A single page from the registry results, containing a list of Payees and pagination metadata.
-      type: object
-      additionalProperties: false
-      properties:
-        payees:
-          $ref: '#/components/schemas/Payees'
-        page:
-          $ref: '#/components/schemas/PageMetadata_3'
-      required:
-      - payees
-      - page
-      example:
-        payees:
-        - payeeId: 02438750586
-          name: Roma Capitale
-        - payeeId: '80015010723'
-          name: Comune di Bari
-        page:
-          totalElements: 2
-          totalPages: 2
-          page: 1
-          size: 1
-    Error_4:
-      description: A single, detailed error object.
-      type: object
-      additionalProperties: false
-      properties:
-        code:
-          $ref: '#/components/schemas/ErrorCode_4'
-        description:
-          $ref: '#/components/schemas/ErrorDescription_3'
-      required:
-      - code
-      - description
-      example:
-        code: 01000000F
-        description: Wrong party identifier
-    RetryAfter_4:
-      description: 'The number of seconds to wait before making a new request, typically sent with 429 (Too Many Requests) responses.
-
-        '
-      type: integer
-      format: int32
-      minimum: 1
-      maximum: 240
-    Errors_4:
+    Errors_3:
       description: 'A generic error response container. The structure of the error can vary depending on where it originates (e.g., Application, API Gateway, or underlying Framework).
 
         '
       oneOf:
-      - $ref: '#/components/schemas/Type1Error_3'
-      - $ref: '#/components/schemas/Type2Error_3'
-      - $ref: '#/components/schemas/Type3Error_3'
-    RateLimitLimit_4:
-      description: The maximum number of requests that the consumer is permitted to make in a time window.
-      type: integer
-      format: int32
-      minimum: 1
-      maximum: 240
-    PageSize_3:
-      description: The number of registry entries to include per page.
-      type: integer
-      format: int32
-      minimum: 1
-      maximum: 128
-      example: 20
-    Version_4:
-      description: The version of the API being requested.
-      type: string
-      pattern: ^v[1-9]\d{0,63}$
-      minLength: 1
-      maxLength: 65
-      example: v1
-    Type2Error_3:
-      description: An error originating from the API Management (APIM) layer.
-      type: object
-      additionalProperties: false
-      properties:
-        statusCode:
-          $ref: '#/components/schemas/StatusCode_3'
-        message:
-          $ref: '#/components/schemas/ErrorDescription_3'
-      required:
-      - statusCode
-      - message
-      example:
-        statusCode: 401
-        message: Invalid JWT.
-    ErrorDescription_3:
-      description: A human-readable description of the error.
-      type: string
-      pattern: ^[ -~]{0,256}$
-      minLength: 0
-      maxLength: 256
-      example: Wrong party identifier
-    AccessControlAllowOrigin_4:
-      description: 'The `Access-Control-Allow-Origin` response header indicates whether the response can be shared with requesting code from the given origin.
-
-        '
-      type: string
-      pattern: ^[ -~]{1,2048}$
-      minLength: 1
-      maxLength: 2048
-    Type3Error_3:
-      description: A generic error originating from the underlying web framework.
-      type: object
-      additionalProperties: false
-      properties:
-        timestamp:
-          description: Timestamp the error occurred.
-          type: string
-          format: date-time
-          minLength: 19
-          maxLength: 29
-          pattern: ^((?:(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2}:\d{2}(?:\.\d+)?))(Z|[\+-]\d{2}:\d{2})?)$
-        path:
-          description: API path where the error occurred.
-          type: string
-          pattern: ^[ -~]{1,1024}$
-          minLength: 1
-          maxLength: 1024
-        status:
-          $ref: '#/components/schemas/StatusCode_3'
-        error:
-          $ref: '#/components/schemas/ErrorDescription_3'
-        requestId:
-          description: The ID of the request that caused the error.
-          type: string
-          pattern: ^[ -~]{1,128}$
-          minLength: 1
-          maxLength: 128
-      required:
-      - timestamp
-      - path
-      - status
-      - error
-      - requestId
-      example:
-        timestamp: '2024-12-31T09:54:01.763+00:00'
-        path: /payees
-        status: 415
-        error: Unsupported Media Type
-        requestId: 3fb00d0f-416
-    PageMetadata_3:
-      description: Contains metadata for navigating the paginated registry query results.
-      type: object
-      additionalProperties: false
-      properties:
-        totalElements:
-          $ref: '#/components/schemas/TotalElements'
-        totalPages:
-          $ref: '#/components/schemas/TotalPages'
-        page:
-          $ref: '#/components/schemas/PageNumber'
-        size:
-          $ref: '#/components/schemas/PageSize_3'
-      required:
-      - totalElements
-      - totalPages
-      - page
-      - size
-      example:
-        totalElements: 198
-        totalPages: 10
-        page: 5
-        size: 20
-    Type1Error_3:
-      description: An error originating from the business logic of the application. Contains a list of specific errors.
-      type: object
-      additionalProperties: false
-      properties:
-        errors:
-          type: array
-          minItems: 1
-          maxItems: 32
-          items:
-            $ref: '#/components/schemas/Error_4'
-      required:
-      - errors
-      example:
-        errors:
-        - code: 01000000F
-          description: Wrong party identifier
-    RequestId_3:
-      description: A unique identifier for tracking a single request across system boundaries, essential for logging and debugging.
-      type: string
-      format: uuid
-      pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
-      minLength: 36
-      maxLength: 36
-      example: bd615b4a-066d-443e-8dd2-a28a39931fef
-    TSP_2:
-      description: Represents a Technical Service Provider, an entity that provides the technical infrastructure and services for one or more Service Providers.
-      type: object
-      additionalProperties: false
-      properties:
-        id:
-          $ref: '#/components/schemas/ProviderId'
-        name:
-          $ref: '#/components/schemas/Name_3'
-        service_endpoint:
-          $ref: '#/components/schemas/ServiceEndpoint'
-        certificate_serial_number:
-          $ref: '#/components/schemas/CertificateSerialNumber'
-        mtls_enabled:
-          $ref: '#/components/schemas/MtlsEnabled'
-        oauth2:
-          $ref: '#/components/schemas/OAuth2Config'
-      required:
-      - id
-      - name
-      - service_endpoint
-      - certificate_serial_number
-      - mtls_enabled
-      example:
-        id: TSP001
-        name: Example TSP
-        service_endpoint: https://api.example.org/v1/service
-        certificate_serial_number: A1B2C3D4E5F67890
-        mtls_enabled: true
-    RateLimitReset_5:
-      description: The number of seconds remaining until the rate limit window resets.
-      type: integer
-      format: int32
-      minimum: 1
-      maximum: 60
-    ErrorCode_5:
+      - $ref: '#/components/schemas/Error_3'
+      - $ref: '#/components/schemas/ApimError'
+    ErrorCode_3:
       description: Error code.
       type: string
       pattern: ^[A-F0-9]{9}$
       minLength: 9
       maxLength: 9
       example: 01000000F
-    SP_2:
-      description: Represents a Service Provider, a business entity that offers services to end-users by leveraging a Technical Service Provider.
-      type: object
-      additionalProperties: false
-      properties:
-        id:
-          $ref: '#/components/schemas/ProviderId'
-        name:
-          description: The ID of the Technical Service Provider that this SP is associated with.
-          $ref: '#/components/schemas/Name_3'
-        tsp_id:
-          $ref: '#/components/schemas/ProviderId'
-        role:
-          $ref: '#/components/schemas/Role'
-      required:
-      - id
-      - name
-      - tsp_id
-      example:
-        id: SP001
-        name: Example Service Provider
-        tsp_id: TSP001
-        role: ADMIN
-    Name_3:
-      description: Name of the service provider.
-      type: string
-      pattern: ^[ -~]{1,64}$
-      minLength: 1
-      maxLength: 64
-      example: Example Provider
-    Error_5:
-      description: Body of an error response.
-      type: object
-      additionalProperties: false
-      properties:
-        code:
-          $ref: '#/components/schemas/ErrorCode_5'
-        description:
-          $ref: '#/components/schemas/ErrorDescription'
-        status:
-          $ref: '#/components/schemas/StatusCode'
-      required:
-      - code
-      - description
-      - status
-    RetryAfter_5:
-      description: 'The number of seconds to wait before making a new request, typically sent with 429 (Too Many Requests) responses.
-
-        '
-      type: integer
-      format: int32
-      minimum: 1
-      maximum: 240
-    Errors_5:
-      description: 'A generic error response container. The structure of the error can vary depending on where it originates (e.g., Application, API Gateway, or underlying Framework).
-
-        '
-      oneOf:
-      - $ref: '#/components/schemas/Error_5'
-      - $ref: '#/components/schemas/ApimError'
-    RateLimitLimit_5:
+    RateLimitLimit_3:
       description: The maximum number of requests that the consumer is permitted to make in a time window.
       type: integer
       format: int32
       minimum: 1
       maximum: 240
-    AccessControlAllowOrigin_5:
-      description: 'The `Access-Control-Allow-Origin` response header indicates whether the response can be shared with requesting code from the given origin.
+  headers:
+    RetryAfter:
+      description: 'The number of seconds to wait before allowing a follow-up request.
 
         '
-      type: string
-      pattern: ^[ -~]{1,2048}$
-      minLength: 1
-      maxLength: 2048
-    Version_5:
-      description: Version of the required API.
-      type: string
-      pattern: ^v[1-9]\d{0,63}$
-      minLength: 1
-      maxLength: 65
-      example: v1
-  headers:
-    RateLimitLimit:
-      description: The number of allowed requests in the current period.
       required: false
       schema:
-        $ref: '#/components/schemas/RateLimitLimit'
+        $ref: '#/components/schemas/RetryAfter'
+    RateLimitReset:
+      description: The number of seconds left in the current period.
+      required: false
+      schema:
+        $ref: '#/components/schemas/RateLimitReset'
     AccessControlAllowOrigin:
       description: 'Indicates whether the response can be shared with requesting code
 
@@ -1621,19 +1293,26 @@ components:
       required: false
       schema:
         $ref: '#/components/schemas/AccessControlAllowOrigin'
-    RateLimitReset:
-      description: The number of seconds left in the current period.
+    RateLimitLimit:
+      description: The number of allowed requests in the current period.
       required: false
       schema:
-        $ref: '#/components/schemas/RateLimitReset'
-    RetryAfter:
-      description: 'The number of seconds to wait before allowing a follow-up request.
-
-        '
-      required: false
-      schema:
-        $ref: '#/components/schemas/RetryAfter'
+        $ref: '#/components/schemas/RateLimitLimit'
   parameters:
+    ActivationId:
+      name: activationId
+      in: path
+      description: Identifier of the RTP activation resource.
+      required: true
+      schema:
+        $ref: '#/components/schemas/ActivationId'
+    PayerIdPath:
+      name: payerId
+      in: path
+      description: Identifier of the Payer.
+      required: true
+      schema:
+        $ref: '#/components/schemas/FiscalCode'
     RequestId:
       name: RequestId
       in: header
@@ -1641,6 +1320,20 @@ components:
       required: true
       schema:
         $ref: '#/components/schemas/RequestId'
+    PayerId:
+      name: PayerId
+      in: header
+      description: Identifier of the Payer.
+      required: true
+      schema:
+        $ref: '#/components/schemas/FiscalCode'
+    Version:
+      name: Version
+      in: header
+      description: Version of the required API.
+      required: true
+      schema:
+        $ref: '#/components/schemas/Version'
     NextActivationId:
       name: NextActivationId
       in: header
@@ -1657,55 +1350,6 @@ components:
       required: true
       schema:
         $ref: '#/components/schemas/PageSize'
-    Version:
-      name: Version
-      in: header
-      description: Version of the required API.
-      required: true
-      schema:
-        $ref: '#/components/schemas/Version'
-    PayerIdPath:
-      name: payerId
-      in: path
-      description: Identifier of the Payer.
-      required: true
-      schema:
-        $ref: '#/components/schemas/FiscalCode'
-    PayerId:
-      name: PayerId
-      in: header
-      description: Identifier of the Payer.
-      required: true
-      schema:
-        $ref: '#/components/schemas/FiscalCode'
-    ActivationId:
-      name: activationId
-      in: path
-      description: Identifier of the RTP activation resource.
-      required: true
-      schema:
-        $ref: '#/components/schemas/ActivationId'
-    RequestId_2:
-      name: RequestId
-      in: header
-      description: Unique identifier for the API request, used for tracing and correlation.
-      required: true
-      schema:
-        $ref: '#/components/schemas/RequestId_2'
-    PageSize_2:
-      name: size
-      in: query
-      description: The number of registry entries to return per page.
-      required: true
-      schema:
-        $ref: '#/components/schemas/PageSize_2'
-    Version_2:
-      name: Version
-      in: header
-      description: Specifies the version of the API the client wishes to use.
-      required: true
-      schema:
-        $ref: '#/components/schemas/Version_2'
     PageNumber:
       name: page
       in: query
@@ -1713,6 +1357,27 @@ components:
       required: true
       schema:
         $ref: '#/components/schemas/PageNumber'
+    RequestId_2:
+      name: RequestId
+      in: header
+      description: Unique identifier for the API request, used for tracing and correlation.
+      required: true
+      schema:
+        $ref: '#/components/schemas/RequestId_2'
+    Version_2:
+      name: Version
+      in: header
+      description: Specifies the version of the API the client wishes to use.
+      required: true
+      schema:
+        $ref: '#/components/schemas/Version_2'
+    PageSize_2:
+      name: size
+      in: query
+      description: The number of registry entries to return per page.
+      required: true
+      schema:
+        $ref: '#/components/schemas/PageSize_2'
     RequestId_3:
       name: RequestId
       in: header
@@ -1727,128 +1392,7 @@ components:
       required: true
       schema:
         $ref: '#/components/schemas/Version_3'
-    RequestId_4:
-      name: RequestId
-      in: header
-      description: Unique identifier for the API request, used for tracing and correlation.
-      required: true
-      schema:
-        $ref: '#/components/schemas/RequestId_3'
-    PageSize_3:
-      name: size
-      in: query
-      description: The number of registry entries to return per page.
-      required: true
-      schema:
-        $ref: '#/components/schemas/PageSize_3'
-    Version_4:
-      name: Version
-      in: header
-      description: Specifies the version of the API the client wishes to use.
-      required: true
-      schema:
-        $ref: '#/components/schemas/Version_4'
-    RequestId_5:
-      name: RequestId
-      in: header
-      description: Unique identifier for the API request, used for tracing and correlation. Must be a valid UUID.
-      required: true
-      schema:
-        $ref: '#/components/schemas/RequestId'
-    Version_5:
-      name: Version
-      in: header
-      description: Specifies the version of the API the client wishes to use.
-      required: true
-      schema:
-        $ref: '#/components/schemas/Version_5'
   responses:
-    BadRequestError:
-      description: Bad request. The request was malformed or contained invalid parameters.
-      headers:
-        Access-Control-Allow-Origin:
-          $ref: '#/components/headers/AccessControlAllowOrigin'
-        RateLimit-Limit:
-          $ref: '#/components/headers/RateLimitLimit'
-        RateLimit-Reset:
-          $ref: '#/components/headers/RateLimitReset'
-        Retry-After:
-          $ref: '#/components/headers/RetryAfter'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Errors'
-        text/*:
-          schema:
-            type: string
-            pattern: ^[ -~]{0,65535}$
-            maxLength: 65535
-    PageOfActivations:
-      description: Response to the request to get RTP activations.
-      headers:
-        Access-Control-Allow-Origin:
-          $ref: '#/components/headers/AccessControlAllowOrigin'
-        RateLimit-Limit:
-          $ref: '#/components/headers/RateLimitLimit'
-        RateLimit-Reset:
-          $ref: '#/components/headers/RateLimitReset'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/PageOfActivations'
-    PayerStatus:
-      description: Response with the activation status of a Payer.
-      headers:
-        Access-Control-Allow-Origin:
-          $ref: '#/components/headers/AccessControlAllowOrigin'
-        RateLimit-Limit:
-          $ref: '#/components/headers/RateLimitLimit'
-        RateLimit-Reset:
-          $ref: '#/components/headers/RateLimitReset'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/PayerStatus'
-    TooManyRequestsError:
-      description: Too many requests. The client has exceeded the rate limit or quota.
-      headers:
-        Access-Control-Allow-Origin:
-          $ref: '#/components/headers/AccessControlAllowOrigin'
-        RateLimit-Limit:
-          $ref: '#/components/headers/RateLimitLimit'
-        RateLimit-Reset:
-          $ref: '#/components/headers/RateLimitReset'
-        Retry-After:
-          $ref: '#/components/headers/RetryAfter'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Errors'
-        text/*:
-          schema:
-            type: string
-            pattern: ^[ -~]{0,65535}$
-            maxLength: 65535
-    ForbiddenError:
-      description: Forbidden. The caller has insufficient permissions or the provided identity does not match the token subject.
-      headers:
-        Access-Control-Allow-Origin:
-          $ref: '#/components/headers/AccessControlAllowOrigin'
-        RateLimit-Limit:
-          $ref: '#/components/headers/RateLimitLimit'
-        RateLimit-Reset:
-          $ref: '#/components/headers/RateLimitReset'
-        Retry-After:
-          $ref: '#/components/headers/RetryAfter'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Errors'
-        text/*:
-          schema:
-            type: string
-            pattern: ^[ -~]{0,65535}$
-            maxLength: 65535
     Error:
       description: Response returned when an unexpected error occurred.
       headers:
@@ -1869,39 +1413,6 @@ components:
             type: string
             pattern: ^[ -~]{0,65535}$
             maxLength: 65535
-    UnauthorizedError:
-      description: Unauthorized. Access token is missing or invalid.
-      headers:
-        Access-Control-Allow-Origin:
-          $ref: '#/components/headers/AccessControlAllowOrigin'
-        RateLimit-Limit:
-          $ref: '#/components/headers/RateLimitLimit'
-        RateLimit-Reset:
-          $ref: '#/components/headers/RateLimitReset'
-        Retry-After:
-          $ref: '#/components/headers/RetryAfter'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Errors'
-        text/*:
-          schema:
-            type: string
-            pattern: ^[ -~]{0,65535}$
-            maxLength: 65535
-    Activation:
-      description: Response returned when RTP activation data is requested.
-      headers:
-        Access-Control-Allow-Origin:
-          $ref: '#/components/headers/AccessControlAllowOrigin'
-        RateLimit-Limit:
-          $ref: '#/components/headers/RateLimitLimit'
-        RateLimit-Reset:
-          $ref: '#/components/headers/RateLimitReset'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Activation'
     InternalServerError:
       description: Internal server error. An unexpected error occurred on the server side.
       headers:
@@ -1942,8 +1453,127 @@ components:
             type: string
             pattern: ^[ -~]{0,65535}$
             maxLength: 65535
-    BadRequestError_2:
-      description: Bad request. The request was malformed or contained invalid parameters (e.g. invalid pagination values).
+    TooManyRequestsError:
+      description: Too many requests. The client has exceeded the rate limit or quota.
+      headers:
+        Access-Control-Allow-Origin:
+          $ref: '#/components/headers/AccessControlAllowOrigin'
+        RateLimit-Limit:
+          $ref: '#/components/headers/RateLimitLimit'
+        RateLimit-Reset:
+          $ref: '#/components/headers/RateLimitReset'
+        Retry-After:
+          $ref: '#/components/headers/RetryAfter'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+        text/*:
+          schema:
+            type: string
+            pattern: ^[ -~]{0,65535}$
+            maxLength: 65535
+    ForbiddenError:
+      description: Forbidden. The caller has insufficient permissions or the provided identity does not match the token subject.
+      headers:
+        Access-Control-Allow-Origin:
+          $ref: '#/components/headers/AccessControlAllowOrigin'
+        RateLimit-Limit:
+          $ref: '#/components/headers/RateLimitLimit'
+        RateLimit-Reset:
+          $ref: '#/components/headers/RateLimitReset'
+        Retry-After:
+          $ref: '#/components/headers/RetryAfter'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+        text/*:
+          schema:
+            type: string
+            pattern: ^[ -~]{0,65535}$
+            maxLength: 65535
+    BadRequestError:
+      description: Bad request. The request was malformed or contained invalid parameters.
+      headers:
+        Access-Control-Allow-Origin:
+          $ref: '#/components/headers/AccessControlAllowOrigin'
+        RateLimit-Limit:
+          $ref: '#/components/headers/RateLimitLimit'
+        RateLimit-Reset:
+          $ref: '#/components/headers/RateLimitReset'
+        Retry-After:
+          $ref: '#/components/headers/RetryAfter'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+        text/*:
+          schema:
+            type: string
+            pattern: ^[ -~]{0,65535}$
+            maxLength: 65535
+    PageOfActivations:
+      description: Response to the request to get RTP activations.
+      headers:
+        Access-Control-Allow-Origin:
+          $ref: '#/components/headers/AccessControlAllowOrigin'
+        RateLimit-Limit:
+          $ref: '#/components/headers/RateLimitLimit'
+        RateLimit-Reset:
+          $ref: '#/components/headers/RateLimitReset'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PageOfActivations'
+    Activation:
+      description: Response returned when RTP activation data is requested.
+      headers:
+        Access-Control-Allow-Origin:
+          $ref: '#/components/headers/AccessControlAllowOrigin'
+        RateLimit-Limit:
+          $ref: '#/components/headers/RateLimitLimit'
+        RateLimit-Reset:
+          $ref: '#/components/headers/RateLimitReset'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Activation'
+    PayerStatus:
+      description: Response with the activation status of a Payer.
+      headers:
+        Access-Control-Allow-Origin:
+          $ref: '#/components/headers/AccessControlAllowOrigin'
+        RateLimit-Limit:
+          $ref: '#/components/headers/RateLimitLimit'
+        RateLimit-Reset:
+          $ref: '#/components/headers/RateLimitReset'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PayerStatus'
+    UnauthorizedError:
+      description: Unauthorized. Access token is missing or invalid.
+      headers:
+        Access-Control-Allow-Origin:
+          $ref: '#/components/headers/AccessControlAllowOrigin'
+        RateLimit-Limit:
+          $ref: '#/components/headers/RateLimitLimit'
+        RateLimit-Reset:
+          $ref: '#/components/headers/RateLimitReset'
+        Retry-After:
+          $ref: '#/components/headers/RetryAfter'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+        text/*:
+          schema:
+            type: string
+            pattern: ^[ -~]{0,65535}$
+            maxLength: 65535
+    Error_2:
+      description: A generic error response returned by the API.
       headers:
         Access-Control-Allow-Origin:
           $ref: '#/components/headers/AccessControlAllowOrigin'
@@ -1995,8 +1625,8 @@ components:
             type: string
             pattern: ^[ -~]{0,65535}$
             maxLength: 65535
-    Error_2:
-      description: A generic error response returned by the API.
+    BadRequestError_2:
+      description: Bad request. The request was malformed or contained invalid parameters (e.g. invalid pagination values).
       headers:
         Access-Control-Allow-Origin:
           $ref: '#/components/headers/AccessControlAllowOrigin'
@@ -2035,105 +1665,8 @@ components:
             type: string
             pattern: ^[ -~]{0,65535}$
             maxLength: 65535
-    BadRequestError_3:
-      description: Bad request. The request was malformed or contained invalid parameters, such as a poorly formatted RequestId header.
-      headers:
-        Access-Control-Allow-Origin:
-          $ref: '#/components/headers/AccessControlAllowOrigin'
-        RateLimit-Limit:
-          $ref: '#/components/headers/RateLimitLimit'
-        RateLimit-Reset:
-          $ref: '#/components/headers/RateLimitReset'
-        Retry-After:
-          $ref: '#/components/headers/RetryAfter'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Errors_3'
-        text/*:
-          schema:
-            type: string
-            pattern: ^[ -~]{0,65535}$
-            minLength: 0
-            maxLength: 65535
-    ServiceProvidersResponse:
-      description: A successful response containing the full list of TSPs and SPs.
-      headers:
-        Access-Control-Allow-Origin:
-          $ref: '#/components/headers/AccessControlAllowOrigin'
-        RateLimit-Limit:
-          $ref: '#/components/headers/RateLimitLimit'
-        RateLimit-Reset:
-          $ref: '#/components/headers/RateLimitReset'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ServiceProviders'
-    TooManyRequestsError_2:
-      description: Too many requests. The client has exceeded the rate limit or quota.
-      headers:
-        Access-Control-Allow-Origin:
-          $ref: '#/components/headers/AccessControlAllowOrigin'
-        RateLimit-Limit:
-          $ref: '#/components/headers/RateLimitLimit'
-        RateLimit-Reset:
-          $ref: '#/components/headers/RateLimitReset'
-        Retry-After:
-          $ref: '#/components/headers/RetryAfter'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Errors_3'
-        text/*:
-          schema:
-            type: string
-            pattern: ^[ -~]{0,65535}$
-            minLength: 0
-            maxLength: 65535
-    ForbiddenError_3:
-      description: Forbidden. The client is authenticated but does not have the required permissions to access this resource.
-      headers:
-        Access-Control-Allow-Origin:
-          $ref: '#/components/headers/AccessControlAllowOrigin'
-        RateLimit-Limit:
-          $ref: '#/components/headers/RateLimitLimit'
-        RateLimit-Reset:
-          $ref: '#/components/headers/RateLimitReset'
-        Retry-After:
-          $ref: '#/components/headers/RetryAfter'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Errors_3'
-        text/*:
-          schema:
-            type: string
-            pattern: ^[ -~]{0,65535}$
-            minLength: 0
-            maxLength: 65535
     Error_3:
       description: A generic error response body used for all client and server errors.
-      headers:
-        Access-Control-Allow-Origin:
-          $ref: '#/components/headers/AccessControlAllowOrigin'
-        RateLimit-Limit:
-          $ref: '#/components/headers/RateLimitLimit'
-        RateLimit-Reset:
-          $ref: '#/components/headers/RateLimitReset'
-        Retry-After:
-          $ref: '#/components/headers/RetryAfter'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Errors_3'
-        text/*:
-          schema:
-            type: string
-            pattern: ^[ -~]{0,65535}$
-            minLength: 0
-            maxLength: 65535
-    UnauthorizedError_3:
-      description: Unauthorized. The access token is missing, expired, or invalid.
       headers:
         Access-Control-Allow-Origin:
           $ref: '#/components/headers/AccessControlAllowOrigin'
@@ -2174,108 +1707,7 @@ components:
             pattern: ^[ -~]{0,65535}$
             minLength: 0
             maxLength: 65535
-    BadRequestError_4:
-      description: Bad request. The request was malformed or contained invalid parameters (e.g. invalid pagination values).
-      headers:
-        Access-Control-Allow-Origin:
-          $ref: '#/components/headers/AccessControlAllowOrigin'
-        RateLimit-Limit:
-          $ref: '#/components/headers/RateLimitLimit'
-        RateLimit-Reset:
-          $ref: '#/components/headers/RateLimitReset'
-        Retry-After:
-          $ref: '#/components/headers/RetryAfter'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Errors_4'
-        text/*:
-          schema:
-            type: string
-            pattern: ^[ -~]{0,65535}$
-            maxLength: 65535
-    ForbiddenError_4:
-      description: Forbidden. The client is authenticated but does not have the required permissions to access this resource.
-      headers:
-        Access-Control-Allow-Origin:
-          $ref: '#/components/headers/AccessControlAllowOrigin'
-        RateLimit-Limit:
-          $ref: '#/components/headers/RateLimitLimit'
-        RateLimit-Reset:
-          $ref: '#/components/headers/RateLimitReset'
-        Retry-After:
-          $ref: '#/components/headers/RetryAfter'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Errors_4'
-        text/*:
-          schema:
-            type: string
-            pattern: ^[ -~]{0,65535}$
-            maxLength: 65535
-    Error_4:
-      description: A generic error response returned by the API.
-      headers:
-        Access-Control-Allow-Origin:
-          $ref: '#/components/headers/AccessControlAllowOrigin'
-        RateLimit-Limit:
-          $ref: '#/components/headers/RateLimitLimit'
-        RateLimit-Reset:
-          $ref: '#/components/headers/RateLimitReset'
-        Retry-After:
-          $ref: '#/components/headers/RetryAfter'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Errors_4'
-        text/*:
-          schema:
-            type: string
-            pattern: ^[ -~]{0,65535}$
-            maxLength: 65535
-    UnauthorizedError_4:
-      description: Unauthorized. The access token is missing, expired, or invalid.
-      headers:
-        Access-Control-Allow-Origin:
-          $ref: '#/components/headers/AccessControlAllowOrigin'
-        RateLimit-Limit:
-          $ref: '#/components/headers/RateLimitLimit'
-        RateLimit-Reset:
-          $ref: '#/components/headers/RateLimitReset'
-        Retry-After:
-          $ref: '#/components/headers/RetryAfter'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Errors_4'
-        text/*:
-          schema:
-            type: string
-            pattern: ^[ -~]{0,65535}$
-            maxLength: 65535
-    BadRequestError_5:
-      description: Bad request. The request was malformed or contained invalid parameters, such as a poorly formatted RequestId header.
-      headers:
-        Access-Control-Allow-Origin:
-          $ref: '#/components/headers/AccessControlAllowOrigin'
-        RateLimit-Limit:
-          $ref: '#/components/headers/RateLimitLimit'
-        RateLimit-Reset:
-          $ref: '#/components/headers/RateLimitReset'
-        Retry-After:
-          $ref: '#/components/headers/RetryAfter'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Errors_5'
-        text/*:
-          schema:
-            type: string
-            pattern: ^[ -~]{0,65535}$
-            minLength: 0
-            maxLength: 65535
-    TooManyRequestsError_3:
+    TooManyRequestsError_2:
       description: Too many requests. The client has exceeded the rate limit or quota.
       headers:
         Access-Control-Allow-Origin:
@@ -2289,14 +1721,27 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Errors_5'
+            $ref: '#/components/schemas/Errors_3'
         text/*:
           schema:
             type: string
             pattern: ^[ -~]{0,65535}$
             minLength: 0
             maxLength: 65535
-    ForbiddenError_5:
+    ServiceProvidersResponse:
+      description: A successful response containing the full list of TSPs and SPs.
+      headers:
+        Access-Control-Allow-Origin:
+          $ref: '#/components/headers/AccessControlAllowOrigin'
+        RateLimit-Limit:
+          $ref: '#/components/headers/RateLimitLimit'
+        RateLimit-Reset:
+          $ref: '#/components/headers/RateLimitReset'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ServiceProviders'
+    ForbiddenError_3:
       description: Forbidden. The client is authenticated but does not have the required permissions to access this resource.
       headers:
         Access-Control-Allow-Origin:
@@ -2310,15 +1755,15 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Errors_5'
+            $ref: '#/components/schemas/Errors_3'
         text/*:
           schema:
             type: string
             pattern: ^[ -~]{0,65535}$
             minLength: 0
             maxLength: 65535
-    Error_5:
-      description: A generic error response body used for all client and server errors.
+    BadRequestError_3:
+      description: Bad request. The request was malformed or contained invalid parameters, such as a poorly formatted RequestId header.
       headers:
         Access-Control-Allow-Origin:
           $ref: '#/components/headers/AccessControlAllowOrigin'
@@ -2331,14 +1776,14 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Errors_5'
+            $ref: '#/components/schemas/Errors_3'
         text/*:
           schema:
             type: string
             pattern: ^[ -~]{0,65535}$
             minLength: 0
             maxLength: 65535
-    UnauthorizedError_5:
+    UnauthorizedError_3:
       description: Unauthorized. The access token is missing, expired, or invalid.
       headers:
         Access-Control-Allow-Origin:
@@ -2352,28 +1797,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Errors_5'
-        text/*:
-          schema:
-            type: string
-            pattern: ^[ -~]{0,65535}$
-            minLength: 0
-            maxLength: 65535
-    InternalServerError_3:
-      description: Internal server error. An unexpected error occurred on the server side.
-      headers:
-        Access-Control-Allow-Origin:
-          $ref: '#/components/headers/AccessControlAllowOrigin'
-        RateLimit-Limit:
-          $ref: '#/components/headers/RateLimitLimit'
-        RateLimit-Reset:
-          $ref: '#/components/headers/RateLimitReset'
-        Retry-After:
-          $ref: '#/components/headers/RetryAfter'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Errors_5'
+            $ref: '#/components/schemas/Errors_3'
         text/*:
           schema:
             type: string
@@ -2398,9 +1822,6 @@ components:
             read_rtp_activations: Read RTP activation belonging to the requesting subject.
             read_rtp_all: Read all RTP activations.
 x-refined-from:
-- srtp-activation.yaml
-- srtp-payees.yaml
-- srtp-service-providers.yaml
 - pagopa-srtp-activation-openapi.yml
 - pagopa-srtp-payees-openapi.yml
 - pagopa-srtp-service-providers-openapi.yml

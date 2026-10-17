@@ -1,13 +1,19 @@
 openapi: 3.2.0
 info:
-  title: Pagopa Subscriptions Feed API
   version: 4.1.1
+  title: IO API for Public Administration Services Subscriptions…
   contact:
     name: PagoPA S.p.A.
     url: https://docs.pagopa.it/io-guida-tecnica/
   x-logo:
     url: https://io.italia.it/assets/img/io-logo-blue.svg
-  description: 'Operations tagged Subscriptions Feed across 2 of this provider''s published API definitions: io-functions-services.yaml, pagopa-io-services-openapi.yml. Each path carries the servers of the definition it was published in.'
+  description: '# Warning
+
+    **This is an experimental API that is (most probably) going to change as we evolve the IO platform.**
+
+    # Introduction
+
+    This is the documentation of the IO API for 3rd party services.'
 servers:
 - url: https://api.io.pagopa.it/api/v1
 tags:
@@ -89,17 +95,8 @@ paths:
       - $ref: '#/components/parameters/DateUTC'
       tags:
       - Subscriptions Feed
-    servers:
-    - url: https://api.io.pagopa.it/api/v1
 components:
   schemas:
-    DateUTC:
-      type: string
-      maxLength: 10
-      minLength: 10
-      description: A date in the format YYYY-MM-DD.
-      pattern: '[0-9]{4}-[0-9]{2}-[0-9]{2}'
-      x-example: '2019-09-15'
     FiscalCodeHash:
       type: string
       maxLength: 16
@@ -109,6 +106,13 @@ components:
         provide the hex encoding of the SHA256 hash of the upper case fiscal code.'
       pattern: '[0-9a-f]{64}'
       x-example: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+    DateUTC:
+      type: string
+      maxLength: 10
+      minLength: 10
+      description: A date in the format YYYY-MM-DD.
+      pattern: '[0-9]{4}-[0-9]{2}-[0-9]{2}'
+      x-example: '2019-09-15'
     SubscriptionsList:
       type: array
       items:
@@ -188,6 +192,3 @@ components:
       name: Ocp-Apim-Subscription-Key
       in: header
       description: The `manage` API key obtained through the Backoffice IO.
-x-refined-from:
-- io-functions-services.yaml
-- pagopa-io-services-openapi.yml

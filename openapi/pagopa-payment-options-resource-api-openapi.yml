@@ -1,9 +1,26 @@
 openapi: 3.2.0
 info:
-  title: Pagopa Payment Options Resource API
-  version: 0.7.0
+  title: pagoPA Payment Options for Organizations Payment Options…
+  description: 'pagoPA Payment Options service for Organizations
+
+    * `INFO` This is the specification that creditor institutions must implement for the payment options service
+
+    ### APP ERROR CODES ###
+
+
+    Details
+
+    **NAME** | **HTTP STATUS CODE** | **DESCRIPTION**
+
+    - | - | -
+
+    **ODP-101** | *400 Bad Request* | PAA_SINTASSI Custom error description
+
+    **ODP-102** | *422 Unprocessable Entity* | PAA_SEMANTICA Custom error description
+
+    **ODP-103** | *500 Internal Server Error* | PAA_SYSTEM_ERROR Custom error…'
   termsOfService: https://www.pagopa.gov.it/
-  description: 'Operations tagged Payment Options Resource across 2 of this provider''s published API definitions: orgs_payment_options.json, pagopa-payment-options-organizations-openapi.yml. Each path carries the servers of the definition it was published in.'
+  version: 0.7.0
 servers:
 - url: http://api.platform.it/service/v1
   description: Production base URL
@@ -67,41 +84,84 @@ paths:
                     validFrom: '2024-09-30T23:59:59'
                     status: non pagato
                     statusReason: desc
-    servers:
-    - url: http://api.platform.it/service/v1
-      description: Production base URL
 components:
+  responses:
+    ErrorResponse422:
+      description: Default app exception for status 422
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            UnprocessableEntityExample:
+              value:
+                httpStatusCode: 422
+                httpStatusDescription: Unprocessable Entity
+                appErrorCode: ODP-110
+                timestamp: 1724425035
+                dateTime: '2024-08-23T14:57:15.635528'
+                errorMessage: PAA_PAGAMENTO_SCADUTO Errore per pagamento scaduto
+    ErrorResponse409:
+      description: Default app exception for status 409
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            ConflitExample:
+              value:
+                httpStatusCode: 409
+                httpStatusDescription: Conflict
+                appErrorCode: ODP-108
+                timestamp: 1724425035
+                dateTime: '2024-08-23T14:57:15.635528'
+                errorMessage: PAA_PAGAMENTO_DUPLICATO Errore per pagamento duplicato
+    ErrorResponse500:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            InternalServerErrorExample:
+              value:
+                httpStatusCode: 500
+                httpStatusDescription: Internal Server Error
+                appErrorCode: ODP-103
+                timestamp: 1724425035
+                dateTime: '2024-08-23T14:57:15.635528'
+                errorMessage: PAA_SYSTEM_ERROR Errore generico
+    ErrorResponse400:
+      description: Default app exception for status 400
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            BadRequestExample:
+              value:
+                httpStatusCode: 400
+                httpStatusDescription: Bad Request
+                appErrorCode: ODP-101
+                timestamp: 1724425035
+                dateTime: '2024-08-23T14:57:15.635528'
+                errorMessage: PAA_SINTASSI Errore di sintassi del modello nella richiesta
+    ErrorResponse404:
+      description: Default app exception for status 404
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            NotFoundExample:
+              value:
+                httpStatusCode: 404
+                httpStatusDescription: Not Found
+                appErrorCode: ODP-107
+                timestamp: 1724425035
+                dateTime: '2024-08-23T14:57:15.635528'
+                errorMessage: PAA_PAGAMENTO_SCONOSCIUTO Errore per pagamento sconosciuto
   schemas:
-    EnumInstallment:
-      enum:
-      - POI_UNPAID
-      - POI_PAID
-      - POI_EXPIRED_NOT_PAYABLE
-      - POI_EXPIRED_UNPAID
-      - POI_INVALID
-      type: string
-    Installment:
-      type: object
-      properties:
-        nav:
-          type: string
-        iuv:
-          type: string
-        amount:
-          format: int64
-          type: integer
-        description:
-          type: string
-        dueDate:
-          type: string
-          format: date-time
-        validFrom:
-          type: string
-          format: date-time
-        status:
-          $ref: '#/components/schemas/EnumInstallment'
-        statusReason:
-          type: string
     EnumPo:
       enum:
       - PO_UNPAID
@@ -110,6 +170,14 @@ components:
       - PO_EXPIRED_NOT_PAYABLE
       - PO_EXPIRED_UNPAID
       - PO_INVALID
+      type: string
+    EnumInstallment:
+      enum:
+      - POI_UNPAID
+      - POI_PAID
+      - POI_EXPIRED_NOT_PAYABLE
+      - POI_EXPIRED_UNPAID
+      - POI_INVALID
       type: string
     ErrorResponse:
       type: object
@@ -149,6 +217,28 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/PaymentOption'
+    Installment:
+      type: object
+      properties:
+        nav:
+          type: string
+        iuv:
+          type: string
+        amount:
+          format: int64
+          type: integer
+        description:
+          type: string
+        dueDate:
+          type: string
+          format: date-time
+        validFrom:
+          type: string
+          format: date-time
+        status:
+          $ref: '#/components/schemas/EnumInstallment'
+        statusReason:
+          type: string
     PaymentOption:
       type: object
       properties:
@@ -176,87 +266,8 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Installment'
-  responses:
-    ErrorResponse422:
-      description: Default app exception for status 422
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            UnprocessableEntityExample:
-              value:
-                httpStatusCode: 422
-                httpStatusDescription: Unprocessable Entity
-                appErrorCode: ODP-110
-                timestamp: 1724425035
-                dateTime: '2024-08-23T14:57:15.635528'
-                errorMessage: PAA_PAGAMENTO_SCADUTO Errore per pagamento scaduto
-    ErrorResponse409:
-      description: Default app exception for status 409
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            ConflitExample:
-              value:
-                httpStatusCode: 409
-                httpStatusDescription: Conflict
-                appErrorCode: ODP-108
-                timestamp: 1724425035
-                dateTime: '2024-08-23T14:57:15.635528'
-                errorMessage: PAA_PAGAMENTO_DUPLICATO Errore per pagamento duplicato
-    ErrorResponse404:
-      description: Default app exception for status 404
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            NotFoundExample:
-              value:
-                httpStatusCode: 404
-                httpStatusDescription: Not Found
-                appErrorCode: ODP-107
-                timestamp: 1724425035
-                dateTime: '2024-08-23T14:57:15.635528'
-                errorMessage: PAA_PAGAMENTO_SCONOSCIUTO Errore per pagamento sconosciuto
-    ErrorResponse500:
-      description: Internal Server Error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            InternalServerErrorExample:
-              value:
-                httpStatusCode: 500
-                httpStatusDescription: Internal Server Error
-                appErrorCode: ODP-103
-                timestamp: 1724425035
-                dateTime: '2024-08-23T14:57:15.635528'
-                errorMessage: PAA_SYSTEM_ERROR Errore generico
-    ErrorResponse400:
-      description: Default app exception for status 400
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            BadRequestExample:
-              value:
-                httpStatusCode: 400
-                httpStatusDescription: Bad Request
-                appErrorCode: ODP-101
-                timestamp: 1724425035
-                dateTime: '2024-08-23T14:57:15.635528'
-                errorMessage: PAA_SINTASSI Errore di sintassi del modello nella richiesta
   securitySchemes:
     ApiKey:
       type: apiKey
       name: Ocp-Apim-Subscription-Key
       in: header
-x-refined-from:
-- orgs_payment_options.json
-- pagopa-payment-options-organizations-openapi.yml

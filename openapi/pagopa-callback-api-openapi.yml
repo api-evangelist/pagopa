@@ -1,10 +1,10 @@
 openapi: 3.2.0
 info:
-  title: Pagopa Callback API
+  title: pagoPa RTP - OpenAPI 3.x Callback API
+  description: The API is designed for creating and sending payment requests through the pagoPa system, with strict validation to ensure data integrity.
   version: 0.0.1
   contact:
     email: cstar@pagopa.it
-  description: 'Operations tagged callback across 2 of this provider''s published API definitions: srtp-callback.yaml, pagopa-srtp-callback-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - description: Development/Test
   url: https://api-rtp-cb.dev.cstar.pagopa.it/rtp/cb/v1
@@ -49,51 +49,110 @@ paths:
           $ref: '#/components/responses/UnsupportedMediaType'
         '500':
           $ref: '#/components/responses/InternalServerError'
-    servers:
-    - description: Development/Test
-      url: https://api-rtp-cb.dev.cstar.pagopa.it/rtp/cb/v1
-      x-internal: true
-    - description: User Acceptance Test
-      url: https://api-rtp-cb.uat.cstar.pagopa.it/rtp/cb/v1
-      x-internal: false
-    - description: Production
-      url: https://api-rtp-cb.cstar.pagopa.it/rtp/cb/v1
-      x-internal: false
 components:
   schemas:
-    RemittanceInformation16_EPC259-22_V3.0_DS04b:
+    ActiveOrHistoricCurrencyAndAmount_EPC259-22_V3.0_DS02_2:
+      maximum: 999999999.99
+      minimum: 0.01
+      type: number
+    CreditorReferenceType2_EPC259-22_V3.0_DS02:
       type: object
       properties:
-        Ustrd:
-          $ref: '#/components/schemas/Max140Text'
-        Strd:
-          $ref: '#/components/schemas/StructuredRemittanceInformation16_EPC259-22_V3.0_DS04b'
-    CreditorPaymentActivationRequestStatusReportV07_EPC259-22_V3.0_DS08N:
-      type: object
-      properties:
-        GrpHdr:
-          $ref: '#/components/schemas/GroupHeader87_EPC259-22_V3.0_DS08N'
-        OrgnlGrpInfAndSts:
-          $ref: '#/components/schemas/OriginalGroupInformation30_EPC259-22_V3.0_DS04b'
-        OrgnlPmtInfAndSts:
-          type: array
-          items:
-            $ref: '#/components/schemas/OriginalPaymentInstruction31_EPC259-22_V3.0_DS08N'
-          maxItems: 2
+        CdOrPrtry:
+          $ref: '#/components/schemas/CreditorReferenceType1Choice_EPC259-22_V3.0_DS02'
+        Issr:
+          $ref: '#/components/schemas/Max35Text'
       required:
-      - GrpHdr
-      - OrgnlGrpInfAndSts
-    Max140Text:
-      maxLength: 140
+      - CdOrPrtry
+    Charges7_EPC259-22_V3.0_DS04b:
+      type: object
+      properties:
+        Amt:
+          $ref: '#/components/schemas/ActiveOrHistoricCurrencyAndAmount_EPC259-22_V3.0_DS04b'
+        Agt:
+          $ref: '#/components/schemas/BranchAndFinancialInstitutionIdentification6_EPC259-22_V3.0_DS02'
+      required:
+      - Amt
+      - Agt
+    StatusReasonInformation12_EPC259-22_V3.0_REDIRECT:
+      type: object
+      properties:
+        Orgtr:
+          $ref: '#/components/schemas/PartyIdentification135_EPC259-22_V3.0_DS04b'
+        AddtlInf:
+          $ref: '#/components/schemas/Max105Text'
+      required:
+      - Orgtr
+      - AddtlInf
+    PositiveSepaRequestToPayResponseResource_DS05:
+      type: object
+      properties:
+        resourceId:
+          $ref: '#/components/schemas/ResourceId'
+        Document:
+          $ref: '#/components/schemas/Document_EPC259-22_V3.0_DS05'
+        _links:
+          type: object
+          properties:
+            initialSepaRequestToPayUri:
+              $ref: '#/components/schemas/GenericHalLink'
+          required:
+          - initialSepaRequestToPayUri
+    OriginalPaymentInstruction31_EPC259-22_V3.0_DS05:
+      type: object
+      properties:
+        OrgnlPmtInfId:
+          $ref: '#/components/schemas/Max35Text'
+        TxInfAndSts:
+          $ref: '#/components/schemas/PaymentTransaction104_EPC259-22_V3.0_DS05'
+      required:
+      - OrgnlPmtInfId
+      - TxInfAndSts
+    Party38Choice_EPC259-22_V3.0_DS04b_2:
+      oneOf:
+      - $ref: '#/components/schemas/OrganisationIdentification29_EPC259-22_V3.0_DS04b_2_Wrapper'
+      - $ref: '#/components/schemas/PersonIdentification13_IV_Wrapper'
+    PaymentTransaction104_EPC259-22_V3.0_DS08P:
+      type: object
+      properties:
+        StsId:
+          $ref: '#/components/schemas/Max35Text'
+        OrgnlInstrId:
+          $ref: '#/components/schemas/Max35Text'
+        OrgnlEndToEndId:
+          $ref: '#/components/schemas/Max35Text'
+        TxSts:
+          $ref: '#/components/schemas/ExternalPaymentTransactionStatus1Code_IV'
+        StsRsnInf:
+          $ref: '#/components/schemas/StatusReasonInformation12_EPC259-22_V3.0_DS08P'
+        PmtCondSts:
+          $ref: '#/components/schemas/PaymentConditionStatus1_EPC259-22_V3.0_DS08P'
+        ChrgsInf:
+          $ref: '#/components/schemas/Charges7_EPC259-22_V3.0_DS04b'
+        DbtrDcsnDtTm:
+          $ref: '#/components/schemas/ISODateTime'
+        AccptncDtTm:
+          $ref: '#/components/schemas/ISODateTime'
+        OrgnlTxRef:
+          $ref: '#/components/schemas/OriginalTransactionReference29_EPC259-22_V3.0_DS08N'
+      required:
+      - OrgnlInstrId
+      - OrgnlEndToEndId
+      - TxSts
+      - StsRsnInf
+      - DbtrDcsnDtTm
+      - OrgnlTxRef
+    Max140Text_EPC259-22_V3.0_DS02:
+      maxLength: 70
       minLength: 1
       type: string
-    ExternalServiceLevel1Code:
-      maxLength: 4
-      minLength: 1
-      enum:
-      - SEPA
-      - SRTP
-      type: string
+    BranchAndFinancialInstitutionIdentification6_EPC259-22_V3.0_DS02:
+      type: object
+      properties:
+        FinInstnId:
+          $ref: '#/components/schemas/FinancialInstitutionIdentification18_EPC259-22_V3.0_DS02'
+      required:
+      - FinInstnId
     PaymentTransaction104_EPC259-22_V3.0_REDIRECT:
       type: object
       properties:
@@ -116,6 +175,93 @@ components:
       - TxSts
       - StsRsnInf
       - OrgnlTxRef
+    AccountIdentification4Choice:
+      oneOf:
+      - $ref: '#/components/schemas/IBAN2007Identifier_Wrapper'
+    LocalInstrument2Choice:
+      oneOf:
+      - $ref: '#/components/schemas/ExternalLocalInstrument1Code_Wrapper'
+      - $ref: '#/components/schemas/Max35Text_Wrapper'
+    OrganisationIdentification29_EPC259-22_V3.0_DS04b_2:
+      type: object
+      properties:
+        AnyBIC:
+          $ref: '#/components/schemas/AnyBICDec2014Identifier'
+        LEI:
+          $ref: '#/components/schemas/LEIIdentifier'
+        Othr:
+          $ref: '#/components/schemas/GenericOrganisationIdentification1_EPC259-22_V3.0_DS04b_2'
+    ActiveOrHistoricCurrencyAndAmount_EPC259-22_V3.0_DS02_Wrapper:
+      type: object
+      properties:
+        InstdAmt:
+          $ref: '#/components/schemas/ActiveOrHistoricCurrencyAndAmount_EPC259-22_V3.0_DS02'
+    GenericFinancialIdentification1:
+      type: object
+      properties:
+        Id:
+          $ref: '#/components/schemas/Max35Text'
+        SchmeNm:
+          $ref: '#/components/schemas/FinancialIdentificationSchemeName1Choice'
+        Issr:
+          $ref: '#/components/schemas/Max35Text'
+      required:
+      - Id
+    CreditorPaymentActivationRequestStatusReportV07_EPC259-22_V3.0_DS08N:
+      type: object
+      properties:
+        GrpHdr:
+          $ref: '#/components/schemas/GroupHeader87_EPC259-22_V3.0_DS08N'
+        OrgnlGrpInfAndSts:
+          $ref: '#/components/schemas/OriginalGroupInformation30_EPC259-22_V3.0_DS04b'
+        OrgnlPmtInfAndSts:
+          type: array
+          items:
+            $ref: '#/components/schemas/OriginalPaymentInstruction31_EPC259-22_V3.0_DS08N'
+          maxItems: 2
+      required:
+      - GrpHdr
+      - OrgnlGrpInfAndSts
+    PaymentTransaction104:
+      type: object
+      properties:
+        StsId:
+          $ref: '#/components/schemas/Max35Text'
+        OrgnlInstrId:
+          $ref: '#/components/schemas/Max35Text'
+        OrgnlEndToEndId:
+          $ref: '#/components/schemas/Max35Text'
+        TxSts:
+          $ref: '#/components/schemas/ExternalPaymentTransactionStatus1Code'
+        StsRsnInf:
+          $ref: '#/components/schemas/StatusReasonInformation12'
+        ChrgsInf:
+          $ref: '#/components/schemas/Charges7'
+        OrgnlTxRef:
+          $ref: '#/components/schemas/OriginalTransactionReference29'
+      required:
+      - StsId
+      - OrgnlInstrId
+      - OrgnlEndToEndId
+      - TxSts
+      - StsRsnInf
+      - OrgnlTxRef
+    ExternalPaymentTransactionStatus1Code:
+      maxLength: 4
+      minLength: 1
+      enum:
+      - RJCT
+      type: string
+    CreditorReferenceInformation2_EPC259-22_V3.0_DS02:
+      type: object
+      properties:
+        Tp:
+          $ref: '#/components/schemas/CreditorReferenceType2_EPC259-22_V3.0_DS02'
+        Ref:
+          $ref: '#/components/schemas/Max35Text'
+      required:
+      - Tp
+      - Ref
     ExternalAccountIdentification1Code_II:
       maxLength: 4
       minLength: 1
@@ -125,53 +271,64 @@ components:
       - CUID
       - UPIC
       type: string
-    StatusReasonInformation12:
-      type: object
-      properties:
-        Orgtr:
-          $ref: '#/components/schemas/PartyIdentification135'
-        Rsn:
-          $ref: '#/components/schemas/StatusReason6Choice_EPC259-22_V3.0_DS04b'
-      required:
-      - Orgtr
-      - Rsn
-    StatusReasonInformation12_EPC259-22_V3.0_DS08P:
-      type: object
-      properties:
-        Orgtr:
-          $ref: '#/components/schemas/PartyIdentification135_EPC259-22_V3.0_DS08N_2'
-        AddtlInf:
-          type: array
-          items:
-            $ref: '#/components/schemas/Max105Text'
-          maxItems: 3
-      required:
-      - Orgtr
-    RemittanceAmount2_EPC259-22_V3.0_DS02:
-      type: object
-      properties:
-        CdtNoteAmt:
-          $ref: '#/components/schemas/ActiveOrHistoricCurrencyAndAmount_EPC259-22_V3.0_DS02_2'
-    ExternalPaymentTransactionStatus1Code:
-      maxLength: 4
-      minLength: 1
-      enum:
-      - RJCT
-      type: string
-    CashAccount38_EPC259-22_V3.0_DS08N:
-      type: object
-      properties:
-        Id:
-          $ref: '#/components/schemas/AccountIdentification4Choice_EPC259-22_V3.0_DS08N'
-        Nm:
-          $ref: '#/components/schemas/Max70Text'
-        Prxy:
-          $ref: '#/components/schemas/ProxyAccountIdentification1_EPC259-22_V3.0_DS08N'
-      required:
-      - Id
-    PersonIdentificationSchemeName1Choice_IV:
+    OrganisationIdentificationSchemeName1Choice_EPC259-22_V3.0_DS04b_2:
       oneOf:
-      - $ref: '#/components/schemas/ExternalPersonIdentification1Code_EPC259-22_V3.0_DS02_Wrapper'
+      - $ref: '#/components/schemas/ExternalOrganisationIdentification1Code_EPC259-22_V3.0_DS02_Wrapper'
+    Max35Text:
+      maxLength: 35
+      minLength: 1
+      type: string
+    ExternalStatusReason1Code_II_Wrapper:
+      type: object
+      properties:
+        Cd:
+          $ref: '#/components/schemas/ExternalStatusReason1Code_II'
+    StatusReasonInformation12_EPC259-22_V3.0_DS05:
+      type: object
+      properties:
+        Orgtr:
+          $ref: '#/components/schemas/PartyIdentification135_EPC259-22_V3.0_DS04b'
+      required:
+      - Orgtr
+    PaymentTypeInformation26_EPC259-22_V3.0_DS04b:
+      type: object
+      properties:
+        SvcLvl:
+          $ref: '#/components/schemas/ServiceLevel8Choice'
+        LclInstrm:
+          $ref: '#/components/schemas/LocalInstrument2Choice'
+      required:
+      - SvcLvl
+      - LclInstrm
+    GenericAccountIdentification1_EPC259-22_V3.0_DS08N_Wrapper:
+      type: object
+      properties:
+        Othr:
+          $ref: '#/components/schemas/GenericAccountIdentification1_EPC259-22_V3.0_DS08N'
+    OriginalPaymentInstruction31_EPC259-22_V3.0_DS08N:
+      type: object
+      properties:
+        OrgnlPmtInfId:
+          $ref: '#/components/schemas/Max35Text'
+        TxInfAndSts:
+          $ref: '#/components/schemas/PaymentTransaction104_EPC259-22_V3.0_DS08N'
+      required:
+      - OrgnlPmtInfId
+      - TxInfAndSts
+    ISODateTime:
+      type: string
+    CountryCode:
+      pattern: '[A-Z]{2,2}'
+      type: string
+    FinancialInstitutionIdentification18_EPC259-22_V3.0_DS02:
+      type: object
+      properties:
+        BICFI:
+          $ref: '#/components/schemas/BICFIDec2014Identifier'
+        LEI:
+          $ref: '#/components/schemas/LEIIdentifier'
+        Othr:
+          $ref: '#/components/schemas/GenericFinancialIdentification1'
     CreditorPaymentActivationRequestStatusReportV07_EPC259-22_V3.0_DS08P:
       type: object
       properties:
@@ -185,65 +342,55 @@ components:
       - GrpHdr
       - OrgnlGrpInfAndSts
       - OrgnlPmtInfAndSts
-    BICFIDec2014Identifier:
-      pattern: '[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}([A-Z0-9]{3,3}){0,1}'
-      type: string
-    ExternalPaymentTransactionStatus1Code_II:
+    CreditorReferenceType1Choice_EPC259-22_V3.0_DS02:
+      oneOf:
+      - $ref: '#/components/schemas/DocumentType3Code_Wrapper'
+    StructuredRemittanceInformation16:
+      type: object
+      properties:
+        RfrdDocAmt:
+          $ref: '#/components/schemas/RemittanceAmount2'
+        CdtrRefInf:
+          $ref: '#/components/schemas/CreditorReferenceInformation2_EPC259-22_V3.0_DS02'
+    ServiceLevel8Choice:
+      oneOf:
+      - $ref: '#/components/schemas/ExternalServiceLevel1Code_Wrapper'
+    ExternalOrganisationIdentification1Code_II_Wrapper:
+      type: object
+      properties:
+        Cd:
+          $ref: '#/components/schemas/ExternalOrganisationIdentification1Code_II'
+    ExternalPersonIdentification1Code_EPC259-22_V3.0_DS02:
       maxLength: 4
       minLength: 1
       enum:
-      - ACTC
+      - POID
       type: string
-    Max2048Text:
-      maxLength: 2048
-      minLength: 1
-      type: string
-    AccountIdentification4Choice_EPC259-22_V3.0_DS08N:
+    AccountSchemeName1Choice_EPC259-22_V3.0_DS08N:
       oneOf:
-      - $ref: '#/components/schemas/IBAN2007Identifier_Wrapper'
-      - $ref: '#/components/schemas/GenericAccountIdentification1_EPC259-22_V3.0_DS08N_Wrapper'
-    GenericHalLink:
-      type: object
-      properties:
-        href:
-          type: string
-        templated:
-          type: boolean
-          default: false
-      required:
-      - href
-    PositiveSepaRequestToPayResponseResource_DS05:
-      type: object
-      properties:
-        resourceId:
-          $ref: '#/components/schemas/ResourceId'
-        Document:
-          $ref: '#/components/schemas/Document_EPC259-22_V3.0_DS05'
-        _links:
-          type: object
-          properties:
-            initialSepaRequestToPayUri:
-              $ref: '#/components/schemas/GenericHalLink'
-          required:
-          - initialSepaRequestToPayUri
-    CashAccount38:
-      type: object
-      properties:
-        Id:
-          $ref: '#/components/schemas/AccountIdentification4Choice'
-      required:
-      - Id
-    OrganisationIdentification29_EPC259-22_V3.0_DS04b_2_Wrapper:
+      - $ref: '#/components/schemas/ExternalAccountIdentification1Code_II_Wrapper'
+      - $ref: '#/components/schemas/Max35Text_Wrapper'
+    OrganisationIdentification29_EPC259-22_V3.0_DS04b_Wrapper:
       type: object
       properties:
         OrgId:
-          $ref: '#/components/schemas/OrganisationIdentification29_EPC259-22_V3.0_DS04b_2'
-    ISODateTime:
+          $ref: '#/components/schemas/OrganisationIdentification29_EPC259-22_V3.0_DS04b'
+    RemittanceAmount2:
+      type: object
+      properties:
+        CdtNoteAmt:
+          $ref: '#/components/schemas/ActiveOrHistoricCurrencyAndAmount_EPC259-22_V3.0_DS02'
+    ExternalServiceLevel1Code:
+      maxLength: 4
+      minLength: 1
+      enum:
+      - SEPA
+      - SRTP
       type: string
-    AmountType4Choice_EPC259-22_V3.0_DS02:
-      oneOf:
-      - $ref: '#/components/schemas/ActiveOrHistoricCurrencyAndAmount_EPC259-22_V3.0_DS02_Wrapper'
-    PaymentTransaction104_EPC259-22_V3.0_DS05:
+    LEIIdentifier:
+      pattern: '[A-Z0-9]{18,18}[0-9]{2,2}'
+      type: string
+    PaymentTransaction104_EPC259-22_V3.0_DS08N:
       type: object
       properties:
         StsId:
@@ -253,37 +400,505 @@ components:
         OrgnlEndToEndId:
           $ref: '#/components/schemas/Max35Text'
         TxSts:
-          $ref: '#/components/schemas/ExternalPaymentTransactionStatus1Code_II'
+          $ref: '#/components/schemas/ExternalPaymentTransactionStatus1Code'
         StsRsnInf:
-          $ref: '#/components/schemas/StatusReasonInformation12_EPC259-22_V3.0_DS05'
+          $ref: '#/components/schemas/StatusReasonInformation12_EPC259-22_V3.0_DS08N'
+        ChrgsInf:
+          $ref: '#/components/schemas/Charges7_EPC259-22_V3.0_DS04b'
+        DbtrDcsnDtTm:
+          $ref: '#/components/schemas/ISODateTime'
         OrgnlTxRef:
-          $ref: '#/components/schemas/OriginalTransactionReference29_EPC259-22_V3.0_DS04b'
+          $ref: '#/components/schemas/OriginalTransactionReference29_EPC259-22_V3.0_DS08N'
       required:
-      - StsId
       - OrgnlInstrId
       - OrgnlEndToEndId
       - TxSts
       - StsRsnInf
+      - DbtrDcsnDtTm
       - OrgnlTxRef
-    Document_EPC259-22_V3.0_DS08P:
+    CreditorPaymentActivationRequestStatusReportV07_EPC259-22_V3.0_DS05:
+      type: object
+      properties:
+        GrpHdr:
+          $ref: '#/components/schemas/GroupHeader87_EPC259-22_V3.0_DS04b'
+        OrgnlGrpInfAndSts:
+          $ref: '#/components/schemas/OriginalGroupInformation30_EPC259-22_V3.0_DS04b'
+        OrgnlPmtInfAndSts:
+          type: array
+          items:
+            $ref: '#/components/schemas/OriginalPaymentInstruction31_EPC259-22_V3.0_DS05'
+          maxItems: 2
+      required:
+      - GrpHdr
+      - OrgnlGrpInfAndSts
+    PartyIdentification135_EPC259-22_V3.0_DS08N:
+      type: object
+      properties:
+        Nm:
+          $ref: '#/components/schemas/Max140Text_EPC259-22_V3.0_DS02'
+        Id:
+          $ref: '#/components/schemas/Party38Choice_II'
+    OriginalPaymentInstruction31:
+      type: object
+      properties:
+        OrgnlPmtInfId:
+          $ref: '#/components/schemas/Max35Text'
+        TxInfAndSts:
+          $ref: '#/components/schemas/PaymentTransaction104'
+      required:
+      - OrgnlPmtInfId
+      - TxInfAndSts
+    ExternalFinancialInstitutionIdentification1Code_Wrapper:
+      type: object
+      properties:
+        Cd:
+          $ref: '#/components/schemas/ExternalFinancialInstitutionIdentification1Code'
+    PartyIdentification135:
+      type: object
+      properties:
+        Nm:
+          $ref: '#/components/schemas/Max140Text'
+        Id:
+          $ref: '#/components/schemas/Party38Choice_IV'
+      required:
+      - Id
+    ResourceId:
+      type: string
+    PersonIdentification13_II_Wrapper:
+      type: object
+      properties:
+        PrvtId:
+          $ref: '#/components/schemas/PersonIdentification13_II'
+    OriginalPaymentInstruction31_EPC259-22_V3.0_DS08P:
+      type: object
+      properties:
+        OrgnlPmtInfId:
+          $ref: '#/components/schemas/Max35Text'
+        TxInfAndSts:
+          type: array
+          items:
+            $ref: '#/components/schemas/PaymentTransaction104_EPC259-22_V3.0_DS08P'
+      required:
+      - OrgnlPmtInfId
+    AccountIdentification4Choice_EPC259-22_V3.0_DS08N:
+      oneOf:
+      - $ref: '#/components/schemas/IBAN2007Identifier_Wrapper'
+      - $ref: '#/components/schemas/GenericAccountIdentification1_EPC259-22_V3.0_DS08N_Wrapper'
+    BICFIDec2014Identifier:
+      pattern: '[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}([A-Z0-9]{3,3}){0,1}'
+      type: string
+    AmountType4Choice_EPC259-22_V3.0_DS02:
+      oneOf:
+      - $ref: '#/components/schemas/ActiveOrHistoricCurrencyAndAmount_EPC259-22_V3.0_DS02_Wrapper'
+    ExternalPaymentTransactionStatus1Code_II:
+      maxLength: 4
+      minLength: 1
+      enum:
+      - ACTC
+      type: string
+    ExternalOrganisationIdentification1Code_EPC259-22_V3.0_DS02_Wrapper:
+      type: object
+      properties:
+        Cd:
+          $ref: '#/components/schemas/ExternalOrganisationIdentification1Code_EPC259-22_V3.0_DS02'
+    ExternalLocalInstrument1Code:
+      maxLength: 35
+      minLength: 1
+      enum:
+      - CTP
+      - INST
+      - ITP
+      - TRF
+      type: string
+    AsynchronousSepaRequestToPayResponse:
+      oneOf:
+      - $ref: '#/components/schemas/RedirectSepaRequestToPayResponseResource_DS05b'
+      - $ref: '#/components/schemas/PositiveSepaRequestToPayResponseResource_DS05'
+      - $ref: '#/components/schemas/Document'
+      - $ref: '#/components/schemas/PositiveSepaRequestToPayResponse_DS08P'
+      - $ref: '#/components/schemas/NegativeSepaRequestToPayResponse_DS08N'
+    Max105Text:
+      maxLength: 105
+      minLength: 1
+      type: string
+    GroupHeader87_EPC259-22_V3.0_DS04b:
+      type: object
+      properties:
+        MsgId:
+          $ref: '#/components/schemas/Max35Text'
+        CreDtTm:
+          $ref: '#/components/schemas/ISODateTime'
+        InitgPty:
+          $ref: '#/components/schemas/PartyIdentification135_EPC259-22_V3.0_DS04b'
+      required:
+      - MsgId
+      - CreDtTm
+      - InitgPty
+    AnyBICDec2014Identifier:
+      pattern: '[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}([A-Z0-9]{3,3}){0,1}'
+      type: string
+    OriginalTransactionReference29_EPC259-22_V3.0_DS04b:
+      type: object
+      properties:
+        Amt:
+          $ref: '#/components/schemas/AmountType4Choice_EPC259-22_V3.0_DS02'
+        ReqdExctnDt:
+          $ref: '#/components/schemas/DateAndDateTime2Choice_EPC259-22_V3.0_DS02'
+        XpryDt:
+          $ref: '#/components/schemas/DateAndDateTime2Choice_EPC259-22_V3.0_DS02'
+        PmtTpInf:
+          $ref: '#/components/schemas/PaymentTypeInformation26_EPC259-22_V3.0_DS04b'
+        RmtInf:
+          $ref: '#/components/schemas/RemittanceInformation16_EPC259-22_V3.0_DS04b'
+        DbtrAgt:
+          $ref: '#/components/schemas/BranchAndFinancialInstitutionIdentification6_EPC259-22_V3.0_DS02'
+        CdtrAgt:
+          $ref: '#/components/schemas/BranchAndFinancialInstitutionIdentification6_EPC259-22_V3.0_DS02'
+        Cdtr:
+          $ref: '#/components/schemas/PartyIdentification135_EPC259-22_V3.0_DS04b_3'
+        CdtrAcct:
+          $ref: '#/components/schemas/CashAccount38'
+      required:
+      - Amt
+      - ReqdExctnDt
+      - XpryDt
+      - PmtTpInf
+      - DbtrAgt
+      - CdtrAgt
+      - Cdtr
+      - CdtrAcct
+    StatusReason6Choice_EPC259-22_V3.0_DS08N:
+      oneOf:
+      - $ref: '#/components/schemas/ExternalStatusReason1Code_II_Wrapper'
+    Party38Choice_EPC259-22_V3.0_DS04b:
+      oneOf:
+      - $ref: '#/components/schemas/OrganisationIdentification29_EPC259-22_V3.0_DS04b_Wrapper'
+    PersonIdentificationSchemeName1Choice_II:
+      oneOf:
+      - $ref: '#/components/schemas/ExternalPersonIdentification1Code_II_Wrapper'
+      - $ref: '#/components/schemas/Max35Text_Wrapper'
+    DateAndPlaceOfBirth1:
+      type: object
+      properties:
+        BirthDt:
+          $ref: '#/components/schemas/ISODate'
+        PrvcOfBirth:
+          $ref: '#/components/schemas/Max35Text'
+        CityOfBirth:
+          $ref: '#/components/schemas/Max35Text'
+        CtryOfBirth:
+          $ref: '#/components/schemas/CountryCode'
+      required:
+      - BirthDt
+      - CityOfBirth
+      - CtryOfBirth
+    Max70Text:
+      maxLength: 70
+      minLength: 1
+      type: string
+    Max2048Text:
+      maxLength: 2048
+      minLength: 1
+      type: string
+    Party38Choice_II:
+      oneOf:
+      - $ref: '#/components/schemas/OrganisationIdentification29_II_Wrapper'
+      - $ref: '#/components/schemas/PersonIdentification13_II_Wrapper'
+    OriginalPaymentInstruction31_EPC259-22_V3.0_REDIRECT:
+      type: object
+      properties:
+        OrgnlPmtInfId:
+          $ref: '#/components/schemas/Max35Text'
+        TxInfAndSts:
+          type: array
+          items:
+            $ref: '#/components/schemas/PaymentTransaction104_EPC259-22_V3.0_REDIRECT'
+      required:
+      - OrgnlPmtInfId
+    Charges7:
+      type: object
+      properties:
+        Amt:
+          $ref: '#/components/schemas/ActiveOrHistoricCurrencyAndAmount_EPC259-22_V3.0_DS02'
+        Agt:
+          $ref: '#/components/schemas/BranchAndFinancialInstitutionIdentification6_EPC259-22_V3.0_DS02'
+      required:
+      - Amt
+      - Agt
+    RedirectSepaRequestToPayResponseResource_DS05b:
+      type: object
+      properties:
+        resourceId:
+          $ref: '#/components/schemas/ResourceId'
+        Document:
+          $ref: '#/components/schemas/Document_EPC259-22_V3.0_REDIRECT'
+        _links:
+          type: object
+          properties:
+            initialSepaRequestToPayUri:
+              $ref: '#/components/schemas/GenericHalLink'
+          required:
+          - initialSepaRequestToPayUri
+    ExternalPersonIdentification1Code_EPC259-22_V3.0_DS02_Wrapper:
+      type: object
+      properties:
+        Cd:
+          $ref: '#/components/schemas/ExternalPersonIdentification1Code_EPC259-22_V3.0_DS02'
+    OriginalTransactionReference29:
+      type: object
+      properties:
+        Amt:
+          $ref: '#/components/schemas/AmountType4Choice_EPC259-22_V3.0_DS02'
+        ReqdExctnDt:
+          $ref: '#/components/schemas/DateAndDateTime2Choice_EPC259-22_V3.0_DS02'
+        XpryDt:
+          $ref: '#/components/schemas/DateAndDateTime2Choice_EPC259-22_V3.0_DS02'
+        PmtTpInf:
+          $ref: '#/components/schemas/PaymentTypeInformation26_EPC259-22_V3.0_DS04b'
+        RmtInf:
+          $ref: '#/components/schemas/RemittanceInformation16'
+        DbtrAgt:
+          $ref: '#/components/schemas/BranchAndFinancialInstitutionIdentification6_EPC259-22_V3.0_DS02'
+        CdtrAgt:
+          $ref: '#/components/schemas/BranchAndFinancialInstitutionIdentification6_EPC259-22_V3.0_DS02'
+        Cdtr:
+          $ref: '#/components/schemas/PartyIdentification135'
+        CdtrAcct:
+          $ref: '#/components/schemas/CashAccount38'
+      required:
+      - Amt
+      - ReqdExctnDt
+      - XpryDt
+      - PmtTpInf
+      - DbtrAgt
+      - CdtrAgt
+      - Cdtr
+      - CdtrAcct
+    Max35Text_Wrapper:
+      type: object
+      properties:
+        Prtry:
+          $ref: '#/components/schemas/Max35Text'
+    ISODate:
+      type: string
+    PartyIdentification135_EPC259-22_V3.0_DS04b:
+      type: object
+      properties:
+        Id:
+          $ref: '#/components/schemas/Party38Choice_EPC259-22_V3.0_DS04b'
+      required:
+      - Id
+    AsynchronousSepaRequestToPayResponseResource:
+      type: object
+      properties:
+        resourceId:
+          $ref: '#/components/schemas/ResourceId'
+        AsynchronousSepaRequestToPayResponse:
+          $ref: '#/components/schemas/AsynchronousSepaRequestToPayResponse'
+        _links:
+          type: object
+          properties:
+            initialSepaRequestToPayUri:
+              $ref: '#/components/schemas/GenericHalLink'
+          required:
+          - initialSepaRequestToPayUri
+    GenericAccountIdentification1_EPC259-22_V3.0_DS08N:
+      type: object
+      properties:
+        Id:
+          $ref: '#/components/schemas/Max34Text'
+        SchmeNm:
+          $ref: '#/components/schemas/AccountSchemeName1Choice_EPC259-22_V3.0_DS08N'
+        Issr:
+          $ref: '#/components/schemas/Max35Text'
+      required:
+      - Id
+    IBAN2007Identifier_Wrapper:
+      type: object
+      properties:
+        IBAN:
+          $ref: '#/components/schemas/IBAN2007Identifier'
+    ISODate_Wrapper:
+      type: object
+      properties:
+        Dt:
+          $ref: '#/components/schemas/ISODate'
+    ExternalPersonIdentification1Code_II:
+      maxLength: 4
+      minLength: 1
+      enum:
+      - ARNU
+      - CCPT
+      - CUST
+      - DRLC
+      - EMPL
+      - NIDN
+      - POID
+      - SOSE
+      - TELE
+      - TXID
+      type: string
+    Max34Text:
+      maxLength: 34
+      minLength: 1
+      type: string
+    DocumentType3Code_Wrapper:
+      type: object
+      properties:
+        Cd:
+          $ref: '#/components/schemas/DocumentType3Code'
+    NegativeSepaRequestToPayResponse_DS08N:
+      type: object
+      properties:
+        Document:
+          $ref: '#/components/schemas/Document_EPC259-22_V3.0_DS08N'
+    ProxyAccountIdentification1_EPC259-22_V3.0_DS08N:
+      type: object
+      properties:
+        Tp:
+          $ref: '#/components/schemas/ProxyAccountType1Choice_EPC259-22_V3.0_DS08N'
+        Id:
+          $ref: '#/components/schemas/Max2048Text'
+      required:
+      - Id
+    ExternalStatusReason1Code_II:
+      maxLength: 4
+      minLength: 1
+      enum:
+      - AM03
+      - AM05
+      - AM09
+      - IEDT
+      - MS02
+      - NOAR
+      - UCRD
+      type: string
+    StatusReason6Choice_EPC259-22_V3.0_DS04b:
+      oneOf:
+      - $ref: '#/components/schemas/ExternalStatusReason1Code_Wrapper'
+      - $ref: '#/components/schemas/Max35Text_Wrapper'
+    OriginalTransactionReference29_EPC259-22_V3.0_DS08N:
+      type: object
+      properties:
+        Amt:
+          $ref: '#/components/schemas/AmountType4Choice_EPC259-22_V3.0_DS02'
+        ReqdExctnDt:
+          $ref: '#/components/schemas/DateAndDateTime2Choice_EPC259-22_V3.0_DS02'
+        XpryDt:
+          $ref: '#/components/schemas/DateAndDateTime2Choice_EPC259-22_V3.0_DS02'
+        PmtTpInf:
+          $ref: '#/components/schemas/PaymentTypeInformation26_EPC259-22_V3.0_DS04b'
+        RmtInf:
+          $ref: '#/components/schemas/RemittanceInformation16_EPC259-22_V3.0_DS04b'
+        Dbtr:
+          $ref: '#/components/schemas/PartyIdentification135_EPC259-22_V3.0_DS08N_2'
+        DbtrAcct:
+          $ref: '#/components/schemas/CashAccount38_EPC259-22_V3.0_DS08N'
+        DbtrAgt:
+          $ref: '#/components/schemas/BranchAndFinancialInstitutionIdentification6_EPC259-22_V3.0_DS02'
+        CdtrAgt:
+          $ref: '#/components/schemas/BranchAndFinancialInstitutionIdentification6_EPC259-22_V3.0_DS02'
+        Cdtr:
+          $ref: '#/components/schemas/PartyIdentification135_EPC259-22_V3.0_DS04b_3'
+        CdtrAcct:
+          $ref: '#/components/schemas/CashAccount38'
+      required:
+      - Amt
+      - ReqdExctnDt
+      - XpryDt
+      - PmtTpInf
+      - DbtrAgt
+      - CdtrAgt
+      - Cdtr
+      - CdtrAcct
+    PersonIdentification13_II:
+      type: object
+      properties:
+        DtAndPlcOfBirth:
+          $ref: '#/components/schemas/DateAndPlaceOfBirth1'
+        Othr:
+          type: array
+          items:
+            $ref: '#/components/schemas/GenericPersonIdentification1_II'
+    Document:
       type: object
       properties:
         CdtrPmtActvtnReqStsRpt:
-          $ref: '#/components/schemas/CreditorPaymentActivationRequestStatusReportV07_EPC259-22_V3.0_DS08P'
+          $ref: '#/components/schemas/CreditorPaymentActivationRequestStatusReportV07'
       required:
       - CdtrPmtActvtnReqStsRpt
-    StructuredRemittanceInformation16:
+    StructuredRemittanceInformation16_EPC259-22_V3.0_DS04b:
       type: object
       properties:
         RfrdDocAmt:
-          $ref: '#/components/schemas/RemittanceAmount2'
+          $ref: '#/components/schemas/RemittanceAmount2_EPC259-22_V3.0_DS02'
         CdtrRefInf:
           $ref: '#/components/schemas/CreditorReferenceInformation2_EPC259-22_V3.0_DS02'
+    ExternalServiceLevel1Code_Wrapper:
+      type: object
+      properties:
+        Cd:
+          $ref: '#/components/schemas/ExternalServiceLevel1Code'
+    CreditorPaymentActivationRequestStatusReportV07:
+      type: object
+      properties:
+        GrpHdr:
+          $ref: '#/components/schemas/GroupHeader87'
+        OrgnlGrpInfAndSts:
+          $ref: '#/components/schemas/OriginalGroupInformation30_EPC259-22_V3.0_DS04b'
+        OrgnlPmtInfAndSts:
+          type: array
+          items:
+            $ref: '#/components/schemas/OriginalPaymentInstruction31'
+          maxItems: 2
+      required:
+      - GrpHdr
+      - OrgnlGrpInfAndSts
+    ActiveOrHistoricCurrencyAndAmount_EPC259-22_V3.0_DS02:
+      minimum: 0
+      type: number
     ISODateTime_Wrapper:
       type: object
       properties:
         DtTm:
           $ref: '#/components/schemas/ISODateTime'
+    PartyIdentification135_EPC259-22_V3.0_DS08N_2:
+      type: object
+      properties:
+        Id:
+          $ref: '#/components/schemas/Party38Choice_EPC259-22_V3.0_DS04b_2'
+      required:
+      - Id
+    StatusReasonInformation12_EPC259-22_V3.0_DS08P:
+      type: object
+      properties:
+        Orgtr:
+          $ref: '#/components/schemas/PartyIdentification135_EPC259-22_V3.0_DS08N_2'
+        AddtlInf:
+          type: array
+          items:
+            $ref: '#/components/schemas/Max105Text'
+          maxItems: 3
+      required:
+      - Orgtr
+    ExternalOrganisationIdentification1Code_EPC259-22_V3.0_DS02:
+      maxLength: 4
+      minLength: 1
+      enum:
+      - BOID
+      type: string
+    PaymentConditionStatus1_EPC259-22_V3.0_DS08P:
+      type: object
+      properties:
+        AccptdAmt:
+          $ref: '#/components/schemas/ActiveCurrencyAndAmount_EPC259-22_V3.0_DS08P'
+        GrntedPmt:
+          $ref: '#/components/schemas/TrueFalseIndicator'
+        EarlyPmt:
+          $ref: '#/components/schemas/TrueFalseIndicator'
+      required:
+      - GrntedPmt
+      - EarlyPmt
     ErrorDetail:
       type: object
       properties:
@@ -320,466 +935,20 @@ components:
           type: array
           items:
             type: string
-    GenericOrganisationIdentification1_EPC259-22_V3.0_DS04b:
+    RemittanceInformation16:
       type: object
       properties:
-        Id:
-          $ref: '#/components/schemas/Max35Text'
-        SchmeNm:
-          $ref: '#/components/schemas/OrganisationIdentificationSchemeName1Choice_EPC259-22_V3.0_DS04b'
-        Issr:
-          $ref: '#/components/schemas/Max35Text'
-      required:
-      - Id
-    DocumentType3Code:
-      enum:
-      - SCOR
-      type: string
-    OrganisationIdentification29_II:
-      type: object
-      properties:
-        AnyBIC:
-          $ref: '#/components/schemas/AnyBICDec2014Identifier'
-        LEI:
-          $ref: '#/components/schemas/LEIIdentifier'
-        Othr:
-          type: array
-          items:
-            $ref: '#/components/schemas/GenericOrganisationIdentification1_EPC259-22_V3.0_DS04b'
-    ExternalPaymentTransactionStatus1Code_IV:
-      maxLength: 4
-      minLength: 1
-      enum:
-      - ACCP
-      - ACWC
-      type: string
-    ProxyAccountType1Choice_EPC259-22_V3.0_DS08N:
-      oneOf:
-      - $ref: '#/components/schemas/ExternalProxyAccountType1Code_II_Wrapper'
-      - $ref: '#/components/schemas/Max35Text_Wrapper'
-    StatusReason6Choice_EPC259-22_V3.0_DS08N:
-      oneOf:
-      - $ref: '#/components/schemas/ExternalStatusReason1Code_II_Wrapper'
-    ExternalStatusReason1Code_II:
-      maxLength: 4
-      minLength: 1
-      enum:
-      - AM03
-      - AM05
-      - AM09
-      - IEDT
-      - MS02
-      - NOAR
-      - UCRD
-      type: string
-    ActiveOrHistoricCurrencyAndAmount_EPC259-22_V3.0_DS02:
-      minimum: 0
-      type: number
-    ExternalOrganisationIdentification1Code_II_Wrapper:
-      type: object
-      properties:
-        Cd:
-          $ref: '#/components/schemas/ExternalOrganisationIdentification1Code_II'
-    Max35Text:
-      maxLength: 35
-      minLength: 1
-      type: string
-    ExternalProxyAccountType1Code_II_Wrapper:
-      type: object
-      properties:
-        Cd:
-          $ref: '#/components/schemas/ExternalProxyAccountType1Code_II'
-    PartyIdentification135_EPC259-22_V3.0_DS08N:
-      type: object
-      properties:
-        Nm:
-          $ref: '#/components/schemas/Max140Text_EPC259-22_V3.0_DS02'
-        Id:
-          $ref: '#/components/schemas/Party38Choice_II'
-    PersonIdentification13_IV_Wrapper:
-      type: object
-      properties:
-        PrvtId:
-          $ref: '#/components/schemas/PersonIdentification13_IV'
-    ExternalStatusReason1Code:
-      maxLength: 4
-      minLength: 1
-      enum:
-      - AC02
-      - AM03
-      - AM05
-      - ATNS
-      - BE16
-      - EDTL
-      - EDTR
-      - FF01
-      - FRAD
-      - MS03
-      - NRCH
-      - PINS
-      - RR04
-      - RTNS
-      - SPII
-      type: string
-    Document_EPC259-22_V3.0_REDIRECT:
-      type: object
-      properties:
-        CdtrPmtActvtnReqStsRpt:
-          $ref: '#/components/schemas/CreditorPaymentActivationRequestStatusReportV07_EPC259-22_V3.0_REDIRECT'
-      required:
-      - CdtrPmtActvtnReqStsRpt
-    ExternalOrganisationIdentification1Code_EPC259-22_V3.0_DS02_Wrapper:
-      type: object
-      properties:
-        Cd:
-          $ref: '#/components/schemas/ExternalOrganisationIdentification1Code_EPC259-22_V3.0_DS02'
-    CreditorPaymentActivationRequestStatusReportV07:
-      type: object
-      properties:
-        GrpHdr:
-          $ref: '#/components/schemas/GroupHeader87'
-        OrgnlGrpInfAndSts:
-          $ref: '#/components/schemas/OriginalGroupInformation30_EPC259-22_V3.0_DS04b'
-        OrgnlPmtInfAndSts:
-          type: array
-          items:
-            $ref: '#/components/schemas/OriginalPaymentInstruction31'
-          maxItems: 2
-      required:
-      - GrpHdr
-      - OrgnlGrpInfAndSts
-    GenericAccountIdentification1_EPC259-22_V3.0_DS08N_Wrapper:
-      type: object
-      properties:
-        Othr:
-          $ref: '#/components/schemas/GenericAccountIdentification1_EPC259-22_V3.0_DS08N'
-    StatusReasonInformation12_EPC259-22_V3.0_DS05:
-      type: object
-      properties:
-        Orgtr:
-          $ref: '#/components/schemas/PartyIdentification135_EPC259-22_V3.0_DS04b'
-      required:
-      - Orgtr
-    PersonIdentificationSchemeName1Choice_II:
-      oneOf:
-      - $ref: '#/components/schemas/ExternalPersonIdentification1Code_II_Wrapper'
-      - $ref: '#/components/schemas/Max35Text_Wrapper'
-    NegativeSepaRequestToPayResponse_DS08N:
-      type: object
-      properties:
-        Document:
-          $ref: '#/components/schemas/Document_EPC259-22_V3.0_DS08N'
-    RedirectSepaRequestToPayResponseResource_DS05b:
-      type: object
-      properties:
-        resourceId:
-          $ref: '#/components/schemas/ResourceId'
-        Document:
-          $ref: '#/components/schemas/Document_EPC259-22_V3.0_REDIRECT'
-        _links:
-          type: object
-          properties:
-            initialSepaRequestToPayUri:
-              $ref: '#/components/schemas/GenericHalLink'
-          required:
-          - initialSepaRequestToPayUri
-    StructuredRemittanceInformation16_EPC259-22_V3.0_DS04b:
-      type: object
-      properties:
-        RfrdDocAmt:
-          $ref: '#/components/schemas/RemittanceAmount2_EPC259-22_V3.0_DS02'
-        CdtrRefInf:
-          $ref: '#/components/schemas/CreditorReferenceInformation2_EPC259-22_V3.0_DS02'
+        Ustrd:
+          $ref: '#/components/schemas/Max140Text'
+        Strd:
+          $ref: '#/components/schemas/StructuredRemittanceInformation16'
+    TrueFalseIndicator:
+      type: boolean
     DateAndDateTime2Choice_EPC259-22_V3.0_DS02:
       oneOf:
       - $ref: '#/components/schemas/ISODate_Wrapper'
       - $ref: '#/components/schemas/ISODateTime_Wrapper'
-    PersonIdentification13_II_Wrapper:
-      type: object
-      properties:
-        PrvtId:
-          $ref: '#/components/schemas/PersonIdentification13_II'
-    ExternalLocalInstrument1Code:
-      maxLength: 35
-      minLength: 1
-      enum:
-      - CTP
-      - INST
-      - ITP
-      - TRF
-      type: string
-    LEIIdentifier:
-      pattern: '[A-Z0-9]{18,18}[0-9]{2,2}'
-      type: string
-    BranchAndFinancialInstitutionIdentification6_EPC259-22_V3.0_DS02:
-      type: object
-      properties:
-        FinInstnId:
-          $ref: '#/components/schemas/FinancialInstitutionIdentification18_EPC259-22_V3.0_DS02'
-      required:
-      - FinInstnId
-    ExternalFinancialInstitutionIdentification1Code:
-      maxLength: 4
-      minLength: 1
-      type: string
-    OrganisationIdentification29_EPC259-22_V3.0_DS04b:
-      type: object
-      properties:
-        AnyBIC:
-          $ref: '#/components/schemas/AnyBICDec2014Identifier'
-        LEI:
-          $ref: '#/components/schemas/LEIIdentifier'
-        Othr:
-          $ref: '#/components/schemas/GenericOrganisationIdentification1_EPC259-22_V3.0_DS04b'
-    Document:
-      type: object
-      properties:
-        CdtrPmtActvtnReqStsRpt:
-          $ref: '#/components/schemas/CreditorPaymentActivationRequestStatusReportV07'
-      required:
-      - CdtrPmtActvtnReqStsRpt
-    IBAN2007Identifier_Wrapper:
-      type: object
-      properties:
-        IBAN:
-          $ref: '#/components/schemas/IBAN2007Identifier'
-    FinancialInstitutionIdentification18_EPC259-22_V3.0_DS02:
-      type: object
-      properties:
-        BICFI:
-          $ref: '#/components/schemas/BICFIDec2014Identifier'
-        LEI:
-          $ref: '#/components/schemas/LEIIdentifier'
-        Othr:
-          $ref: '#/components/schemas/GenericFinancialIdentification1'
-    Max70Text:
-      maxLength: 70
-      minLength: 1
-      type: string
-    GroupHeader87_EPC259-22_V3.0_DS04b:
-      type: object
-      properties:
-        MsgId:
-          $ref: '#/components/schemas/Max35Text'
-        CreDtTm:
-          $ref: '#/components/schemas/ISODateTime'
-        InitgPty:
-          $ref: '#/components/schemas/PartyIdentification135_EPC259-22_V3.0_DS04b'
-      required:
-      - MsgId
-      - CreDtTm
-      - InitgPty
-    PaymentTransaction104_EPC259-22_V3.0_DS08N:
-      type: object
-      properties:
-        StsId:
-          $ref: '#/components/schemas/Max35Text'
-        OrgnlInstrId:
-          $ref: '#/components/schemas/Max35Text'
-        OrgnlEndToEndId:
-          $ref: '#/components/schemas/Max35Text'
-        TxSts:
-          $ref: '#/components/schemas/ExternalPaymentTransactionStatus1Code'
-        StsRsnInf:
-          $ref: '#/components/schemas/StatusReasonInformation12_EPC259-22_V3.0_DS08N'
-        ChrgsInf:
-          $ref: '#/components/schemas/Charges7_EPC259-22_V3.0_DS04b'
-        DbtrDcsnDtTm:
-          $ref: '#/components/schemas/ISODateTime'
-        OrgnlTxRef:
-          $ref: '#/components/schemas/OriginalTransactionReference29_EPC259-22_V3.0_DS08N'
-      required:
-      - OrgnlInstrId
-      - OrgnlEndToEndId
-      - TxSts
-      - StsRsnInf
-      - DbtrDcsnDtTm
-      - OrgnlTxRef
-    ExternalFinancialInstitutionIdentification1Code_Wrapper:
-      type: object
-      properties:
-        Cd:
-          $ref: '#/components/schemas/ExternalFinancialInstitutionIdentification1Code'
-    OrganisationIdentificationSchemeName1Choice_EPC259-22_V3.0_DS04b:
-      oneOf:
-      - $ref: '#/components/schemas/ExternalOrganisationIdentification1Code_II_Wrapper'
-      - $ref: '#/components/schemas/Max35Text_Wrapper'
-    FinancialIdentificationSchemeName1Choice:
-      oneOf:
-      - $ref: '#/components/schemas/ExternalFinancialInstitutionIdentification1Code_Wrapper'
-      - $ref: '#/components/schemas/Max35Text_Wrapper'
-    OriginalPaymentInstruction31_EPC259-22_V3.0_DS05:
-      type: object
-      properties:
-        OrgnlPmtInfId:
-          $ref: '#/components/schemas/Max35Text'
-        TxInfAndSts:
-          $ref: '#/components/schemas/PaymentTransaction104_EPC259-22_V3.0_DS05'
-      required:
-      - OrgnlPmtInfId
-      - TxInfAndSts
-    OriginalPaymentInstruction31_EPC259-22_V3.0_DS08P:
-      type: object
-      properties:
-        OrgnlPmtInfId:
-          $ref: '#/components/schemas/Max35Text'
-        TxInfAndSts:
-          type: array
-          items:
-            $ref: '#/components/schemas/PaymentTransaction104_EPC259-22_V3.0_DS08P'
-      required:
-      - OrgnlPmtInfId
-    GenericPersonIdentification1_II:
-      type: object
-      properties:
-        Id:
-          $ref: '#/components/schemas/Max35Text'
-        SchmeNm:
-          $ref: '#/components/schemas/PersonIdentificationSchemeName1Choice_II'
-        Issr:
-          $ref: '#/components/schemas/Max35Text'
-      required:
-      - Id
-    AsynchronousSepaRequestToPayResponseResource:
-      type: object
-      properties:
-        resourceId:
-          $ref: '#/components/schemas/ResourceId'
-        AsynchronousSepaRequestToPayResponse:
-          $ref: '#/components/schemas/AsynchronousSepaRequestToPayResponse'
-        _links:
-          type: object
-          properties:
-            initialSepaRequestToPayUri:
-              $ref: '#/components/schemas/GenericHalLink'
-          required:
-          - initialSepaRequestToPayUri
-    ExternalPersonIdentification1Code_II:
-      maxLength: 4
-      minLength: 1
-      enum:
-      - ARNU
-      - CCPT
-      - CUST
-      - DRLC
-      - EMPL
-      - NIDN
-      - POID
-      - SOSE
-      - TELE
-      - TXID
-      type: string
-    PaymentTransaction104:
-      type: object
-      properties:
-        StsId:
-          $ref: '#/components/schemas/Max35Text'
-        OrgnlInstrId:
-          $ref: '#/components/schemas/Max35Text'
-        OrgnlEndToEndId:
-          $ref: '#/components/schemas/Max35Text'
-        TxSts:
-          $ref: '#/components/schemas/ExternalPaymentTransactionStatus1Code'
-        StsRsnInf:
-          $ref: '#/components/schemas/StatusReasonInformation12'
-        ChrgsInf:
-          $ref: '#/components/schemas/Charges7'
-        OrgnlTxRef:
-          $ref: '#/components/schemas/OriginalTransactionReference29'
-      required:
-      - StsId
-      - OrgnlInstrId
-      - OrgnlEndToEndId
-      - TxSts
-      - StsRsnInf
-      - OrgnlTxRef
-    PersonIdentification13_II:
-      type: object
-      properties:
-        DtAndPlcOfBirth:
-          $ref: '#/components/schemas/DateAndPlaceOfBirth1'
-        Othr:
-          type: array
-          items:
-            $ref: '#/components/schemas/GenericPersonIdentification1_II'
-    StatusReasonInformation12_EPC259-22_V3.0_REDIRECT:
-      type: object
-      properties:
-        Orgtr:
-          $ref: '#/components/schemas/PartyIdentification135_EPC259-22_V3.0_DS04b'
-        AddtlInf:
-          $ref: '#/components/schemas/Max105Text'
-      required:
-      - Orgtr
-      - AddtlInf
-    OriginalTransactionReference29_EPC259-22_V3.0_DS08N:
-      type: object
-      properties:
-        Amt:
-          $ref: '#/components/schemas/AmountType4Choice_EPC259-22_V3.0_DS02'
-        ReqdExctnDt:
-          $ref: '#/components/schemas/DateAndDateTime2Choice_EPC259-22_V3.0_DS02'
-        XpryDt:
-          $ref: '#/components/schemas/DateAndDateTime2Choice_EPC259-22_V3.0_DS02'
-        PmtTpInf:
-          $ref: '#/components/schemas/PaymentTypeInformation26_EPC259-22_V3.0_DS04b'
-        RmtInf:
-          $ref: '#/components/schemas/RemittanceInformation16_EPC259-22_V3.0_DS04b'
-        Dbtr:
-          $ref: '#/components/schemas/PartyIdentification135_EPC259-22_V3.0_DS08N_2'
-        DbtrAcct:
-          $ref: '#/components/schemas/CashAccount38_EPC259-22_V3.0_DS08N'
-        DbtrAgt:
-          $ref: '#/components/schemas/BranchAndFinancialInstitutionIdentification6_EPC259-22_V3.0_DS02'
-        CdtrAgt:
-          $ref: '#/components/schemas/BranchAndFinancialInstitutionIdentification6_EPC259-22_V3.0_DS02'
-        Cdtr:
-          $ref: '#/components/schemas/PartyIdentification135_EPC259-22_V3.0_DS04b_3'
-        CdtrAcct:
-          $ref: '#/components/schemas/CashAccount38'
-      required:
-      - Amt
-      - ReqdExctnDt
-      - XpryDt
-      - PmtTpInf
-      - DbtrAgt
-      - CdtrAgt
-      - Cdtr
-      - CdtrAcct
-    ActiveOrHistoricCurrencyAndAmount_EPC259-22_V3.0_DS02_Wrapper:
-      type: object
-      properties:
-        InstdAmt:
-          $ref: '#/components/schemas/ActiveOrHistoricCurrencyAndAmount_EPC259-22_V3.0_DS02'
-    GroupHeader87_EPC259-22_V3.0_DS08N:
-      type: object
-      properties:
-        MsgId:
-          $ref: '#/components/schemas/Max35Text'
-        CreDtTm:
-          $ref: '#/components/schemas/ISODateTime'
-        InitgPty:
-          $ref: '#/components/schemas/PartyIdentification135_EPC259-22_V3.0_DS08N'
-      required:
-      - MsgId
-      - CreDtTm
-      - InitgPty
-    Party38Choice_EPC259-22_V3.0_DS04b_2:
-      oneOf:
-      - $ref: '#/components/schemas/OrganisationIdentification29_EPC259-22_V3.0_DS04b_2_Wrapper'
-      - $ref: '#/components/schemas/PersonIdentification13_IV_Wrapper'
-    OriginalPaymentInstruction31_EPC259-22_V3.0_REDIRECT:
-      type: object
-      properties:
-        OrgnlPmtInfId:
-          $ref: '#/components/schemas/Max35Text'
-        TxInfAndSts:
-          type: array
-          items:
-            $ref: '#/components/schemas/PaymentTransaction104_EPC259-22_V3.0_REDIRECT'
-      required:
-      - OrgnlPmtInfId
-    CreditorPaymentActivationRequestStatusReportV07_EPC259-22_V3.0_DS05:
+    CreditorPaymentActivationRequestStatusReportV07_EPC259-22_V3.0_REDIRECT:
       type: object
       properties:
         GrpHdr:
@@ -789,158 +958,70 @@ components:
         OrgnlPmtInfAndSts:
           type: array
           items:
-            $ref: '#/components/schemas/OriginalPaymentInstruction31_EPC259-22_V3.0_DS05'
+            $ref: '#/components/schemas/OriginalPaymentInstruction31_EPC259-22_V3.0_REDIRECT'
           maxItems: 2
       required:
       - GrpHdr
       - OrgnlGrpInfAndSts
-    TrueFalseIndicator:
-      type: boolean
-    ExternalPersonIdentification1Code_EPC259-22_V3.0_DS02_Wrapper:
+    ExternalProxyAccountType1Code_II_Wrapper:
       type: object
       properties:
         Cd:
-          $ref: '#/components/schemas/ExternalPersonIdentification1Code_EPC259-22_V3.0_DS02'
-    CreditorReferenceType1Choice_EPC259-22_V3.0_DS02:
-      oneOf:
-      - $ref: '#/components/schemas/DocumentType3Code_Wrapper'
-    Charges7_EPC259-22_V3.0_DS04b:
-      type: object
-      properties:
-        Amt:
-          $ref: '#/components/schemas/ActiveOrHistoricCurrencyAndAmount_EPC259-22_V3.0_DS04b'
-        Agt:
-          $ref: '#/components/schemas/BranchAndFinancialInstitutionIdentification6_EPC259-22_V3.0_DS02'
-      required:
-      - Amt
-      - Agt
-    PartyIdentification135_EPC259-22_V3.0_DS08N_2:
+          $ref: '#/components/schemas/ExternalProxyAccountType1Code_II'
+    CashAccount38_EPC259-22_V3.0_DS08N:
       type: object
       properties:
         Id:
-          $ref: '#/components/schemas/Party38Choice_EPC259-22_V3.0_DS04b_2'
+          $ref: '#/components/schemas/AccountIdentification4Choice_EPC259-22_V3.0_DS08N'
+        Nm:
+          $ref: '#/components/schemas/Max70Text'
+        Prxy:
+          $ref: '#/components/schemas/ProxyAccountIdentification1_EPC259-22_V3.0_DS08N'
       required:
       - Id
-    Charges7:
-      type: object
-      properties:
-        Amt:
-          $ref: '#/components/schemas/ActiveOrHistoricCurrencyAndAmount_EPC259-22_V3.0_DS02'
-        Agt:
-          $ref: '#/components/schemas/BranchAndFinancialInstitutionIdentification6_EPC259-22_V3.0_DS02'
-      required:
-      - Amt
-      - Agt
-    RemittanceInformation16:
-      type: object
-      properties:
-        Ustrd:
-          $ref: '#/components/schemas/Max140Text'
-        Strd:
-          $ref: '#/components/schemas/StructuredRemittanceInformation16'
-    PartyIdentification135_EPC259-22_V3.0_DS04b:
+    GenericOrganisationIdentification1_EPC259-22_V3.0_DS04b_2:
       type: object
       properties:
         Id:
-          $ref: '#/components/schemas/Party38Choice_EPC259-22_V3.0_DS04b'
+          $ref: '#/components/schemas/Max35Text'
+        SchmeNm:
+          $ref: '#/components/schemas/OrganisationIdentificationSchemeName1Choice_EPC259-22_V3.0_DS04b_2'
       required:
       - Id
-    Document_EPC259-22_V3.0_DS08N:
-      type: object
-      properties:
-        CdtrPmtActvtnReqStsRpt:
-          $ref: '#/components/schemas/CreditorPaymentActivationRequestStatusReportV07_EPC259-22_V3.0_DS08N'
-      required:
-      - CdtrPmtActvtnReqStsRpt
-    OrganisationIdentification29_II_Wrapper:
-      type: object
-      properties:
-        OrgId:
-          $ref: '#/components/schemas/OrganisationIdentification29_II'
-    OriginalTransactionReference29:
-      type: object
-      properties:
-        Amt:
-          $ref: '#/components/schemas/AmountType4Choice_EPC259-22_V3.0_DS02'
-        ReqdExctnDt:
-          $ref: '#/components/schemas/DateAndDateTime2Choice_EPC259-22_V3.0_DS02'
-        XpryDt:
-          $ref: '#/components/schemas/DateAndDateTime2Choice_EPC259-22_V3.0_DS02'
-        PmtTpInf:
-          $ref: '#/components/schemas/PaymentTypeInformation26_EPC259-22_V3.0_DS04b'
-        RmtInf:
-          $ref: '#/components/schemas/RemittanceInformation16'
-        DbtrAgt:
-          $ref: '#/components/schemas/BranchAndFinancialInstitutionIdentification6_EPC259-22_V3.0_DS02'
-        CdtrAgt:
-          $ref: '#/components/schemas/BranchAndFinancialInstitutionIdentification6_EPC259-22_V3.0_DS02'
-        Cdtr:
-          $ref: '#/components/schemas/PartyIdentification135'
-        CdtrAcct:
-          $ref: '#/components/schemas/CashAccount38'
-      required:
-      - Amt
-      - ReqdExctnDt
-      - XpryDt
-      - PmtTpInf
-      - DbtrAgt
-      - CdtrAgt
-      - Cdtr
-      - CdtrAcct
-    ExternalPaymentTransactionStatus1Code_EPC259-22_V3.0_REDIRECT:
+      - SchmeNm
+    ExternalOrganisationIdentification1Code_II:
       maxLength: 4
       minLength: 1
       enum:
-      - ''
-      - ACTC
+      - BANK
+      - BDID
+      - BOID
+      - CBID
+      - CHID
+      - CINC
+      - COID
+      - CUST
+      - DUNS
+      - EMPL
+      - GS1G
+      - SREN
+      - SRET
+      - TXID
       type: string
-    Max105Text:
-      maxLength: 105
-      minLength: 1
-      type: string
-    PartyIdentification135:
+    PersonIdentification13_IV_Wrapper:
       type: object
       properties:
-        Nm:
-          $ref: '#/components/schemas/Max140Text'
-        Id:
-          $ref: '#/components/schemas/Party38Choice_IV'
-      required:
-      - Id
-    StatusReason6Choice_EPC259-22_V3.0_DS04b:
+        PrvtId:
+          $ref: '#/components/schemas/PersonIdentification13_IV'
+    OrganisationIdentification29_EPC259-22_V3.0_DS04b_2_Wrapper:
+      type: object
+      properties:
+        OrgId:
+          $ref: '#/components/schemas/OrganisationIdentification29_EPC259-22_V3.0_DS04b_2'
+    ProxyAccountType1Choice_EPC259-22_V3.0_DS08N:
       oneOf:
-      - $ref: '#/components/schemas/ExternalStatusReason1Code_Wrapper'
+      - $ref: '#/components/schemas/ExternalProxyAccountType1Code_II_Wrapper'
       - $ref: '#/components/schemas/Max35Text_Wrapper'
-    OriginalTransactionReference29_EPC259-22_V3.0_DS04b:
-      type: object
-      properties:
-        Amt:
-          $ref: '#/components/schemas/AmountType4Choice_EPC259-22_V3.0_DS02'
-        ReqdExctnDt:
-          $ref: '#/components/schemas/DateAndDateTime2Choice_EPC259-22_V3.0_DS02'
-        XpryDt:
-          $ref: '#/components/schemas/DateAndDateTime2Choice_EPC259-22_V3.0_DS02'
-        PmtTpInf:
-          $ref: '#/components/schemas/PaymentTypeInformation26_EPC259-22_V3.0_DS04b'
-        RmtInf:
-          $ref: '#/components/schemas/RemittanceInformation16_EPC259-22_V3.0_DS04b'
-        DbtrAgt:
-          $ref: '#/components/schemas/BranchAndFinancialInstitutionIdentification6_EPC259-22_V3.0_DS02'
-        CdtrAgt:
-          $ref: '#/components/schemas/BranchAndFinancialInstitutionIdentification6_EPC259-22_V3.0_DS02'
-        Cdtr:
-          $ref: '#/components/schemas/PartyIdentification135_EPC259-22_V3.0_DS04b_3'
-        CdtrAcct:
-          $ref: '#/components/schemas/CashAccount38'
-      required:
-      - Amt
-      - ReqdExctnDt
-      - XpryDt
-      - PmtTpInf
-      - DbtrAgt
-      - CdtrAgt
-      - Cdtr
-      - CdtrAcct
     ExternalProxyAccountType1Code_II:
       maxLength: 4
       minLength: 1
@@ -967,12 +1048,193 @@ components:
       - UBIL
       - VIPN
       type: string
-    CountryCode:
-      pattern: '[A-Z]{2,2}'
+    Document_EPC259-22_V3.0_DS08P:
+      type: object
+      properties:
+        CdtrPmtActvtnReqStsRpt:
+          $ref: '#/components/schemas/CreditorPaymentActivationRequestStatusReportV07_EPC259-22_V3.0_DS08P'
+      required:
+      - CdtrPmtActvtnReqStsRpt
+    Document_EPC259-22_V3.0_DS05:
+      type: object
+      properties:
+        CdtrPmtActvtnReqStsRpt:
+          $ref: '#/components/schemas/CreditorPaymentActivationRequestStatusReportV07_EPC259-22_V3.0_DS05'
+      required:
+      - CdtrPmtActvtnReqStsRpt
+    PaymentTransaction104_EPC259-22_V3.0_DS05:
+      type: object
+      properties:
+        StsId:
+          $ref: '#/components/schemas/Max35Text'
+        OrgnlInstrId:
+          $ref: '#/components/schemas/Max35Text'
+        OrgnlEndToEndId:
+          $ref: '#/components/schemas/Max35Text'
+        TxSts:
+          $ref: '#/components/schemas/ExternalPaymentTransactionStatus1Code_II'
+        StsRsnInf:
+          $ref: '#/components/schemas/StatusReasonInformation12_EPC259-22_V3.0_DS05'
+        OrgnlTxRef:
+          $ref: '#/components/schemas/OriginalTransactionReference29_EPC259-22_V3.0_DS04b'
+      required:
+      - StsId
+      - OrgnlInstrId
+      - OrgnlEndToEndId
+      - TxSts
+      - StsRsnInf
+      - OrgnlTxRef
+    ExternalStatusReason1Code:
+      maxLength: 4
+      minLength: 1
+      enum:
+      - AC02
+      - AM03
+      - AM05
+      - ATNS
+      - BE16
+      - EDTL
+      - EDTR
+      - FF01
+      - FRAD
+      - MS03
+      - NRCH
+      - PINS
+      - RR04
+      - RTNS
+      - SPII
       type: string
-    OrganisationIdentificationSchemeName1Choice_EPC259-22_V3.0_DS04b_2:
+    ActiveCurrencyAndAmount_EPC259-22_V3.0_DS08P:
+      minimum: 0.01
+      type: number
+    GenericPersonIdentification1_IV:
+      type: object
+      properties:
+        Id:
+          $ref: '#/components/schemas/Max35Text'
+        SchmeNm:
+          $ref: '#/components/schemas/PersonIdentificationSchemeName1Choice_IV'
+      required:
+      - Id
+      - SchmeNm
+    ExternalStatusReason1Code_Wrapper:
+      type: object
+      properties:
+        Cd:
+          $ref: '#/components/schemas/ExternalStatusReason1Code'
+    DocumentType3Code:
+      enum:
+      - SCOR
+      type: string
+    CashAccount38:
+      type: object
+      properties:
+        Id:
+          $ref: '#/components/schemas/AccountIdentification4Choice'
+      required:
+      - Id
+    GenericHalLink:
+      type: object
+      properties:
+        href:
+          type: string
+        templated:
+          type: boolean
+          default: false
+      required:
+      - href
+    PositiveSepaRequestToPayResponse_DS08P:
+      type: object
+      properties:
+        Document:
+          $ref: '#/components/schemas/Document_EPC259-22_V3.0_DS08P'
+    PersonIdentificationSchemeName1Choice_IV:
       oneOf:
-      - $ref: '#/components/schemas/ExternalOrganisationIdentification1Code_EPC259-22_V3.0_DS02_Wrapper'
+      - $ref: '#/components/schemas/ExternalPersonIdentification1Code_EPC259-22_V3.0_DS02_Wrapper'
+    OrganisationIdentification29_II:
+      type: object
+      properties:
+        AnyBIC:
+          $ref: '#/components/schemas/AnyBICDec2014Identifier'
+        LEI:
+          $ref: '#/components/schemas/LEIIdentifier'
+        Othr:
+          type: array
+          items:
+            $ref: '#/components/schemas/GenericOrganisationIdentification1_EPC259-22_V3.0_DS04b'
+    PersonIdentification13_IV:
+      type: object
+      properties:
+        Othr:
+          $ref: '#/components/schemas/GenericPersonIdentification1_IV'
+      required:
+      - Othr
+    Party38Choice_IV:
+      oneOf:
+      - $ref: '#/components/schemas/OrganisationIdentification29_EPC259-22_V3.0_DS04b_Wrapper'
+      - $ref: '#/components/schemas/PersonIdentification13_IV_Wrapper'
+    ExternalLocalInstrument1Code_Wrapper:
+      type: object
+      properties:
+        Cd:
+          $ref: '#/components/schemas/ExternalLocalInstrument1Code'
+    FinancialIdentificationSchemeName1Choice:
+      oneOf:
+      - $ref: '#/components/schemas/ExternalFinancialInstitutionIdentification1Code_Wrapper'
+      - $ref: '#/components/schemas/Max35Text_Wrapper'
+    RemittanceInformation16_EPC259-22_V3.0_DS04b:
+      type: object
+      properties:
+        Ustrd:
+          $ref: '#/components/schemas/Max140Text'
+        Strd:
+          $ref: '#/components/schemas/StructuredRemittanceInformation16_EPC259-22_V3.0_DS04b'
+    ExternalFinancialInstitutionIdentification1Code:
+      maxLength: 4
+      minLength: 1
+      type: string
+    Document_EPC259-22_V3.0_DS08N:
+      type: object
+      properties:
+        CdtrPmtActvtnReqStsRpt:
+          $ref: '#/components/schemas/CreditorPaymentActivationRequestStatusReportV07_EPC259-22_V3.0_DS08N'
+      required:
+      - CdtrPmtActvtnReqStsRpt
+    ExternalPaymentTransactionStatus1Code_IV:
+      maxLength: 4
+      minLength: 1
+      enum:
+      - ACCP
+      - ACWC
+      type: string
+    RemittanceAmount2_EPC259-22_V3.0_DS02:
+      type: object
+      properties:
+        CdtNoteAmt:
+          $ref: '#/components/schemas/ActiveOrHistoricCurrencyAndAmount_EPC259-22_V3.0_DS02_2'
+    ExternalAccountIdentification1Code_II_Wrapper:
+      type: object
+      properties:
+        Cd:
+          $ref: '#/components/schemas/ExternalAccountIdentification1Code_II'
+    OrganisationIdentification29_II_Wrapper:
+      type: object
+      properties:
+        OrgId:
+          $ref: '#/components/schemas/OrganisationIdentification29_II'
+    GroupHeader87_EPC259-22_V3.0_DS08N:
+      type: object
+      properties:
+        MsgId:
+          $ref: '#/components/schemas/Max35Text'
+        CreDtTm:
+          $ref: '#/components/schemas/ISODateTime'
+        InitgPty:
+          $ref: '#/components/schemas/PartyIdentification135_EPC259-22_V3.0_DS08N'
+      required:
+      - MsgId
+      - CreDtTm
+      - InitgPty
     ErrorModelType2:
       type: object
       description: Error response format returned by the Spring WebFlux gateway layer.
@@ -1019,13 +1281,6 @@ components:
       - status
       - error
       - requestId
-    PersonIdentification13_IV:
-      type: object
-      properties:
-        Othr:
-          $ref: '#/components/schemas/GenericPersonIdentification1_IV'
-      required:
-      - Othr
     ErrorModel:
       type: object
       properties:
@@ -1052,36 +1307,8 @@ components:
       required:
       - status
       - message
-    PaymentTypeInformation26_EPC259-22_V3.0_DS04b:
-      type: object
-      properties:
-        SvcLvl:
-          $ref: '#/components/schemas/ServiceLevel8Choice'
-        LclInstrm:
-          $ref: '#/components/schemas/LocalInstrument2Choice'
-      required:
-      - SvcLvl
-      - LclInstrm
-    OrganisationIdentification29_EPC259-22_V3.0_DS04b_Wrapper:
-      type: object
-      properties:
-        OrgId:
-          $ref: '#/components/schemas/OrganisationIdentification29_EPC259-22_V3.0_DS04b'
-    GenericOrganisationIdentification1_EPC259-22_V3.0_DS04b_2:
-      type: object
-      properties:
-        Id:
-          $ref: '#/components/schemas/Max35Text'
-        SchmeNm:
-          $ref: '#/components/schemas/OrganisationIdentificationSchemeName1Choice_EPC259-22_V3.0_DS04b_2'
-      required:
-      - Id
-      - SchmeNm
-    ExternalOrganisationIdentification1Code_EPC259-22_V3.0_DS02:
-      maxLength: 4
-      minLength: 1
-      enum:
-      - BOID
+    IBAN2007Identifier:
+      pattern: '[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}'
       type: string
     StatusReasonInformation12_EPC259-22_V3.0_DS08N:
       type: object
@@ -1093,74 +1320,9 @@ components:
       required:
       - Orgtr
       - Rsn
-    AccountIdentification4Choice:
-      oneOf:
-      - $ref: '#/components/schemas/IBAN2007Identifier_Wrapper'
-    CreditorPaymentActivationRequestStatusReportV07_EPC259-22_V3.0_REDIRECT:
-      type: object
-      properties:
-        GrpHdr:
-          $ref: '#/components/schemas/GroupHeader87_EPC259-22_V3.0_DS04b'
-        OrgnlGrpInfAndSts:
-          $ref: '#/components/schemas/OriginalGroupInformation30_EPC259-22_V3.0_DS04b'
-        OrgnlPmtInfAndSts:
-          type: array
-          items:
-            $ref: '#/components/schemas/OriginalPaymentInstruction31_EPC259-22_V3.0_REDIRECT'
-          maxItems: 2
-      required:
-      - GrpHdr
-      - OrgnlGrpInfAndSts
-    PaymentTransaction104_EPC259-22_V3.0_DS08P:
-      type: object
-      properties:
-        StsId:
-          $ref: '#/components/schemas/Max35Text'
-        OrgnlInstrId:
-          $ref: '#/components/schemas/Max35Text'
-        OrgnlEndToEndId:
-          $ref: '#/components/schemas/Max35Text'
-        TxSts:
-          $ref: '#/components/schemas/ExternalPaymentTransactionStatus1Code_IV'
-        StsRsnInf:
-          $ref: '#/components/schemas/StatusReasonInformation12_EPC259-22_V3.0_DS08P'
-        PmtCondSts:
-          $ref: '#/components/schemas/PaymentConditionStatus1_EPC259-22_V3.0_DS08P'
-        ChrgsInf:
-          $ref: '#/components/schemas/Charges7_EPC259-22_V3.0_DS04b'
-        DbtrDcsnDtTm:
-          $ref: '#/components/schemas/ISODateTime'
-        AccptncDtTm:
-          $ref: '#/components/schemas/ISODateTime'
-        OrgnlTxRef:
-          $ref: '#/components/schemas/OriginalTransactionReference29_EPC259-22_V3.0_DS08N'
-      required:
-      - OrgnlInstrId
-      - OrgnlEndToEndId
-      - TxSts
-      - StsRsnInf
-      - DbtrDcsnDtTm
-      - OrgnlTxRef
-    GenericPersonIdentification1_IV:
-      type: object
-      properties:
-        Id:
-          $ref: '#/components/schemas/Max35Text'
-        SchmeNm:
-          $ref: '#/components/schemas/PersonIdentificationSchemeName1Choice_IV'
-      required:
-      - Id
-      - SchmeNm
-    ExternalLocalInstrument1Code_Wrapper:
-      type: object
-      properties:
-        Cd:
-          $ref: '#/components/schemas/ExternalLocalInstrument1Code'
-    IBAN2007Identifier:
-      pattern: '[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}'
-      type: string
-    ResourceId:
-      type: string
+    ActiveOrHistoricCurrencyAndAmount_EPC259-22_V3.0_DS04b:
+      minimum: 0.01
+      type: number
     PartyIdentification135_EPC259-22_V3.0_DS04b_3:
       type: object
       properties:
@@ -1171,140 +1333,27 @@ components:
       required:
       - Nm
       - Id
-    PaymentConditionStatus1_EPC259-22_V3.0_DS08P:
-      type: object
-      properties:
-        AccptdAmt:
-          $ref: '#/components/schemas/ActiveCurrencyAndAmount_EPC259-22_V3.0_DS08P'
-        GrntedPmt:
-          $ref: '#/components/schemas/TrueFalseIndicator'
-        EarlyPmt:
-          $ref: '#/components/schemas/TrueFalseIndicator'
-      required:
-      - GrntedPmt
-      - EarlyPmt
-    AsynchronousSepaRequestToPayResponse:
-      oneOf:
-      - $ref: '#/components/schemas/RedirectSepaRequestToPayResponseResource_DS05b'
-      - $ref: '#/components/schemas/PositiveSepaRequestToPayResponseResource_DS05'
-      - $ref: '#/components/schemas/Document'
-      - $ref: '#/components/schemas/PositiveSepaRequestToPayResponse_DS08P'
-      - $ref: '#/components/schemas/NegativeSepaRequestToPayResponse_DS08N'
-    Max34Text:
-      maxLength: 34
-      minLength: 1
-      type: string
-    ExternalPersonIdentification1Code_II_Wrapper:
-      type: object
-      properties:
-        Cd:
-          $ref: '#/components/schemas/ExternalPersonIdentification1Code_II'
-    Party38Choice_EPC259-22_V3.0_DS04b:
-      oneOf:
-      - $ref: '#/components/schemas/OrganisationIdentification29_EPC259-22_V3.0_DS04b_Wrapper'
-    Max140Text_EPC259-22_V3.0_DS02:
-      maxLength: 70
-      minLength: 1
-      type: string
-    ExternalServiceLevel1Code_Wrapper:
-      type: object
-      properties:
-        Cd:
-          $ref: '#/components/schemas/ExternalServiceLevel1Code'
-    Max35Text_Wrapper:
-      type: object
-      properties:
-        Prtry:
-          $ref: '#/components/schemas/Max35Text'
-    DateAndPlaceOfBirth1:
-      type: object
-      properties:
-        BirthDt:
-          $ref: '#/components/schemas/ISODate'
-        PrvcOfBirth:
-          $ref: '#/components/schemas/Max35Text'
-        CityOfBirth:
-          $ref: '#/components/schemas/Max35Text'
-        CtryOfBirth:
-          $ref: '#/components/schemas/CountryCode'
-      required:
-      - BirthDt
-      - CityOfBirth
-      - CtryOfBirth
-    AccountSchemeName1Choice_EPC259-22_V3.0_DS08N:
-      oneOf:
-      - $ref: '#/components/schemas/ExternalAccountIdentification1Code_II_Wrapper'
-      - $ref: '#/components/schemas/Max35Text_Wrapper'
-    ExternalOrganisationIdentification1Code_II:
-      maxLength: 4
-      minLength: 1
-      enum:
-      - BANK
-      - BDID
-      - BOID
-      - CBID
-      - CHID
-      - CINC
-      - COID
-      - CUST
-      - DUNS
-      - EMPL
-      - GS1G
-      - SREN
-      - SRET
-      - TXID
-      type: string
-    GenericAccountIdentification1_EPC259-22_V3.0_DS08N:
+    GenericOrganisationIdentification1_EPC259-22_V3.0_DS04b:
       type: object
       properties:
         Id:
-          $ref: '#/components/schemas/Max34Text'
+          $ref: '#/components/schemas/Max35Text'
         SchmeNm:
-          $ref: '#/components/schemas/AccountSchemeName1Choice_EPC259-22_V3.0_DS08N'
+          $ref: '#/components/schemas/OrganisationIdentificationSchemeName1Choice_EPC259-22_V3.0_DS04b'
         Issr:
           $ref: '#/components/schemas/Max35Text'
       required:
       - Id
-    OriginalPaymentInstruction31_EPC259-22_V3.0_DS08N:
+    StatusReasonInformation12:
       type: object
       properties:
-        OrgnlPmtInfId:
-          $ref: '#/components/schemas/Max35Text'
-        TxInfAndSts:
-          $ref: '#/components/schemas/PaymentTransaction104_EPC259-22_V3.0_DS08N'
+        Orgtr:
+          $ref: '#/components/schemas/PartyIdentification135'
+        Rsn:
+          $ref: '#/components/schemas/StatusReason6Choice_EPC259-22_V3.0_DS04b'
       required:
-      - OrgnlPmtInfId
-      - TxInfAndSts
-    ProxyAccountIdentification1_EPC259-22_V3.0_DS08N:
-      type: object
-      properties:
-        Tp:
-          $ref: '#/components/schemas/ProxyAccountType1Choice_EPC259-22_V3.0_DS08N'
-        Id:
-          $ref: '#/components/schemas/Max2048Text'
-      required:
-      - Id
-    CreditorReferenceInformation2_EPC259-22_V3.0_DS02:
-      type: object
-      properties:
-        Tp:
-          $ref: '#/components/schemas/CreditorReferenceType2_EPC259-22_V3.0_DS02'
-        Ref:
-          $ref: '#/components/schemas/Max35Text'
-      required:
-      - Tp
-      - Ref
-    ExternalAccountIdentification1Code_II_Wrapper:
-      type: object
-      properties:
-        Cd:
-          $ref: '#/components/schemas/ExternalAccountIdentification1Code_II'
-    ISODate:
-      type: string
-    ActiveOrHistoricCurrencyAndAmount_EPC259-22_V3.0_DS02_2:
-      maximum: 999999999.99
-      minimum: 0.01
-      type: number
+      - Orgtr
+      - Rsn
     OriginalGroupInformation30_EPC259-22_V3.0_DS04b:
       type: object
       properties:
@@ -1318,22 +1367,53 @@ components:
       - OrgnlMsgId
       - OrgnlMsgNmId
       - OrgnlCreDtTm
-    ExternalPersonIdentification1Code_EPC259-22_V3.0_DS02:
+    Max140Text:
+      maxLength: 140
+      minLength: 1
+      type: string
+    ExternalPaymentTransactionStatus1Code_EPC259-22_V3.0_REDIRECT:
       maxLength: 4
       minLength: 1
       enum:
-      - POID
+      - ''
+      - ACTC
       type: string
-    LocalInstrument2Choice:
+    Document_EPC259-22_V3.0_REDIRECT:
+      type: object
+      properties:
+        CdtrPmtActvtnReqStsRpt:
+          $ref: '#/components/schemas/CreditorPaymentActivationRequestStatusReportV07_EPC259-22_V3.0_REDIRECT'
+      required:
+      - CdtrPmtActvtnReqStsRpt
+    GenericPersonIdentification1_II:
+      type: object
+      properties:
+        Id:
+          $ref: '#/components/schemas/Max35Text'
+        SchmeNm:
+          $ref: '#/components/schemas/PersonIdentificationSchemeName1Choice_II'
+        Issr:
+          $ref: '#/components/schemas/Max35Text'
+      required:
+      - Id
+    ExternalPersonIdentification1Code_II_Wrapper:
+      type: object
+      properties:
+        Cd:
+          $ref: '#/components/schemas/ExternalPersonIdentification1Code_II'
+    OrganisationIdentificationSchemeName1Choice_EPC259-22_V3.0_DS04b:
       oneOf:
-      - $ref: '#/components/schemas/ExternalLocalInstrument1Code_Wrapper'
+      - $ref: '#/components/schemas/ExternalOrganisationIdentification1Code_II_Wrapper'
       - $ref: '#/components/schemas/Max35Text_Wrapper'
-    AnyBICDec2014Identifier:
-      pattern: '[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}([A-Z0-9]{3,3}){0,1}'
-      type: string
-    ServiceLevel8Choice:
-      oneOf:
-      - $ref: '#/components/schemas/ExternalServiceLevel1Code_Wrapper'
+    OrganisationIdentification29_EPC259-22_V3.0_DS04b:
+      type: object
+      properties:
+        AnyBIC:
+          $ref: '#/components/schemas/AnyBICDec2014Identifier'
+        LEI:
+          $ref: '#/components/schemas/LEIIdentifier'
+        Othr:
+          $ref: '#/components/schemas/GenericOrganisationIdentification1_EPC259-22_V3.0_DS04b'
     GroupHeader87:
       type: object
       properties:
@@ -1347,99 +1427,9 @@ components:
       - MsgId
       - CreDtTm
       - InitgPty
-    Document_EPC259-22_V3.0_DS05:
-      type: object
-      properties:
-        CdtrPmtActvtnReqStsRpt:
-          $ref: '#/components/schemas/CreditorPaymentActivationRequestStatusReportV07_EPC259-22_V3.0_DS05'
-      required:
-      - CdtrPmtActvtnReqStsRpt
-    OrganisationIdentification29_EPC259-22_V3.0_DS04b_2:
-      type: object
-      properties:
-        AnyBIC:
-          $ref: '#/components/schemas/AnyBICDec2014Identifier'
-        LEI:
-          $ref: '#/components/schemas/LEIIdentifier'
-        Othr:
-          $ref: '#/components/schemas/GenericOrganisationIdentification1_EPC259-22_V3.0_DS04b_2'
-    ActiveOrHistoricCurrencyAndAmount_EPC259-22_V3.0_DS04b:
-      minimum: 0.01
-      type: number
-    ActiveCurrencyAndAmount_EPC259-22_V3.0_DS08P:
-      minimum: 0.01
-      type: number
-    GenericFinancialIdentification1:
-      type: object
-      properties:
-        Id:
-          $ref: '#/components/schemas/Max35Text'
-        SchmeNm:
-          $ref: '#/components/schemas/FinancialIdentificationSchemeName1Choice'
-        Issr:
-          $ref: '#/components/schemas/Max35Text'
-      required:
-      - Id
-    ISODate_Wrapper:
-      type: object
-      properties:
-        Dt:
-          $ref: '#/components/schemas/ISODate'
-    PositiveSepaRequestToPayResponse_DS08P:
-      type: object
-      properties:
-        Document:
-          $ref: '#/components/schemas/Document_EPC259-22_V3.0_DS08P'
-    ExternalStatusReason1Code_II_Wrapper:
-      type: object
-      properties:
-        Cd:
-          $ref: '#/components/schemas/ExternalStatusReason1Code_II'
-    RemittanceAmount2:
-      type: object
-      properties:
-        CdtNoteAmt:
-          $ref: '#/components/schemas/ActiveOrHistoricCurrencyAndAmount_EPC259-22_V3.0_DS02'
-    OriginalPaymentInstruction31:
-      type: object
-      properties:
-        OrgnlPmtInfId:
-          $ref: '#/components/schemas/Max35Text'
-        TxInfAndSts:
-          $ref: '#/components/schemas/PaymentTransaction104'
-      required:
-      - OrgnlPmtInfId
-      - TxInfAndSts
-    Party38Choice_IV:
-      oneOf:
-      - $ref: '#/components/schemas/OrganisationIdentification29_EPC259-22_V3.0_DS04b_Wrapper'
-      - $ref: '#/components/schemas/PersonIdentification13_IV_Wrapper'
-    ExternalStatusReason1Code_Wrapper:
-      type: object
-      properties:
-        Cd:
-          $ref: '#/components/schemas/ExternalStatusReason1Code'
-    DocumentType3Code_Wrapper:
-      type: object
-      properties:
-        Cd:
-          $ref: '#/components/schemas/DocumentType3Code'
-    Party38Choice_II:
-      oneOf:
-      - $ref: '#/components/schemas/OrganisationIdentification29_II_Wrapper'
-      - $ref: '#/components/schemas/PersonIdentification13_II_Wrapper'
-    CreditorReferenceType2_EPC259-22_V3.0_DS02:
-      type: object
-      properties:
-        CdOrPrtry:
-          $ref: '#/components/schemas/CreditorReferenceType1Choice_EPC259-22_V3.0_DS02'
-        Issr:
-          $ref: '#/components/schemas/Max35Text'
-      required:
-      - CdOrPrtry
   responses:
-    Forbidden:
-      description: The client is not authorized to call this endpoint (HTTP403).
+    UnsupportedMediaType:
+      description: The media-type in Content-type of the request is not supported by the server. (HTTP415)
       headers:
         Correlation:
           $ref: '#/components/headers/X-Request-ID'
@@ -1460,8 +1450,8 @@ components:
             oneOf:
             - $ref: '#/components/schemas/ErrorModel'
             - $ref: '#/components/schemas/ErrorModelType2'
-    BadRequest:
-      description: The request could not be parsed or processed (HTTP400).
+    Forbidden:
+      description: The client is not authorized to call this endpoint (HTTP403).
       headers:
         Correlation:
           $ref: '#/components/headers/X-Request-ID'
@@ -1471,8 +1461,8 @@ components:
             oneOf:
             - $ref: '#/components/schemas/ErrorModel'
             - $ref: '#/components/schemas/ErrorModelType2'
-    UnsupportedMediaType:
-      description: The media-type in Content-type of the request is not supported by the server. (HTTP415)
+    BadRequest:
+      description: The request could not be parsed or processed (HTTP400).
       headers:
         Correlation:
           $ref: '#/components/headers/X-Request-ID'
@@ -1492,6 +1482,3 @@ components:
       allowReserved: false
       schema:
         type: string
-x-refined-from:
-- srtp-callback.yaml
-- pagopa-srtp-callback-openapi.yml

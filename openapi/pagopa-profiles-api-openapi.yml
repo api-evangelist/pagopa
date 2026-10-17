@@ -1,13 +1,19 @@
 openapi: 3.2.0
 info:
-  title: Pagopa Profiles API
   version: 4.1.1
+  title: IO API for Public Administration Services Profiles API
   contact:
     name: PagoPA S.p.A.
     url: https://docs.pagopa.it/io-guida-tecnica/
   x-logo:
     url: https://io.italia.it/assets/img/io-logo-blue.svg
-  description: 'Operations tagged Profiles across 2 of this provider''s published API definitions: io-functions-services.yaml, pagopa-io-services-openapi.yml. Each path carries the servers of the definition it was published in.'
+  description: '# Warning
+
+    **This is an experimental API that is (most probably) going to change as we evolve the IO platform.**
+
+    # Introduction
+
+    This is the documentation of the IO API for 3rd party services.'
 servers:
 - url: https://api.io.pagopa.it/api/v1
 tags:
@@ -53,8 +59,6 @@ paths:
               $ref: '#/components/schemas/FiscalCodePayload'
       tags:
       - Profiles
-    servers:
-    - url: https://api.io.pagopa.it/api/v1
   /profiles/{fiscal_code}:
     get:
       operationId: getProfile
@@ -92,8 +96,6 @@ paths:
       - $ref: '#/components/parameters/FiscalCode'
       tags:
       - Profiles
-    servers:
-    - url: https://api.io.pagopa.it/api/v1
 components:
   schemas:
     FiscalCodePayload:
@@ -204,6 +206,3 @@ components:
       name: Ocp-Apim-Subscription-Key
       in: header
       description: The `manage` API key obtained through the Backoffice IO.
-x-refined-from:
-- io-functions-services.yaml
-- pagopa-io-services-openapi.yml

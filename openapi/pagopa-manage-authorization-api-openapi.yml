@@ -1,13 +1,19 @@
 openapi: 3.2.0
 info:
-  title: Pagopa Manage Authorization API
   version: 4.1.1
+  title: IO API for Public Administration Services Manage…
   contact:
     name: PagoPA S.p.A.
     url: https://docs.pagopa.it/io-guida-tecnica/
   x-logo:
     url: https://io.italia.it/assets/img/io-logo-blue.svg
-  description: 'Operations tagged manage-authorization across 2 of this provider''s published API definitions: io-functions-services.yaml, pagopa-io-services-openapi.yml. Each path carries the servers of the definition it was published in.'
+  description: '# Warning
+
+    **This is an experimental API that is (most probably) going to change as we evolve the IO platform.**
+
+    # Introduction
+
+    This is the documentation of the IO API for 3rd party services.'
 servers:
 - url: https://api.io.pagopa.it/api/v1
 tags:
@@ -50,8 +56,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProblemJson'
-    servers:
-    - url: https://api.io.pagopa.it/api/v1
   /manage/services/{serviceId}/keys/{keyType}:
     put:
       tags:
@@ -96,20 +100,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProblemJson'
-    servers:
-    - url: https://api.io.pagopa.it/api/v1
 components:
-  parameters:
-    CmsSubscriptionKeyType:
-      name: keyType
-      in: path
-      description: Key type
-      required: true
-      schema:
-        type: string
-        enum:
-        - primary
-        - secondary
   schemas:
     CmsSubscriptionKeys:
       type: object
@@ -160,6 +151,17 @@ components:
           description: 'An absolute URI that identifies the specific occurrence of the problem.
 
             It may or may not yield further information if dereferenced.'
+  parameters:
+    CmsSubscriptionKeyType:
+      name: keyType
+      in: path
+      description: Key type
+      required: true
+      schema:
+        type: string
+        enum:
+        - primary
+        - secondary
   securitySchemes:
     SubscriptionKey:
       type: apiKey
@@ -171,6 +173,3 @@ components:
       name: Ocp-Apim-Subscription-Key
       in: header
       description: The `manage` API key obtained through the Backoffice IO.
-x-refined-from:
-- io-functions-services.yaml
-- pagopa-io-services-openapi.yml

@@ -1,18 +1,19 @@
 openapi: 3.2.0
 info:
-  title: Pagopa Eservices API
+  title: PDND Interoperability Eservices API
+  description: PDND Interoperability API for machine-to-machine interaction with interoperability features
+  x-summary: PDND Interoperability API
+  version: 3.1.0
   contact:
     name: API Support
     url: https://github.com/pagopa/pdnd-interop-frontend/issues
   termsOfService: https://selfcare.interop.pagopa.it/ui/it/termini-di-servizio
-  x-summary: PDND Interoperability API
-  version: '1.0'
-  description: 'Operations tagged eservices across 3 of this provider''s published API definitions: interop-api-v3.yaml, pagopa-pdnd-interop-v2-openapi.yml, pagopa-pdnd-interop-v3-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.interop.pagopa.it/v3
   description: Production environment
-- url: https://api.interop.pagopa.it/v2
-  description: PROD environment
+security:
+- DPoPAuth: []
+  DPoPProofHeader: []
 tags:
 - name: eservices
   description: E-Services routes
@@ -92,9 +93,6 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
     post:
       tags:
       - eservices
@@ -136,12 +134,6 @@ paths:
           $ref: '#/components/responses/Conflict'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /eservices/{eserviceId}:
     parameters:
     - name: eserviceId
@@ -183,9 +175,6 @@ paths:
           $ref: '#/components/responses/Conflict'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
     patch:
       tags:
       - eservices
@@ -228,9 +217,6 @@ paths:
           $ref: '#/components/responses/Conflict'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
     delete:
       tags:
       - eservices
@@ -265,12 +251,6 @@ paths:
           $ref: '#/components/responses/NotFound'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /eservices/{eserviceId}/delegation:
     parameters:
     - name: eserviceId
@@ -321,12 +301,6 @@ paths:
           $ref: '#/components/responses/Conflict'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /eservices/{eserviceId}/description:
     parameters:
     - name: eserviceId
@@ -377,12 +351,6 @@ paths:
           $ref: '#/components/responses/Conflict'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /eservices/{eserviceId}/name:
     parameters:
     - name: eserviceId
@@ -433,12 +401,6 @@ paths:
           $ref: '#/components/responses/Conflict'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /eservices/{eserviceId}/signalHub:
     parameters:
     - name: eserviceId
@@ -489,12 +451,6 @@ paths:
           $ref: '#/components/responses/Conflict'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /eservices/{eserviceId}/personalDataFlag:
     parameters:
     - name: eserviceId
@@ -545,12 +501,6 @@ paths:
           $ref: '#/components/responses/Conflict'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /eservices/{eserviceId}/descriptors:
     parameters:
     - name: eserviceId
@@ -599,9 +549,6 @@ paths:
           $ref: '#/components/responses/NotFound'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
     post:
       tags:
       - eservices
@@ -644,12 +591,6 @@ paths:
           $ref: '#/components/responses/NotFound'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /eservices/{eserviceId}/descriptors/{descriptorId}:
     parameters:
     - name: eserviceId
@@ -695,9 +636,6 @@ paths:
           $ref: '#/components/responses/NotFound'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
     patch:
       tags:
       - eservices
@@ -738,9 +676,6 @@ paths:
           $ref: '#/components/responses/NotFound'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
     delete:
       tags:
       - eservices
@@ -779,12 +714,6 @@ paths:
           $ref: '#/components/responses/Conflict'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /eservices/{eserviceId}/descriptors/{descriptorId}/quotas:
     parameters:
     - name: eserviceId
@@ -841,12 +770,6 @@ paths:
           $ref: '#/components/responses/Conflict'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /eservices/{eserviceId}/descriptors/{descriptorId}/documents:
     parameters:
     - name: eserviceId
@@ -896,9 +819,6 @@ paths:
           $ref: '#/components/responses/NotFound'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
     post:
       tags:
       - eservices
@@ -941,12 +861,6 @@ paths:
           $ref: '#/components/responses/Conflict'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /eservices/{eserviceId}/descriptors/{descriptorId}/documents/{documentId}:
     parameters:
     - name: eserviceId
@@ -1000,9 +914,6 @@ paths:
           $ref: '#/components/responses/NotFound'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
     delete:
       tags:
       - eservices
@@ -1037,12 +948,6 @@ paths:
           $ref: '#/components/responses/NotFound'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /eservices/{eserviceId}/descriptors/{descriptorId}/interface:
     parameters:
     - name: eserviceId
@@ -1090,9 +995,6 @@ paths:
           $ref: '#/components/responses/NotFound'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
     post:
       tags:
       - eservices
@@ -1137,9 +1039,6 @@ paths:
           $ref: '#/components/responses/NotFound'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
     delete:
       tags:
       - eservices
@@ -1176,12 +1075,6 @@ paths:
           $ref: '#/components/responses/NotFound'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /eservices/{eserviceId}/descriptors/{descriptorId}/suspend:
     post:
       tags:
@@ -1231,12 +1124,6 @@ paths:
           $ref: '#/components/responses/NotFound'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /eservices/{eserviceId}/descriptors/{descriptorId}/unsuspend:
     post:
       tags:
@@ -1286,12 +1173,6 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /eservices/{eserviceId}/descriptors/{descriptorId}/publish:
     post:
       tags:
@@ -1341,12 +1222,6 @@ paths:
           $ref: '#/components/responses/NotFound'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /eservices/{eserviceId}/descriptors/{descriptorId}/approve:
     post:
       tags:
@@ -1396,12 +1271,6 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /eservices/{eserviceId}/descriptors/{descriptorId}/reject:
     post:
       tags:
@@ -1458,12 +1327,6 @@ paths:
           $ref: '#/components/responses/NotFound'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /eservices/{eserviceId}/riskAnalyses:
     parameters:
     - name: eserviceId
@@ -1516,9 +1379,6 @@ paths:
           $ref: '#/components/responses/Conflict'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
     get:
       tags:
       - eservices
@@ -1552,12 +1412,6 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /eservices/{eserviceId}/riskAnalyses/{riskAnalysisId}:
     parameters:
     - name: eserviceId
@@ -1605,9 +1459,6 @@ paths:
           $ref: '#/components/responses/NotFound'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
     delete:
       tags:
       - eservices
@@ -1644,12 +1495,6 @@ paths:
           $ref: '#/components/responses/NotFound'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /eservices/{eserviceId}/descriptors/{descriptorId}/certifiedAttributes:
     parameters:
     - name: eserviceId
@@ -1699,12 +1544,6 @@ paths:
           $ref: '#/components/responses/NotFound'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /eservices/{eserviceId}/descriptors/{descriptorId}/declaredAttributes:
     parameters:
     - name: eserviceId
@@ -1754,12 +1593,6 @@ paths:
           $ref: '#/components/responses/NotFound'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /eservices/{eserviceId}/descriptors/{descriptorId}/verifiedAttributes:
     parameters:
     - name: eserviceId
@@ -1809,12 +1642,6 @@ paths:
           $ref: '#/components/responses/NotFound'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /eservices/{eserviceId}/descriptors/{descriptorId}/certifiedAttributes/groups/{groupIndex}/attributes:
     parameters:
     - name: eserviceId
@@ -1879,12 +1706,6 @@ paths:
           $ref: '#/components/responses/Conflict'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /eservices/{eserviceId}/descriptors/{descriptorId}/declaredAttributes/groups/{groupIndex}/attributes:
     parameters:
     - name: eserviceId
@@ -1949,12 +1770,6 @@ paths:
           $ref: '#/components/responses/Conflict'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /eservices/{eserviceId}/descriptors/{descriptorId}/verifiedAttributes/groups/{groupIndex}/attributes:
     parameters:
     - name: eserviceId
@@ -2019,12 +1834,6 @@ paths:
           $ref: '#/components/responses/Conflict'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /eservices/{eserviceId}/descriptors/{descriptorId}/certifiedAttributes/groups/{groupIndex}/attributes/{attributeId}:
     parameters:
     - name: eserviceId
@@ -2089,12 +1898,6 @@ paths:
           $ref: '#/components/responses/NotFound'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /eservices/{eserviceId}/descriptors/{descriptorId}/verifiedAttributes/groups/{groupIndex}/attributes/{attributeId}:
     parameters:
     - name: eserviceId
@@ -2159,12 +1962,6 @@ paths:
           $ref: '#/components/responses/NotFound'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /eservices/{eserviceId}/descriptors/{descriptorId}/declaredAttributes/groups/{groupIndex}/attributes/{attributeId}:
     parameters:
     - name: eserviceId
@@ -2229,12 +2026,6 @@ paths:
           $ref: '#/components/responses/NotFound'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /eservices/{eserviceId}/descriptors/{descriptorId}/certifiedAttributes/groups:
     parameters:
     - name: eserviceId
@@ -2289,12 +2080,6 @@ paths:
           $ref: '#/components/responses/NotFound'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /eservices/{eserviceId}/descriptors/{descriptorId}/declaredAttributes/groups:
     parameters:
     - name: eserviceId
@@ -2349,12 +2134,6 @@ paths:
           $ref: '#/components/responses/NotFound'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /eservices/{eserviceId}/descriptors/{descriptorId}/verifiedAttributes/groups:
     parameters:
     - name: eserviceId
@@ -2409,280 +2188,17 @@ paths:
           $ref: '#/components/responses/NotFound'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
 components:
   schemas:
-    RiskAnalysisFormSeed:
+    EServiceSeed:
       type: object
       additionalProperties: false
-      properties:
-        version:
-          type: string
-          minLength: 1
-          maxLength: 250
-        answers:
-          description: 'Key-value pairs of risk analysis form answers.
-
-            Key: question ID; value: array of answers.
-
-            '
-          additionalProperties:
-            type: array
-            items:
-              type: string
-              minLength: 1
-              maxLength: 2000
       required:
-      - version
-      - answers
-    EServiceDescriptorQuotasUpdateSeed:
-      type: object
-      additionalProperties: false
-      properties:
-        voucherLifespan:
-          type: integer
-          format: int32
-          minimum: 60
-          maximum: 86400
-        dailyCallsPerConsumer:
-          description: Maximum number of daily calls that this descriptor can afford per consumer
-          type: integer
-          format: int32
-          minimum: 1
-          maximum: 1000000000
-        dailyCallsTotal:
-          description: Total daily calls available for this E-Service
-          type: integer
-          format: int32
-          minimum: 1
-          maximum: 1000000000
-    EServiceDelegationUpdateSeed:
-      type: object
-      additionalProperties: false
-      properties:
-        isConsumerDelegable:
-          type: boolean
-        isClientAccessDelegable:
-          type: boolean
-    EServiceDescriptorCertifiedAttributes:
-      type: object
-      additionalProperties: false
-      properties:
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/EServiceDescriptorCertifiedAttribute'
-        pagination:
-          $ref: '#/components/schemas/Pagination'
-      required:
-      - results
-      - pagination
-    DeclaredAttribute:
-      type: object
-      additionalProperties: false
-      properties:
-        id:
-          type: string
-          format: uuid
-        description:
-          type: string
-        name:
-          type: string
-        createdAt:
-          type: string
-          format: date-time
-      required:
-      - id
       - name
       - description
-      - createdAt
-    Documents:
-      type: object
-      additionalProperties: false
-      properties:
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/Document'
-        pagination:
-          $ref: '#/components/schemas/Pagination'
-      required:
-      - results
-      - pagination
-    EServiceDescriptorSeed:
-      type: object
-      additionalProperties: false
-      properties:
-        description:
-          type: string
-          minLength: 10
-          maxLength: 250
-        audience:
-          type: array
-          minItems: 1
-          maxItems: 1
-          items:
-            type: string
-            minLength: 0
-            maxLength: 250
-        voucherLifespan:
-          type: integer
-          format: int32
-          minimum: 60
-          maximum: 86400
-        dailyCallsPerConsumer:
-          description: Maximum number of daily calls that this descriptor can afford per consumer
-          type: integer
-          format: int32
-          minimum: 1
-          maximum: 1000000000
-        dailyCallsTotal:
-          description: Total daily calls available for this E-Service
-          type: integer
-          format: int32
-          minimum: 1
-          maximum: 1000000000
-        agreementApprovalPolicy:
-          $ref: '#/components/schemas/AgreementApprovalPolicy'
-      required:
-      - audience
-      - voucherLifespan
-      - dailyCallsPerConsumer
-      - dailyCallsTotal
-      - agreementApprovalPolicy
-    Problem:
-      properties:
-        type:
-          description: URI reference of type definition
-          type: string
-        status:
-          description: The HTTP status code generated by the origin server for this occurrence of the problem
-          example: 503
-          format: int32
-          minimum: 100
-          type: integer
-          exclusiveMaximum: 600
-        title:
-          description: A short, summary of the problem type. Written in english and readable
-          example: Service Unavailable
-          maxLength: 64
-          pattern: ^[ -~]{0,64}$
-          type: string
-        correlationId:
-          description: Unique identifier of the request
-          example: 53af4f2d-0c87-41ef-a645-b726a821852b
-          maxLength: 64
-          type: string
-        detail:
-          description: A human readable explanation of the problem
-          example: Request took too long to complete
-          maxLength: 4096
-          pattern: ^.{0,1024}$
-          type: string
-        errors:
-          type: array
-          minItems: 1
-          items:
-            $ref: '#/components/schemas/ProblemError'
-      additionalProperties: false
-      required:
-      - type
-      - status
-      - title
-    ProblemError:
-      properties:
-        code:
-          description: Internal code of the error
-          example: 123-4567
-          minLength: 8
-          maxLength: 8
-          pattern: ^[0-9]{3}-[0-9]{4}$
-          type: string
-        detail:
-          description: A human readable explanation specific to this occurrence of the problem
-          example: Parameter not valid
-          maxLength: 4096
-          pattern: ^.{0,1024}$
-          type: string
-      required:
-      - code
-      - detail
-    EServiceDescriptorVerifiedAttributesGroup:
-      type: object
-      additionalProperties: false
-      properties:
-        attributes:
-          type: array
-          items:
-            $ref: '#/components/schemas/EServiceDescriptorVerifiedAttribute'
-      required:
-      - attributes
-    VerifiedAttribute:
-      type: object
-      additionalProperties: false
-      properties:
-        id:
-          type: string
-          format: uuid
-        description:
-          type: string
-        name:
-          type: string
-        createdAt:
-          type: string
-          format: date-time
-      required:
-      - id
-      - name
-      - description
-      - createdAt
-    EServiceDescriptorCertifiedAttributesGroup:
-      type: object
-      additionalProperties: false
-      properties:
-        attributes:
-          type: array
-          items:
-            $ref: '#/components/schemas/EServiceDescriptorCertifiedAttribute'
-      required:
-      - attributes
-    EServiceDescriptors:
-      type: object
-      additionalProperties: false
-      properties:
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/EServiceDescriptor'
-        pagination:
-          $ref: '#/components/schemas/Pagination'
-      required:
-      - results
-      - pagination
-    EServiceDescriptorState:
-      type: string
-      description: E-Service Descriptor State
-      enum:
-      - DRAFT
-      - PUBLISHED
-      - DEPRECATED
-      - SUSPENDED
-      - ARCHIVED
-      - WAITING_FOR_APPROVAL
-    EServiceTechnology:
-      type: string
-      description: API Technology
-      enum:
-      - REST
-      - SOAP
-    EServiceDraftUpdateSeed:
-      type: object
-      additionalProperties: false
+      - technology
+      - mode
+      - descriptor
       properties:
         name:
           type: string
@@ -2696,6 +2212,8 @@ components:
           $ref: '#/components/schemas/EServiceTechnology'
         mode:
           $ref: '#/components/schemas/EServiceMode'
+        descriptor:
+          $ref: '#/components/schemas/DescriptorSeedForEServiceCreation'
         isSignalHubEnabled:
           type: boolean
         isConsumerDelegable:
@@ -2703,225 +2221,23 @@ components:
         isClientAccessDelegable:
           type: boolean
         personalData:
-          type:
-          - boolean
-          - 'null'
-    EServiceDescriptorVerifiedAttribute:
-      type: object
-      description: Represents an E-Service Descriptor Verified attribute with the index of its attribute group.
-      properties:
-        groupIndex:
-          type: integer
-          format: int32
-          minimum: 0
-          description: The index of the group to which the attribute belongs.
-        attribute:
-          $ref: '#/components/schemas/VerifiedAttribute'
-      required:
-      - groupIndex
-      - attribute
-    RejectDelegatedEServiceDescriptorSeed:
-      type: object
-      additionalProperties: false
-      properties:
-        rejectionReason:
-          type: string
-      required:
-      - rejectionReason
-    EServices:
-      type: object
-      additionalProperties: false
-      properties:
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/EService'
-        pagination:
-          $ref: '#/components/schemas/Pagination'
-      required:
-      - results
-      - pagination
-    EServiceRiskAnalysisSeed:
-      type: object
-      additionalProperties: false
-      required:
-      - name
-      - riskAnalysisForm
-      properties:
-        name:
-          type: string
-        riskAnalysisForm:
-          $ref: '#/components/schemas/RiskAnalysisFormSeed'
-    DescriptorId:
-      type: string
-      format: uuid
-      description: The unique identifier of the Descriptor
-    EServiceDescriptorVerifiedAttributes:
-      type: object
-      additionalProperties: false
-      properties:
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/EServiceDescriptorVerifiedAttribute'
-        pagination:
-          $ref: '#/components/schemas/Pagination'
-      required:
-      - results
-      - pagination
-    EServiceDescriptionUpdateSeed:
-      type: object
-      additionalProperties: false
-      required:
-      - description
-      properties:
-        description:
-          type: string
-          minLength: 10
-          maxLength: 400
-    EServiceDescriptorDeclaredAttribute:
-      type: object
-      description: Represents an E-Service Descriptor Declared attribute with the index of its attribute group.
-      properties:
-        groupIndex:
-          type: integer
-          format: int32
-          minimum: 0
-          description: The index of the group to which the attribute belongs.
-        attribute:
-          $ref: '#/components/schemas/DeclaredAttribute'
-      required:
-      - groupIndex
-      - attribute
-    RiskAnalysisForm:
-      type: object
-      additionalProperties: false
-      properties:
-        id:
-          type: string
-          format: uuid
-        version:
-          type: string
-          minLength: 1
-          maxLength: 250
-        answers:
-          description: 'Key-value pairs of risk analysis form answers.
-
-            Key: question ID; value: array of answers
-
-            '
-          additionalProperties:
-            type: array
-            items:
-              type: string
-              minLength: 1
-              maxLength: 2000
-      required:
-      - version
-      - answers
-    Document:
-      type: object
-      additionalProperties: false
-      required:
-      - id
-      - name
-      - prettyName
-      - contentType
-      - createdAt
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: Unique identifier of the file
-        name:
-          type: string
-          description: The name of the file
-        prettyName:
-          type: string
-          description: A human-readable name for the file
-        contentType:
-          type: string
-          description: The content type of the file
-        createdAt:
-          type: string
-          format: date-time
-          description: The date and time when the file was uploaded
-    AttributeId:
-      type: string
-      format: uuid
-      description: The unique identifier of the Attribute
-    EServiceDescriptorDeclaredAttributesGroup:
-      type: object
-      additionalProperties: false
-      properties:
-        attributes:
-          type: array
-          items:
-            $ref: '#/components/schemas/EServiceDescriptorDeclaredAttribute'
-      required:
-      - attributes
-    EServicePersonalDataFlagUpdateSeed:
-      type: object
-      additionalProperties: false
-      required:
-      - personalData
-      properties:
-        personalData:
           type: boolean
-    VoidObject:
-      type: object
-      additionalProperties: false
-      description: An empty object
-    TemplateId:
+    AgreementApprovalPolicy:
       type: string
-      format: uuid
-      description: The unique identifier of the Template
-    EServiceMode:
-      type: string
-      description: Indicates if the E-Service is intended for receiving or delivering data
+      description: E-Service Descriptor policy for new Agreements approval
       enum:
-      - RECEIVE
-      - DELIVER
-    EServiceRiskAnalyses:
+      - AUTOMATIC
+      - MANUAL
+    EServiceNameUpdateSeed:
       type: object
       additionalProperties: false
-      properties:
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/EServiceRiskAnalysis'
-        pagination:
-          $ref: '#/components/schemas/Pagination'
       required:
-      - results
-      - pagination
-    CertifiedAttribute:
-      type: object
-      additionalProperties: false
+      - name
       properties:
-        id:
-          type: string
-          format: uuid
-        code:
-          type: string
-          description: The identifier of the attribute on the source registry
-        description:
-          type: string
-        origin:
-          type: string
-          description: Identifier of the origin of this attribute, e.g. "IPA"
         name:
           type: string
-        createdAt:
-          type: string
-          format: date-time
-      required:
-      - id
-      - name
-      - description
-      - code
-      - origin
-      - createdAt
+          minLength: 5
+          maxLength: 60
     DescriptorSeedForEServiceCreation:
       required:
       - audience
@@ -2961,6 +2277,212 @@ components:
           minimum: 1
         agreementApprovalPolicy:
           $ref: '#/components/schemas/AgreementApprovalPolicy'
+    EServiceDescriptionUpdateSeed:
+      type: object
+      additionalProperties: false
+      required:
+      - description
+      properties:
+        description:
+          type: string
+          minLength: 10
+          maxLength: 400
+    Document:
+      type: object
+      additionalProperties: false
+      required:
+      - id
+      - name
+      - prettyName
+      - contentType
+      - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier of the file
+        name:
+          type: string
+          description: The name of the file
+        prettyName:
+          type: string
+          description: A human-readable name for the file
+        contentType:
+          type: string
+          description: The content type of the file
+        createdAt:
+          type: string
+          format: date-time
+          description: The date and time when the file was uploaded
+    DeclaredAttribute:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          format: uuid
+        description:
+          type: string
+        name:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+      - id
+      - name
+      - description
+      - createdAt
+    FileUploadMultipart:
+      type: object
+      additionalProperties: false
+      required:
+      - file
+      - prettyName
+      properties:
+        file:
+          type: string
+          format: binary
+          description: The file to upload
+        prettyName:
+          type: string
+          description: A human-readable name for the file
+    Pagination:
+      type: object
+      additionalProperties: false
+      properties:
+        offset:
+          type: integer
+          format: int32
+          minimum: 0
+        limit:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 50
+        totalCount:
+          type: integer
+          format: int32
+          minimum: 0
+      required:
+      - offset
+      - limit
+      - totalCount
+    FileDownloadMultipart:
+      type: object
+      additionalProperties: false
+      required:
+      - file
+      - filename
+      - contentType
+      - id
+      properties:
+        file:
+          type: string
+          format: binary
+          description: The file to download
+        filename:
+          type: string
+          description: The name of the file
+        contentType:
+          type: string
+          description: The content type of the file
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier of the file
+        prettyName:
+          type: string
+          description: A human-readable name for the file
+    VerifiedAttribute:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          format: uuid
+        description:
+          type: string
+        name:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+      - id
+      - name
+      - description
+      - createdAt
+    RiskAnalysisForm:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          format: uuid
+        version:
+          type: string
+          minLength: 1
+          maxLength: 250
+        answers:
+          description: 'Key-value pairs of risk analysis form answers.
+
+            Key: question ID; value: array of answers
+
+            '
+          additionalProperties:
+            type: array
+            items:
+              type: string
+              minLength: 1
+              maxLength: 2000
+      required:
+      - version
+      - answers
+    EServiceDescriptorVerifiedAttributes:
+      type: object
+      additionalProperties: false
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/EServiceDescriptorVerifiedAttribute'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+      required:
+      - results
+      - pagination
+    EServiceId:
+      type: string
+      format: uuid
+      description: The unique identifier of the E-Service
+    EServiceDescriptorVerifiedAttribute:
+      type: object
+      description: Represents an E-Service Descriptor Verified attribute with the index of its attribute group.
+      properties:
+        groupIndex:
+          type: integer
+          format: int32
+          minimum: 0
+          description: The index of the group to which the attribute belongs.
+        attribute:
+          $ref: '#/components/schemas/VerifiedAttribute'
+      required:
+      - groupIndex
+      - attribute
+    Documents:
+      type: object
+      additionalProperties: false
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Document'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+      required:
+      - results
+      - pagination
     EServiceDescriptorDraftUpdateSeed:
       type: object
       additionalProperties: false
@@ -2996,29 +2518,6 @@ components:
           maximum: 1000000000
         agreementApprovalPolicy:
           $ref: '#/components/schemas/AgreementApprovalPolicy'
-    EServiceRiskAnalysis:
-      type: object
-      additionalProperties: false
-      required:
-      - id
-      - name
-      - riskAnalysisForm
-      - createdAt
-      properties:
-        id:
-          type: string
-          format: uuid
-        name:
-          type: string
-        riskAnalysisForm:
-          $ref: '#/components/schemas/RiskAnalysisForm'
-        createdAt:
-          type: string
-          format: date-time
-    EServiceId:
-      type: string
-      format: uuid
-      description: The unique identifier of the E-Service
     EServiceDescriptor:
       type: object
       additionalProperties: false
@@ -3084,6 +2583,16 @@ components:
       - dailyCallsTotal
       - agreementApprovalPolicy
       - serverUrls
+    EServiceDescriptorCertifiedAttributesGroup:
+      type: object
+      additionalProperties: false
+      properties:
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/EServiceDescriptorCertifiedAttribute'
+      required:
+      - attributes
     EServiceDescriptorAttributesGroupSeed:
       type: object
       additionalProperties: false
@@ -3095,6 +2604,238 @@ components:
             format: uuid
       required:
       - attributeIds
+    EServiceMode:
+      type: string
+      description: Indicates if the E-Service is intended for receiving or delivering data
+      enum:
+      - RECEIVE
+      - DELIVER
+    EServices:
+      type: object
+      additionalProperties: false
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/EService'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+      required:
+      - results
+      - pagination
+    CertifiedAttribute:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          format: uuid
+        code:
+          type: string
+          description: The identifier of the attribute on the source registry
+        description:
+          type: string
+        origin:
+          type: string
+          description: Identifier of the origin of this attribute, e.g. "IPA"
+        name:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+      - id
+      - name
+      - description
+      - code
+      - origin
+      - createdAt
+    EServiceDescriptorDeclaredAttributes:
+      type: object
+      additionalProperties: false
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/EServiceDescriptorDeclaredAttribute'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+      required:
+      - results
+      - pagination
+    TemplateId:
+      type: string
+      format: uuid
+      description: The unique identifier of the Template
+    EServiceDescriptorVerifiedAttributesGroup:
+      type: object
+      additionalProperties: false
+      properties:
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/EServiceDescriptorVerifiedAttribute'
+      required:
+      - attributes
+    VoidObject:
+      type: object
+      additionalProperties: false
+      description: An empty object
+    EServicePersonalDataFlagUpdateSeed:
+      type: object
+      additionalProperties: false
+      required:
+      - personalData
+      properties:
+        personalData:
+          type: boolean
+    EServiceDescriptors:
+      type: object
+      additionalProperties: false
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/EServiceDescriptor'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+      required:
+      - results
+      - pagination
+    DescriptorId:
+      type: string
+      format: uuid
+      description: The unique identifier of the Descriptor
+    EServiceDelegationUpdateSeed:
+      type: object
+      additionalProperties: false
+      properties:
+        isConsumerDelegable:
+          type: boolean
+        isClientAccessDelegable:
+          type: boolean
+    EServiceDescriptorDeclaredAttributesGroup:
+      type: object
+      additionalProperties: false
+      properties:
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/EServiceDescriptorDeclaredAttribute'
+      required:
+      - attributes
+    Problem:
+      properties:
+        type:
+          description: URI reference of type definition
+          type: string
+        status:
+          description: The HTTP status code generated by the origin server for this occurrence of the problem
+          example: 503
+          format: int32
+          minimum: 100
+          type: integer
+          exclusiveMaximum: 600
+        title:
+          description: A short, summary of the problem type. Written in english and readable
+          example: Service Unavailable
+          maxLength: 64
+          pattern: ^[ -~]{0,64}$
+          type: string
+        correlationId:
+          description: Unique identifier of the request
+          example: 53af4f2d-0c87-41ef-a645-b726a821852b
+          maxLength: 64
+          type: string
+        detail:
+          description: A human readable explanation of the problem
+          example: Request took too long to complete
+          maxLength: 4096
+          pattern: ^.{0,1024}$
+          type: string
+        errors:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/ProblemError'
+      additionalProperties: false
+      required:
+      - type
+      - status
+      - title
+    EServiceRiskAnalysisSeed:
+      type: object
+      additionalProperties: false
+      required:
+      - name
+      - riskAnalysisForm
+      properties:
+        name:
+          type: string
+        riskAnalysisForm:
+          $ref: '#/components/schemas/RiskAnalysisFormSeed'
+    EServiceRiskAnalysis:
+      type: object
+      additionalProperties: false
+      required:
+      - id
+      - name
+      - riskAnalysisForm
+      - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        riskAnalysisForm:
+          $ref: '#/components/schemas/RiskAnalysisForm'
+        createdAt:
+          type: string
+          format: date-time
+    EServiceDescriptorCertifiedAttributes:
+      type: object
+      additionalProperties: false
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/EServiceDescriptorCertifiedAttribute'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+      required:
+      - results
+      - pagination
+    RejectDelegatedEServiceDescriptorSeed:
+      type: object
+      additionalProperties: false
+      properties:
+        rejectionReason:
+          type: string
+      required:
+      - rejectionReason
+    EServiceSignalHubUpdateSeed:
+      type: object
+      additionalProperties: false
+      required:
+      - isSignalHubEnabled
+      properties:
+        isSignalHubEnabled:
+          type: boolean
+    EServiceDescriptorDeclaredAttribute:
+      type: object
+      description: Represents an E-Service Descriptor Declared attribute with the index of its attribute group.
+      properties:
+        groupIndex:
+          type: integer
+          format: int32
+          minimum: 0
+          description: The index of the group to which the attribute belongs.
+        attribute:
+          $ref: '#/components/schemas/DeclaredAttribute'
+      required:
+      - groupIndex
+      - attribute
     EServiceDescriptorCertifiedAttribute:
       type: object
       description: Represents an E-Service Descriptor Certified attribute with the index of its attribute group.
@@ -3109,15 +2850,69 @@ components:
       required:
       - groupIndex
       - attribute
-    EServiceSeed:
+    RiskAnalysisFormSeed:
       type: object
       additionalProperties: false
+      properties:
+        version:
+          type: string
+          minLength: 1
+          maxLength: 250
+        answers:
+          description: 'Key-value pairs of risk analysis form answers.
+
+            Key: question ID; value: array of answers.
+
+            '
+          additionalProperties:
+            type: array
+            items:
+              type: string
+              minLength: 1
+              maxLength: 2000
       required:
-      - name
-      - description
-      - technology
-      - mode
-      - descriptor
+      - version
+      - answers
+    EServiceTechnology:
+      type: string
+      description: API Technology
+      enum:
+      - REST
+      - SOAP
+    EServiceDescriptorQuotasUpdateSeed:
+      type: object
+      additionalProperties: false
+      properties:
+        voucherLifespan:
+          type: integer
+          format: int32
+          minimum: 60
+          maximum: 86400
+        dailyCallsPerConsumer:
+          description: Maximum number of daily calls that this descriptor can afford per consumer
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 1000000000
+        dailyCallsTotal:
+          description: Total daily calls available for this E-Service
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 1000000000
+    EServiceDescriptorState:
+      type: string
+      description: E-Service Descriptor State
+      enum:
+      - DRAFT
+      - PUBLISHED
+      - DEPRECATED
+      - SUSPENDED
+      - ARCHIVED
+      - WAITING_FOR_APPROVAL
+    EServiceDraftUpdateSeed:
+      type: object
+      additionalProperties: false
       properties:
         name:
           type: string
@@ -3131,8 +2926,6 @@ components:
           $ref: '#/components/schemas/EServiceTechnology'
         mode:
           $ref: '#/components/schemas/EServiceMode'
-        descriptor:
-          $ref: '#/components/schemas/DescriptorSeedForEServiceCreation'
         isSignalHubEnabled:
           type: boolean
         isConsumerDelegable:
@@ -3140,27 +2933,27 @@ components:
         isClientAccessDelegable:
           type: boolean
         personalData:
-          type: boolean
-    AgreementApprovalPolicy:
-      type: string
-      description: E-Service Descriptor policy for new Agreements approval
-      enum:
-      - AUTOMATIC
-      - MANUAL
-    FileUploadMultipart:
-      type: object
-      additionalProperties: false
-      required:
-      - file
-      - prettyName
+          type:
+          - boolean
+          - 'null'
+    ProblemError:
       properties:
-        file:
+        code:
+          description: Internal code of the error
+          example: 123-4567
+          minLength: 8
+          maxLength: 8
+          pattern: ^[0-9]{3}-[0-9]{4}$
           type: string
-          format: binary
-          description: The file to upload
-        prettyName:
+        detail:
+          description: A human readable explanation specific to this occurrence of the problem
+          example: Parameter not valid
+          maxLength: 4096
+          pattern: ^.{0,1024}$
           type: string
-          description: A human-readable name for the file
+      required:
+      - code
+      - detail
     EService:
       type: object
       additionalProperties: false
@@ -3197,190 +2990,88 @@ components:
       - technology
       - descriptors
       - mode
-    FileDownloadMultipart:
-      type: object
-      additionalProperties: false
-      required:
-      - file
-      - filename
-      - contentType
-      - id
-      properties:
-        file:
-          type: string
-          format: binary
-          description: The file to download
-        filename:
-          type: string
-          description: The name of the file
-        contentType:
-          type: string
-          description: The content type of the file
-        id:
-          type: string
-          format: uuid
-          description: Unique identifier of the file
-        prettyName:
-          type: string
-          description: A human-readable name for the file
-    EServiceSignalHubUpdateSeed:
-      type: object
-      additionalProperties: false
-      required:
-      - isSignalHubEnabled
-      properties:
-        isSignalHubEnabled:
-          type: boolean
-    Pagination:
-      type: object
-      additionalProperties: false
-      properties:
-        offset:
-          type: integer
-          format: int32
-          minimum: 0
-        limit:
-          type: integer
-          format: int32
-          minimum: 1
-          maximum: 50
-        totalCount:
-          type: integer
-          format: int32
-          minimum: 0
-      required:
-      - offset
-      - limit
-      - totalCount
-    EServiceNameUpdateSeed:
-      type: object
-      additionalProperties: false
-      required:
-      - name
-      properties:
-        name:
-          type: string
-          minLength: 5
-          maxLength: 60
-    EServiceDescriptorDeclaredAttributes:
+    EServiceRiskAnalyses:
       type: object
       additionalProperties: false
       properties:
         results:
           type: array
           items:
-            $ref: '#/components/schemas/EServiceDescriptorDeclaredAttribute'
+            $ref: '#/components/schemas/EServiceRiskAnalysis'
         pagination:
           $ref: '#/components/schemas/Pagination'
       required:
       - results
       - pagination
-    EServiceDraftUpdateSeed_2:
+    AttributeId:
+      type: string
+      format: uuid
+      description: The unique identifier of the Attribute
+    EServiceDescriptorSeed:
       type: object
       additionalProperties: false
-      properties:
-        name:
-          type: string
-          minLength: 5
-          maxLength: 60
-        description:
-          type: string
-          minLength: 10
-          maxLength: 250
-        technology:
-          $ref: '#/components/schemas/EServiceTechnology'
-        mode:
-          $ref: '#/components/schemas/EServiceMode'
-        isSignalHubEnabled:
-          type: boolean
-        isConsumerDelegable:
-          type: boolean
-        isClientAccessDelegable:
-          type: boolean
-        personalData:
-          type:
-          - boolean
-          - 'null'
-    EServiceDescriptionUpdateSeed_2:
-      type: object
-      additionalProperties: false
-      required:
-      - description
       properties:
         description:
           type: string
           minLength: 10
           maxLength: 250
-    EServiceSeed_2:
-      type: object
-      additionalProperties: false
+        audience:
+          type: array
+          minItems: 1
+          maxItems: 1
+          items:
+            type: string
+            minLength: 0
+            maxLength: 250
+        voucherLifespan:
+          type: integer
+          format: int32
+          minimum: 60
+          maximum: 86400
+        dailyCallsPerConsumer:
+          description: Maximum number of daily calls that this descriptor can afford per consumer
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 1000000000
+        dailyCallsTotal:
+          description: Total daily calls available for this E-Service
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 1000000000
+        agreementApprovalPolicy:
+          $ref: '#/components/schemas/AgreementApprovalPolicy'
       required:
-      - name
-      - description
-      - technology
-      - mode
-      - descriptor
-      properties:
-        name:
-          type: string
-          minLength: 5
-          maxLength: 60
-        description:
-          type: string
-          minLength: 10
-          maxLength: 250
-        technology:
-          $ref: '#/components/schemas/EServiceTechnology'
-        mode:
-          $ref: '#/components/schemas/EServiceMode'
-        descriptor:
-          $ref: '#/components/schemas/DescriptorSeedForEServiceCreation'
-        isSignalHubEnabled:
-          type: boolean
-        isConsumerDelegable:
-          type: boolean
-        isClientAccessDelegable:
-          type: boolean
-        personalData:
-          type: boolean
-    EService_2:
-      type: object
-      additionalProperties: false
-      properties:
-        id:
-          type: string
-          format: uuid
-        producerId:
-          type: string
-          format: uuid
-        name:
-          type: string
-        description:
-          type: string
-        technology:
-          $ref: '#/components/schemas/EServiceTechnology'
-        mode:
-          $ref: '#/components/schemas/EServiceMode'
-        isSignalHubEnabled:
-          type: boolean
-        isConsumerDelegable:
-          type: boolean
-        isClientAccessDelegable:
-          type: boolean
-        templateId:
-          type: string
-          format: uuid
-        personalData:
-          type: boolean
-      required:
-      - id
-      - producerId
-      - name
-      - description
-      - technology
-      - descriptors
-      - mode
+      - audience
+      - voucherLifespan
+      - dailyCallsPerConsumer
+      - dailyCallsTotal
+      - agreementApprovalPolicy
   headers:
+    RateLimitLimitHeader:
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+      description: Max allowed requests within time interval
+    RateLimitIntervalHeader:
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+      description: Time interval in milliseconds. Allowed requests will be constantly replenished during the interval. At the end of the interval the max allowed requests will be available
+    IntegrityRest02DigestHeader:
+      schema:
+        type: string
+        pattern: ^SHA-256=[a-zA-Z0-9+/]{43}=$
+      description: 'Digest of the body using the canonical JSON representation of the response body.
+
+        The digest is calculated using the SHA-256 algorithm on the response body
+
+        exactly as it is sent to the client, encoded in Base64 as per RFC 3230
+
+        '
     IntegrityRest02AgidJwtSignatureHeader:
       description: 'The `Agid-JWT-Signature` header contains a JSON Web Signature (JWS) signed with the PDND API private key.
 
@@ -3395,98 +3086,9 @@ components:
         format: int32
         minimum: 0
       description: Remaining requests within time interval
-    RateLimitIntervalHeader:
-      schema:
-        type: integer
-        format: int32
-        minimum: 0
-      description: Time interval in milliseconds. Allowed requests will be constantly replenished during the interval. At the end of the interval the max allowed requests will be available
-    RateLimitLimitHeader:
-      schema:
-        type: integer
-        format: int32
-        minimum: 0
-      description: Max allowed requests within time interval
-    IntegrityRest02DigestHeader:
-      schema:
-        type: string
-        pattern: ^SHA-256=[a-zA-Z0-9+/]{43}=$
-      description: 'Digest of the body using the canonical JSON representation of the response body.
-
-        The digest is calculated using the SHA-256 algorithm on the response body
-
-        exactly as it is sent to the client, encoded in Base64 as per RFC 3230
-
-        '
-  parameters:
-    TemplateIdsParam:
-      in: query
-      name: templateIds
-      description: Filter E-Services by template IDs. If not specified, return E-Services for any template, and E-Services without a template
-      required: false
-      explode: false
-      schema:
-        type: array
-        items:
-          type: string
-          format: uuid
-        default: []
-    LimitParam:
-      in: query
-      name: limit
-      description: Maximum number of results to return
-      required: true
-      schema:
-        type: integer
-        format: int32
-        minimum: 1
-        maximum: 50
-    OffsetParam:
-      in: query
-      name: offset
-      description: Pagination starting position
-      required: true
-      schema:
-        type: integer
-        format: int32
-        minimum: 0
   responses:
-    Forbidden:
-      description: Forbidden
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-      headers:
-        X-Rate-Limit-Limit:
-          $ref: '#/components/headers/RateLimitLimitHeader'
-        X-Rate-Limit-Remaining:
-          $ref: '#/components/headers/RateLimitRemainingHeader'
-        X-Rate-Limit-Interval:
-          $ref: '#/components/headers/RateLimitIntervalHeader'
-        Digest:
-          $ref: '#/components/headers/IntegrityRest02DigestHeader'
-        Agid-JWT-Signature:
-          $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
-    Conflict:
-      description: Conflict
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-      headers:
-        X-Rate-Limit-Limit:
-          $ref: '#/components/headers/RateLimitLimitHeader'
-        X-Rate-Limit-Remaining:
-          $ref: '#/components/headers/RateLimitRemainingHeader'
-        X-Rate-Limit-Interval:
-          $ref: '#/components/headers/RateLimitIntervalHeader'
-        Digest:
-          $ref: '#/components/headers/IntegrityRest02DigestHeader'
-        Agid-JWT-Signature:
-          $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
-    Unauthorized:
-      description: Unauthorized
+    NotFound:
+      description: Not Found
       content:
         application/problem+json:
           schema:
@@ -3519,23 +3121,6 @@ components:
           $ref: '#/components/headers/IntegrityRest02DigestHeader'
         Agid-JWT-Signature:
           $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
-    NotFound:
-      description: Not Found
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-      headers:
-        X-Rate-Limit-Limit:
-          $ref: '#/components/headers/RateLimitLimitHeader'
-        X-Rate-Limit-Remaining:
-          $ref: '#/components/headers/RateLimitRemainingHeader'
-        X-Rate-Limit-Interval:
-          $ref: '#/components/headers/RateLimitIntervalHeader'
-        Digest:
-          $ref: '#/components/headers/IntegrityRest02DigestHeader'
-        Agid-JWT-Signature:
-          $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
     TooManyRequests:
       description: Too Many Requests
       content:
@@ -3553,6 +3138,89 @@ components:
           $ref: '#/components/headers/IntegrityRest02DigestHeader'
         Agid-JWT-Signature:
           $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+      headers:
+        X-Rate-Limit-Limit:
+          $ref: '#/components/headers/RateLimitLimitHeader'
+        X-Rate-Limit-Remaining:
+          $ref: '#/components/headers/RateLimitRemainingHeader'
+        X-Rate-Limit-Interval:
+          $ref: '#/components/headers/RateLimitIntervalHeader'
+        Digest:
+          $ref: '#/components/headers/IntegrityRest02DigestHeader'
+        Agid-JWT-Signature:
+          $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+    Conflict:
+      description: Conflict
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+      headers:
+        X-Rate-Limit-Limit:
+          $ref: '#/components/headers/RateLimitLimitHeader'
+        X-Rate-Limit-Remaining:
+          $ref: '#/components/headers/RateLimitRemainingHeader'
+        X-Rate-Limit-Interval:
+          $ref: '#/components/headers/RateLimitIntervalHeader'
+        Digest:
+          $ref: '#/components/headers/IntegrityRest02DigestHeader'
+        Agid-JWT-Signature:
+          $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+      headers:
+        X-Rate-Limit-Limit:
+          $ref: '#/components/headers/RateLimitLimitHeader'
+        X-Rate-Limit-Remaining:
+          $ref: '#/components/headers/RateLimitRemainingHeader'
+        X-Rate-Limit-Interval:
+          $ref: '#/components/headers/RateLimitIntervalHeader'
+        Digest:
+          $ref: '#/components/headers/IntegrityRest02DigestHeader'
+        Agid-JWT-Signature:
+          $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+  parameters:
+    OffsetParam:
+      in: query
+      name: offset
+      description: Pagination starting position
+      required: true
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+    TemplateIdsParam:
+      in: query
+      name: templateIds
+      description: Filter E-Services by template IDs. If not specified, return E-Services for any template, and E-Services without a template
+      required: false
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+          format: uuid
+        default: []
+    LimitParam:
+      in: query
+      name: limit
+      description: Maximum number of results to return
+      required: true
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+        maximum: 50
   securitySchemes:
     DPoPAuth:
       type: http
@@ -3574,11 +3242,3 @@ components:
       description: 'DPoP proof JWT for sender-constrained access. Must accompany the DPoP Authorization header.
 
         '
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
-x-refined-from:
-- interop-api-v3.yaml
-- pagopa-pdnd-interop-v2-openapi.yml
-- pagopa-pdnd-interop-v3-openapi.yml

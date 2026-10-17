@@ -1,14 +1,13 @@
 openapi: 3.2.0
 info:
   title: Pagopa Debt Position Actions API
+  version: 1.0.0
   termsOfService: https://www.pagopa.gov.it/
-  version: '1.0'
-  description: 'Operations tagged Debt Position Actions API across 5 of this provider''s published API definitions: gpd-4-aca.json, gpd.json, pagopa-gpd-aca-openapi.yml, pagopa-gpd-v1-openapi.yml, pagopa-gpd-v3-openapi.yml. Each path carries the servers of the definition it was published in.'
+  description: 'Operations tagged Debt Position Actions API across 2 of this provider''s published API definitions: gpd-4-aca.json, gpd.json. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.platform.pagopa.it/aca/debt-positions-service/v1
   description: ACA Production environment
 - url: https://api.platform.pagopa.it/gpd/debt-positions-service/v1
-- url: https://api.platform.pagopa.it/gpd/debt-positions-service/v3
 security:
 - apiKeyHeader: []
 - apiKeyQuery: []
@@ -325,6 +324,143 @@ paths:
       description: ACA Production environment
 components:
   schemas:
+    TransferMetadataModel:
+      required:
+      - key
+      - value
+      type: object
+      properties:
+        key:
+          maxLength: 140
+          minLength: 0
+          type: string
+        value:
+          maxLength: 140
+          minLength: 0
+          type: string
+    PaymentOptionMetadataModel:
+      required:
+      - key
+      - value
+      type: object
+      properties:
+        key:
+          maxLength: 140
+          minLength: 0
+          type: string
+        value:
+          maxLength: 140
+          minLength: 0
+          type: string
+    PaymentOptionModel:
+      required:
+      - amount
+      - description
+      - dueDate
+      - isPartialPayment
+      - iuv
+      type: object
+      properties:
+        nav:
+          type: string
+        iuv:
+          type: string
+        amount:
+          minimum: 1.0
+          type: integer
+          format: int64
+        description:
+          maxLength: 140
+          minLength: 0
+          type: string
+        isPartialPayment:
+          type: boolean
+        dueDate:
+          type: string
+          format: date-time
+        retentionDate:
+          type: string
+          format: date-time
+        fee:
+          type: integer
+          format: int64
+          readOnly: true
+        notificationFee:
+          type: integer
+          format: int64
+          readOnly: true
+        transfer:
+          maxItems: 5
+          minItems: 1
+          type: array
+          items:
+            $ref: '#/components/schemas/TransferModel'
+        paymentOptionMetadata:
+          maxItems: 10
+          minItems: 0
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/PaymentOptionMetadataModel'
+          description: It can be added a maximum of 10 key-value pairs for metadata. Metadata keys must be unique within the same payment option.
+    TransferModel:
+      required:
+      - amount
+      - category
+      - idTransfer
+      - remittanceInformation
+      type: object
+      properties:
+        idTransfer:
+          enum:
+          - '1'
+          - '2'
+          - '3'
+          - '4'
+          - '5'
+          type: string
+        amount:
+          minimum: 1.0
+          type: integer
+          format: int64
+        organizationFiscalCode:
+          type: string
+          description: Fiscal code related to the organization targeted by this transfer.
+          example: '00000000000'
+        remittanceInformation:
+          maxLength: 140
+          minLength: 0
+          type: string
+        category:
+          type: string
+        iban:
+          maxLength: 35
+          minLength: 1
+          pattern: ^[A-Za-z0-9]{1,35}$
+          type: string
+          description: mutual exclusive with stamp
+          example: IT0000000000000000000000000
+        postalIban:
+          maxLength: 35
+          minLength: 1
+          pattern: ^$|^[A-Za-z0-9]{1,35}$
+          type: string
+          description: optional - can be combined with iban but not with stamp
+          example: IT0000000000000000000000000
+        stamp:
+          $ref: '#/components/schemas/Stamp'
+        companyName:
+          maxLength: 140
+          minLength: 0
+          type: string
+        transferMetadata:
+          maxItems: 10
+          minItems: 0
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/TransferMetadataModel'
+          description: It can be added a maximum of 10 key-value pairs for metadata. Metadata keys must be unique within the same transfer.
     PaymentPositionModel:
       required:
       - companyName
@@ -408,71 +544,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/PaymentOptionModel'
-    PaymentOptionModel:
-      required:
-      - amount
-      - description
-      - dueDate
-      - isPartialPayment
-      - iuv
-      type: object
-      properties:
-        nav:
-          type: string
-        iuv:
-          type: string
-        amount:
-          minimum: 1.0
-          type: integer
-          format: int64
-        description:
-          maxLength: 140
-          minLength: 0
-          type: string
-        isPartialPayment:
-          type: boolean
-        dueDate:
-          type: string
-          format: date-time
-        retentionDate:
-          type: string
-          format: date-time
-        fee:
-          type: integer
-          format: int64
-          readOnly: true
-        notificationFee:
-          type: integer
-          format: int64
-          readOnly: true
-        transfer:
-          maxItems: 5
-          minItems: 1
-          type: array
-          items:
-            $ref: '#/components/schemas/TransferModel'
-        paymentOptionMetadata:
-          maxItems: 10
-          minItems: 0
-          uniqueItems: true
-          type: array
-          items:
-            $ref: '#/components/schemas/PaymentOptionMetadataModel'
-          description: It can be added a maximum of 10 key-value pairs for metadata. Metadata keys must be unique within the same payment option.
-    PaymentOptionMetadataModel:
-      required:
-      - key
-      - value
-      type: object
-      properties:
-        key:
-          maxLength: 140
-          minLength: 0
-          type: string
-        value:
-          maxLength: 140
-          minLength: 0
-          type: string
     Stamp:
       required:
       - hashDocument
@@ -495,64 +566,6 @@ components:
           type: string
           description: The provincial of the residence
           example: RM
-    TransferModel:
-      required:
-      - amount
-      - category
-      - idTransfer
-      - remittanceInformation
-      type: object
-      properties:
-        idTransfer:
-          enum:
-          - '1'
-          - '2'
-          - '3'
-          - '4'
-          - '5'
-          type: string
-        amount:
-          minimum: 1.0
-          type: integer
-          format: int64
-        organizationFiscalCode:
-          type: string
-          description: Fiscal code related to the organization targeted by this transfer.
-          example: '00000000000'
-        remittanceInformation:
-          maxLength: 140
-          minLength: 0
-          type: string
-        category:
-          type: string
-        iban:
-          maxLength: 35
-          minLength: 1
-          pattern: ^[A-Za-z0-9]{1,35}$
-          type: string
-          description: mutual exclusive with stamp
-          example: IT0000000000000000000000000
-        postalIban:
-          maxLength: 35
-          minLength: 1
-          pattern: ^$|^[A-Za-z0-9]{1,35}$
-          type: string
-          description: optional - can be combined with iban but not with stamp
-          example: IT0000000000000000000000000
-        stamp:
-          $ref: '#/components/schemas/Stamp'
-        companyName:
-          maxLength: 140
-          minLength: 0
-          type: string
-        transferMetadata:
-          maxItems: 10
-          minItems: 0
-          uniqueItems: true
-          type: array
-          items:
-            $ref: '#/components/schemas/TransferMetadataModel'
-          description: It can be added a maximum of 10 key-value pairs for metadata. Metadata keys must be unique within the same transfer.
     ProblemJson:
       type: object
       properties:
@@ -570,194 +583,6 @@ components:
           type: string
           description: A human readable explanation specific to this occurrence of the problem.
           example: There was an error processing the request
-    TransferMetadataModel:
-      required:
-      - key
-      - value
-      type: object
-      properties:
-        key:
-          maxLength: 140
-          minLength: 0
-          type: string
-        value:
-          maxLength: 140
-          minLength: 0
-          type: string
-    PaymentOptionModelV3:
-      required:
-      - debtor
-      - installments
-      - switchToExpired
-      type: object
-      properties:
-        description:
-          maxLength: 140
-          minLength: 0
-          type: string
-          writeOnly: true
-        validityDate:
-          type: string
-          format: date-time
-        retentionDate:
-          type: string
-          format: date-time
-        switchToExpired:
-          type: boolean
-          description: feature flag to enable the payment option to expire after the due date
-          default: 'false'
-          example: false
-        debtor:
-          $ref: '#/components/schemas/DebtorModel'
-        installments:
-          maxItems: 100
-          minItems: 1
-          type: array
-          items:
-            $ref: '#/components/schemas/InstallmentModel'
-    DebtorModel:
-      required:
-      - fiscalCode
-      - fullName
-      - type
-      type: object
-      properties:
-        type:
-          enum:
-          - F
-          - G
-          type: string
-        fiscalCode:
-          type: string
-        fullName:
-          type: string
-        streetName:
-          type: string
-        civicNumber:
-          type: string
-        postalCode:
-          type: string
-        city:
-          type: string
-        province:
-          type: string
-        region:
-          type: string
-        country:
-          pattern: '[A-Z]{2}'
-          type: string
-          example: IT
-        email:
-          type: string
-          example: email@domain.com
-        phone:
-          type: string
-    InstallmentMetadataModel:
-      required:
-      - key
-      type: object
-      properties:
-        key:
-          type: string
-        value:
-          type: string
-    PaymentPositionModelV3:
-      required:
-      - companyName
-      - iupd
-      - paymentOption
-      type: object
-      properties:
-        iupd:
-          type: string
-        payStandIn:
-          type: boolean
-          description: feature flag to enable a debt position in stand-in mode
-          default: 'true'
-          example: true
-        companyName:
-          maxLength: 140
-          minLength: 0
-          type: string
-        officeName:
-          maxLength: 140
-          minLength: 0
-          type: string
-        paymentDate:
-          type: string
-          format: date-time
-          readOnly: true
-        status:
-          enum:
-          - DRAFT
-          - PUBLISHED
-          - VALID
-          - UNPAYABLE
-          - PARTIALLY_PAID
-          - PAID
-          type: string
-          readOnly: true
-        paymentOption:
-          maxItems: 100
-          minItems: 1
-          type: array
-          items:
-            $ref: '#/components/schemas/PaymentOptionModelV3'
-    InstallmentModel:
-      required:
-      - amount
-      - description
-      - dueDate
-      - iuv
-      type: object
-      properties:
-        nav:
-          type: string
-        iuv:
-          type: string
-        amount:
-          minimum: 1.0
-          type: integer
-          format: int64
-        description:
-          maxLength: 140
-          minLength: 0
-          type: string
-        dueDate:
-          type: string
-          format: date-time
-        fee:
-          type: integer
-          format: int64
-          readOnly: true
-        notificationFee:
-          type: integer
-          format: int64
-          readOnly: true
-        status:
-          enum:
-          - UNPAID
-          - PAID
-          - PARTIALLY_REPORTED
-          - REPORTED
-          - UNPAYABLE
-          - EXPIRED
-          type: string
-          readOnly: true
-        transfer:
-          maxItems: 5
-          minItems: 1
-          type: array
-          items:
-            $ref: '#/components/schemas/TransferModel'
-        installmentMetadata:
-          maxItems: 10
-          minItems: 0
-          uniqueItems: true
-          type: array
-          items:
-            $ref: '#/components/schemas/InstallmentMetadataModel'
-          description: It can be added a maximum of 10 key-value pairs for metadata. Metadata keys must be unique within the same installment.
   securitySchemes:
     apiKeyHeader:
       type: apiKey
@@ -770,6 +595,3 @@ components:
 x-refined-from:
 - gpd-4-aca.json
 - gpd.json
-- pagopa-gpd-aca-openapi.yml
-- pagopa-gpd-v1-openapi.yml
-- pagopa-gpd-v3-openapi.yml

@@ -1,18 +1,19 @@
 openapi: 3.2.0
 info:
-  title: Pagopa Producer Keychains API
+  title: PDND Interoperability Producer Keychains API
+  description: PDND Interoperability API for machine-to-machine interaction with interoperability features
+  x-summary: PDND Interoperability API
+  version: 3.1.0
   contact:
     name: API Support
     url: https://github.com/pagopa/pdnd-interop-frontend/issues
   termsOfService: https://selfcare.interop.pagopa.it/ui/it/termini-di-servizio
-  x-summary: PDND Interoperability API
-  version: '1.0'
-  description: 'Operations tagged producerKeychains across 3 of this provider''s published API definitions: interop-api-v3.yaml, pagopa-pdnd-interop-v2-openapi.yml, pagopa-pdnd-interop-v3-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.interop.pagopa.it/v3
   description: Production environment
-- url: https://api.interop.pagopa.it/v2
-  description: PROD environment
+security:
+- DPoPAuth: []
+  DPoPProofHeader: []
 tags:
 - name: producerKeychains
   description: Producer Keychains routes
@@ -70,9 +71,6 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
     post:
       tags:
       - producerKeychains
@@ -111,12 +109,6 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /producerKeychains/{keychainId}:
     parameters:
     - name: keychainId
@@ -158,9 +150,6 @@ paths:
           $ref: '#/components/responses/NotFound'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
     delete:
       tags:
       - producerKeychains
@@ -195,12 +184,6 @@ paths:
           $ref: '#/components/responses/NotFound'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /producerKeychains/{keychainId}/eservices:
     parameters:
     - name: keychainId
@@ -247,9 +230,6 @@ paths:
           $ref: '#/components/responses/NotFound'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
     post:
       tags:
       - producerKeychains
@@ -294,12 +274,6 @@ paths:
           $ref: '#/components/responses/Conflict'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /producerKeychains/{keychainId}/eservices/{eserviceId}:
     parameters:
     - name: keychainId
@@ -349,12 +323,6 @@ paths:
           $ref: '#/components/responses/NotFound'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /producerKeychains/{keychainId}/keys:
     parameters:
     - name: keychainId
@@ -401,9 +369,6 @@ paths:
           $ref: '#/components/responses/NotFound'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
     post:
       tags:
       - producerKeychains
@@ -443,12 +408,6 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /producerKeychains/{keychainId}/keys/{keyId}:
     parameters:
     - name: keychainId
@@ -498,12 +457,6 @@ paths:
           $ref: '#/components/responses/NotFound'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /producerKeychains/{keychainId}/users:
     parameters:
     - name: keychainId
@@ -549,9 +502,6 @@ paths:
           $ref: '#/components/responses/NotFound'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
     post:
       tags:
       - producerKeychains
@@ -598,12 +548,6 @@ paths:
           $ref: '#/components/responses/NotFound'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
   /producerKeychains/{keychainId}/users/{userId}:
     parameters:
     - name: keychainId
@@ -653,52 +597,168 @@ paths:
           $ref: '#/components/responses/NotFound'
         '429':
           $ref: '#/components/responses/TooManyRequests'
-      security:
-      - DPoPAuth: []
-        DPoPProofHeader: []
-    servers:
-    - url: https://api.interop.pagopa.it/v3
-      description: Production environment
 components:
-  headers:
-    IntegrityRest02AgidJwtSignatureHeader:
-      description: 'The `Agid-JWT-Signature` header contains a JSON Web Signature (JWS) signed with the PDND API private key.
-
-        It ensures payload integrity and non-repudiation across all responses (both success and error), in compliance with: 1) Linee Guida sull''interoperabilità tecnica delle Pubbliche Amministrazioni - Pattern di sicurezza,  2) RFC 7515 and 3) RFC 7519.
-
-        '
-      schema:
-        type: string
-    RateLimitRemainingHeader:
-      schema:
-        type: integer
-        format: int32
-        minimum: 0
-      description: Remaining requests within time interval
-    RateLimitIntervalHeader:
-      schema:
-        type: integer
-        format: int32
-        minimum: 0
-      description: Time interval in milliseconds. Allowed requests will be constantly replenished during the interval. At the end of the interval the max allowed requests will be available
-    RateLimitLimitHeader:
-      schema:
-        type: integer
-        format: int32
-        minimum: 0
-      description: Max allowed requests within time interval
-    IntegrityRest02DigestHeader:
-      schema:
-        type: string
-        pattern: ^SHA-256=[a-zA-Z0-9+/]{43}=$
-      description: 'Digest of the body using the canonical JSON representation of the response body.
-
-        The digest is calculated using the SHA-256 algorithm on the response body
-
-        exactly as it is sent to the client, encoded in Base64 as per RFC 3230
-
-        '
   schemas:
+    JWKs:
+      type: object
+      additionalProperties: false
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/JWK'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+      required:
+      - results
+      - pagination
+    FullProducerKeychain:
+      type: object
+      description: Models a Producer Keychain with unrestricted field visibility
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          format: uuid
+        producerId:
+          description: Tenant ID of the Producer Keychain owner
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+      - id
+      - producerId
+      - name
+      - createdAt
+    Pagination:
+      type: object
+      additionalProperties: false
+      properties:
+        offset:
+          type: integer
+          format: int32
+          minimum: 0
+        limit:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 50
+        totalCount:
+          type: integer
+          format: int32
+          minimum: 0
+      required:
+      - offset
+      - limit
+      - totalCount
+    EServiceId:
+      type: string
+      format: uuid
+      description: The unique identifier of the E-Service
+    Kid:
+      type: string
+      description: The unique identifier of the Key
+    User:
+      type: object
+      additionalProperties: false
+      description: User information
+      properties:
+        userId:
+          type: string
+          format: uuid
+          description: User identifier
+        name:
+          type: string
+          description: User first name
+        familyName:
+          type: string
+          description: User last name
+        roles:
+          type: array
+          items:
+            type: string
+          description: User roles
+      required:
+      - userId
+      - name
+      - familyName
+      - roles
+    ProducerKeychains:
+      type: object
+      additionalProperties: false
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProducerKeychain'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+      required:
+      - results
+      - pagination
+    ProducerKeychainSeed:
+      description: Producer keychain creation request body
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 5
+          maxLength: 60
+        description:
+          type: string
+          minLength: 10
+          maxLength: 250
+        members:
+          type: array
+          items:
+            type: string
+            format: uuid
+      required:
+      - name
+      - description
+      - members
+    EServiceMode:
+      type: string
+      description: Indicates if the E-Service is intended for receiving or delivering data
+      enum:
+      - RECEIVE
+      - DELIVER
+    EServices:
+      type: object
+      additionalProperties: false
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/EService'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+      required:
+      - results
+      - pagination
+    LinkUser:
+      type: object
+      additionalProperties: false
+      properties:
+        userId:
+          type: string
+          format: uuid
+      required:
+      - userId
+    VoidObject:
+      type: object
+      additionalProperties: false
+      description: An empty object
+    TemplateId:
+      type: string
+      format: uuid
+      description: The unique identifier of the Template
     JWK:
       description: JSON Web Key
       type: object
@@ -760,27 +820,6 @@ components:
       required:
       - kty
       - kid
-    ProducerKeychainSeed:
-      description: Producer keychain creation request body
-      type: object
-      properties:
-        name:
-          type: string
-          minLength: 5
-          maxLength: 60
-        description:
-          type: string
-          minLength: 10
-          maxLength: 250
-        members:
-          type: array
-          items:
-            type: string
-            format: uuid
-      required:
-      - name
-      - description
-      - members
     Problem:
       properties:
         type:
@@ -820,6 +859,81 @@ components:
       - type
       - status
       - title
+    KeyUse:
+      type: string
+      description: Represents the Use field of key
+      enum:
+      - SIG
+      - ENC
+    OtherPrimeInfo:
+      type: object
+      additionalProperties: false
+      properties:
+        r:
+          type: string
+        d:
+          type: string
+        t:
+          type: string
+      required:
+      - r
+      - d
+      - t
+    PartialProducerKeychain:
+      type: object
+      description: Models a Producer Keychain with restricted field visibility
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          format: uuid
+        producerId:
+          description: Tenant ID of the Producer Keychain owner
+          type: string
+          format: uuid
+      required:
+      - id
+      - producerId
+    ProducerKeychainAddEService:
+      type: object
+      additionalProperties: false
+      properties:
+        eserviceId:
+          $ref: '#/components/schemas/EServiceId'
+      required:
+      - eserviceId
+    EServiceTechnology:
+      type: string
+      description: API Technology
+      enum:
+      - REST
+      - SOAP
+    Users:
+      type: object
+      additionalProperties: false
+      description: Paginated list of users
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+      required:
+      - results
+      - pagination
+    ProducerKey:
+      description: Key
+      type: object
+      additionalProperties: false
+      properties:
+        producerKeychainId:
+          $ref: '#/components/schemas/ProducerKeychainId'
+        jwk:
+          $ref: '#/components/schemas/JWK'
+      required:
+      - producerKeychainId
+      - jwk
     ProblemError:
       properties:
         code:
@@ -838,144 +952,6 @@ components:
       required:
       - code
       - detail
-    EServiceTechnology:
-      type: string
-      description: API Technology
-      enum:
-      - REST
-      - SOAP
-    ProducerKey:
-      description: Key
-      type: object
-      additionalProperties: false
-      properties:
-        producerKeychainId:
-          $ref: '#/components/schemas/ProducerKeychainId'
-        jwk:
-          $ref: '#/components/schemas/JWK'
-      required:
-      - producerKeychainId
-      - jwk
-    EServices:
-      type: object
-      additionalProperties: false
-      properties:
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/EService'
-        pagination:
-          $ref: '#/components/schemas/Pagination'
-      required:
-      - results
-      - pagination
-    LinkUser:
-      type: object
-      additionalProperties: false
-      properties:
-        userId:
-          type: string
-          format: uuid
-      required:
-      - userId
-    Kid:
-      type: string
-      description: The unique identifier of the Key
-    KeyUse:
-      type: string
-      description: Represents the Use field of key
-      enum:
-      - SIG
-      - ENC
-    ProducerKeychainAddEService:
-      type: object
-      additionalProperties: false
-      properties:
-        eserviceId:
-          $ref: '#/components/schemas/EServiceId'
-      required:
-      - eserviceId
-    KeySeed:
-      description: Models the seed for a public key to be persisted
-      type: object
-      additionalProperties: false
-      properties:
-        key:
-          type: string
-          description: Base64 UTF-8 encoding of a public key in PEM format
-        use:
-          $ref: '#/components/schemas/KeyUse'
-        alg:
-          type: string
-          description: The algorithm type of the key.
-        name:
-          type: string
-          description: Name given to the current key.
-          minLength: 5
-          maxLength: 60
-      required:
-      - key
-      - use
-      - alg
-      - name
-    JWKs:
-      type: object
-      additionalProperties: false
-      properties:
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/JWK'
-        pagination:
-          $ref: '#/components/schemas/Pagination'
-      required:
-      - results
-      - pagination
-    VoidObject:
-      type: object
-      additionalProperties: false
-      description: An empty object
-    TemplateId:
-      type: string
-      format: uuid
-      description: The unique identifier of the Template
-    EServiceMode:
-      type: string
-      description: Indicates if the E-Service is intended for receiving or delivering data
-      enum:
-      - RECEIVE
-      - DELIVER
-    EServiceId:
-      type: string
-      format: uuid
-      description: The unique identifier of the E-Service
-    Users:
-      type: object
-      additionalProperties: false
-      description: Paginated list of users
-      properties:
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/User'
-        pagination:
-          $ref: '#/components/schemas/Pagination'
-      required:
-      - results
-      - pagination
-    ProducerKeychainId:
-      type: string
-      format: uuid
-      description: The unique identifier of the Producer Keychain
-    ProducerKeychain:
-      description: 'Models a Producer Keychain with field visibility based on the requester''s permissions.
-
-        Only the Producer Keychain owner has access to all fields.
-
-        '
-      oneOf:
-      - $ref: '#/components/schemas/FullProducerKeychain'
-      - $ref: '#/components/schemas/PartialProducerKeychain'
     EService:
       type: object
       additionalProperties: false
@@ -1012,262 +988,83 @@ components:
       - technology
       - descriptors
       - mode
-    OtherPrimeInfo:
+    ProducerKeychainId:
+      type: string
+      format: uuid
+      description: The unique identifier of the Producer Keychain
+    KeySeed:
+      description: Models the seed for a public key to be persisted
       type: object
       additionalProperties: false
       properties:
-        r:
+        key:
           type: string
-        d:
-          type: string
-        t:
-          type: string
-      required:
-      - r
-      - d
-      - t
-    ProducerKeychains:
-      type: object
-      additionalProperties: false
-      properties:
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/ProducerKeychain'
-        pagination:
-          $ref: '#/components/schemas/Pagination'
-      required:
-      - results
-      - pagination
-    User:
-      type: object
-      additionalProperties: false
-      description: User information
-      properties:
-        userId:
-          type: string
-          format: uuid
-          description: User identifier
-        name:
-          type: string
-          description: User first name
-        familyName:
-          type: string
-          description: User last name
-        roles:
-          type: array
-          items:
-            type: string
-          description: User roles
-      required:
-      - userId
-      - name
-      - familyName
-      - roles
-    Pagination:
-      type: object
-      additionalProperties: false
-      properties:
-        offset:
-          type: integer
-          format: int32
-          minimum: 0
-        limit:
-          type: integer
-          format: int32
-          minimum: 1
-          maximum: 50
-        totalCount:
-          type: integer
-          format: int32
-          minimum: 0
-      required:
-      - offset
-      - limit
-      - totalCount
-    FullProducerKeychain:
-      type: object
-      description: Models a Producer Keychain with unrestricted field visibility
-      additionalProperties: false
-      properties:
-        id:
-          type: string
-          format: uuid
-        producerId:
-          description: Tenant ID of the Producer Keychain owner
-          type: string
-          format: uuid
-        name:
-          type: string
-        description:
-          type: string
-        createdAt:
-          type: string
-          format: date-time
-      required:
-      - id
-      - producerId
-      - name
-      - createdAt
-    PartialProducerKeychain:
-      type: object
-      description: Models a Producer Keychain with restricted field visibility
-      additionalProperties: false
-      properties:
-        id:
-          type: string
-          format: uuid
-        producerId:
-          description: Tenant ID of the Producer Keychain owner
-          type: string
-          format: uuid
-      required:
-      - id
-      - producerId
-    EService_2:
-      type: object
-      additionalProperties: false
-      properties:
-        id:
-          type: string
-          format: uuid
-        producerId:
-          type: string
-          format: uuid
-        name:
-          type: string
-        description:
-          type: string
-        technology:
-          $ref: '#/components/schemas/EServiceTechnology'
-        mode:
-          $ref: '#/components/schemas/EServiceMode'
-        isSignalHubEnabled:
-          type: boolean
-        isConsumerDelegable:
-          type: boolean
-        isClientAccessDelegable:
-          type: boolean
-        templateId:
-          type: string
-          format: uuid
-        personalData:
-          type: boolean
-      required:
-      - id
-      - producerId
-      - name
-      - description
-      - technology
-      - descriptors
-      - mode
-    JWK_2:
-      description: JSON Web Key
-      type: object
-      additionalProperties: false
-      properties:
-        kty:
-          type: string
-        key_ops:
-          type: array
-          items:
-            type: string
+          description: Base64 UTF-8 encoding of a public key in PEM format
         use:
-          type: string
+          $ref: '#/components/schemas/KeyUse'
         alg:
           type: string
-        kid:
+          description: The algorithm type of the key.
+        name:
           type: string
-        x5u:
-          type: string
-          minLength: 1
-        x5t:
-          type: string
-        x5t#S256:
-          type: string
-        x5c:
-          type: array
-          items:
-            type: string
-        crv:
-          type: string
-        x:
-          type: string
-        y:
-          type: string
-        d:
-          type: string
-        k:
-          type: string
-        n:
-          type: string
-        e:
-          type: string
-        p:
-          type: string
-        q:
-          type: string
-        dp:
-          type: string
-        dq:
-          type: string
-        qi:
-          type: string
-        oth:
-          uniqueItems: false
-          minItems: 1
-          type: array
-          items:
-            $ref: '#/components/schemas/OtherPrimeInfo'
+          description: Name given to the current key.
+          minLength: 5
+          maxLength: 60
       required:
-      - kty
-      - kid
-    ProducerKeychainAddEService_2:
-      type: object
-      additionalProperties: false
-      properties:
-        eserviceId:
-          type: string
-          format: uuid
-      required:
-      - eserviceId
+      - key
+      - use
+      - alg
+      - name
+    ProducerKeychain:
+      description: 'Models a Producer Keychain with field visibility based on the requester''s permissions.
+
+        Only the Producer Keychain owner has access to all fields.
+
+        '
+      oneOf:
+      - $ref: '#/components/schemas/FullProducerKeychain'
+      - $ref: '#/components/schemas/PartialProducerKeychain'
+  headers:
+    RateLimitLimitHeader:
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+      description: Max allowed requests within time interval
+    RateLimitIntervalHeader:
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+      description: Time interval in milliseconds. Allowed requests will be constantly replenished during the interval. At the end of the interval the max allowed requests will be available
+    IntegrityRest02DigestHeader:
+      schema:
+        type: string
+        pattern: ^SHA-256=[a-zA-Z0-9+/]{43}=$
+      description: 'Digest of the body using the canonical JSON representation of the response body.
+
+        The digest is calculated using the SHA-256 algorithm on the response body
+
+        exactly as it is sent to the client, encoded in Base64 as per RFC 3230
+
+        '
+    IntegrityRest02AgidJwtSignatureHeader:
+      description: 'The `Agid-JWT-Signature` header contains a JSON Web Signature (JWS) signed with the PDND API private key.
+
+        It ensures payload integrity and non-repudiation across all responses (both success and error), in compliance with: 1) Linee Guida sull''interoperabilità tecnica delle Pubbliche Amministrazioni - Pattern di sicurezza,  2) RFC 7515 and 3) RFC 7519.
+
+        '
+      schema:
+        type: string
+    RateLimitRemainingHeader:
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+      description: Remaining requests within time interval
   responses:
-    Forbidden:
-      description: Forbidden
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-      headers:
-        X-Rate-Limit-Limit:
-          $ref: '#/components/headers/RateLimitLimitHeader'
-        X-Rate-Limit-Remaining:
-          $ref: '#/components/headers/RateLimitRemainingHeader'
-        X-Rate-Limit-Interval:
-          $ref: '#/components/headers/RateLimitIntervalHeader'
-        Digest:
-          $ref: '#/components/headers/IntegrityRest02DigestHeader'
-        Agid-JWT-Signature:
-          $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
-    Conflict:
-      description: Conflict
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-      headers:
-        X-Rate-Limit-Limit:
-          $ref: '#/components/headers/RateLimitLimitHeader'
-        X-Rate-Limit-Remaining:
-          $ref: '#/components/headers/RateLimitRemainingHeader'
-        X-Rate-Limit-Interval:
-          $ref: '#/components/headers/RateLimitIntervalHeader'
-        Digest:
-          $ref: '#/components/headers/IntegrityRest02DigestHeader'
-        Agid-JWT-Signature:
-          $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
-    Unauthorized:
-      description: Unauthorized
+    NotFound:
+      description: Not Found
       content:
         application/problem+json:
           schema:
@@ -1300,23 +1097,6 @@ components:
           $ref: '#/components/headers/IntegrityRest02DigestHeader'
         Agid-JWT-Signature:
           $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
-    NotFound:
-      description: Not Found
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-      headers:
-        X-Rate-Limit-Limit:
-          $ref: '#/components/headers/RateLimitLimitHeader'
-        X-Rate-Limit-Remaining:
-          $ref: '#/components/headers/RateLimitRemainingHeader'
-        X-Rate-Limit-Interval:
-          $ref: '#/components/headers/RateLimitIntervalHeader'
-        Digest:
-          $ref: '#/components/headers/IntegrityRest02DigestHeader'
-        Agid-JWT-Signature:
-          $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
     TooManyRequests:
       description: Too Many Requests
       content:
@@ -1334,7 +1114,67 @@ components:
           $ref: '#/components/headers/IntegrityRest02DigestHeader'
         Agid-JWT-Signature:
           $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+      headers:
+        X-Rate-Limit-Limit:
+          $ref: '#/components/headers/RateLimitLimitHeader'
+        X-Rate-Limit-Remaining:
+          $ref: '#/components/headers/RateLimitRemainingHeader'
+        X-Rate-Limit-Interval:
+          $ref: '#/components/headers/RateLimitIntervalHeader'
+        Digest:
+          $ref: '#/components/headers/IntegrityRest02DigestHeader'
+        Agid-JWT-Signature:
+          $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+    Conflict:
+      description: Conflict
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+      headers:
+        X-Rate-Limit-Limit:
+          $ref: '#/components/headers/RateLimitLimitHeader'
+        X-Rate-Limit-Remaining:
+          $ref: '#/components/headers/RateLimitRemainingHeader'
+        X-Rate-Limit-Interval:
+          $ref: '#/components/headers/RateLimitIntervalHeader'
+        Digest:
+          $ref: '#/components/headers/IntegrityRest02DigestHeader'
+        Agid-JWT-Signature:
+          $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+      headers:
+        X-Rate-Limit-Limit:
+          $ref: '#/components/headers/RateLimitLimitHeader'
+        X-Rate-Limit-Remaining:
+          $ref: '#/components/headers/RateLimitRemainingHeader'
+        X-Rate-Limit-Interval:
+          $ref: '#/components/headers/RateLimitIntervalHeader'
+        Digest:
+          $ref: '#/components/headers/IntegrityRest02DigestHeader'
+        Agid-JWT-Signature:
+          $ref: '#/components/headers/IntegrityRest02AgidJwtSignatureHeader'
   parameters:
+    OffsetParam:
+      in: query
+      name: offset
+      description: Pagination starting position
+      required: true
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
     LimitParam:
       in: query
       name: limit
@@ -1345,15 +1185,6 @@ components:
         format: int32
         minimum: 1
         maximum: 50
-    OffsetParam:
-      in: query
-      name: offset
-      description: Pagination starting position
-      required: true
-      schema:
-        type: integer
-        format: int32
-        minimum: 0
   securitySchemes:
     DPoPAuth:
       type: http
@@ -1375,11 +1206,3 @@ components:
       description: 'DPoP proof JWT for sender-constrained access. Must accompany the DPoP Authorization header.
 
         '
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
-x-refined-from:
-- interop-api-v3.yaml
-- pagopa-pdnd-interop-v2-openapi.yml
-- pagopa-pdnd-interop-v3-openapi.yml

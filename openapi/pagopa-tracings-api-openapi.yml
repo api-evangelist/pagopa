@@ -1,8 +1,8 @@
 openapi: 3.2.0
 info:
-  title: Pagopa Tracings API
+  title: Tracing Interop API specifications Tracings API
+  description: OpenAPI specification for Tracing services exposed for the Interop platform
   version: 1.0.0
-  description: 'Operations tagged Tracings across 2 of this provider''s published API definitions: interop-tracing.yaml, pagopa-pdnd-tracing-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.tracing.interop.pagopa.it
   description: Tracing Production environment
@@ -51,9 +51,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Problem'
-    servers:
-    - url: https://api.tracing.interop.pagopa.it
-      description: Tracing Production environment
   /tracings:
     get:
       security:
@@ -99,9 +96,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Problem'
-    servers:
-    - url: https://api.tracing.interop.pagopa.it
-      description: Tracing Production environment
   /tracings/{tracingId}/errors:
     get:
       security:
@@ -158,9 +152,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Problem'
-    servers:
-    - url: https://api.tracing.interop.pagopa.it
-      description: Tracing Production environment
   /tracings/{tracingId}/recover:
     post:
       security:
@@ -208,9 +199,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Problem'
-    servers:
-    - url: https://api.tracing.interop.pagopa.it
-      description: Tracing Production environment
   /tracings/{tracingId}/replace:
     post:
       security:
@@ -258,28 +246,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Problem'
-    servers:
-    - url: https://api.tracing.interop.pagopa.it
-      description: Tracing Production environment
 components:
   schemas:
-    RecoverTracingRequest:
-      type: object
-      properties:
-        file:
-          type: string
-          format: binary
-          description: 'The CSV file to upload containing tracing data. <br><br> Example format: <br> `date,purpose_id,token_id,status,requests_count` <br> `2023-05-01,0e1114e6-31d1-41a4-811d-a0c3d1b70bbf,4e1234e6-31d1-41a4-811d-a0c3d1b70aad,404,100`'
-      required:
-      - file
-    ReplaceTracingResponse:
-      type: object
-      properties:
-        tracingId:
-          type: string
-          format: uuid
-        errors:
-          type: boolean
     ReplaceTracingRequest:
       type: object
       properties:
@@ -289,41 +257,6 @@ components:
           description: 'The CSV file to upload containing tracing data. <br><br> Example format: <br> `date,purpose_id,token_id,status,requests_count` <br> `2023-05-01,0e1114e6-31d1-41a4-811d-a0c3d1b70bbf,99382e29-b0cf-412b-a060-72e421b6d167,404,100`'
       required:
       - file
-    GetTracingErrorsResponse:
-      type: object
-      required:
-      - results
-      - totalCount
-      properties:
-        results:
-          type: array
-          items:
-            type: object
-            properties:
-              purposeId:
-                type: string
-              severity:
-                type: string
-                enum:
-                - INVALID
-                - WARNING
-              errorCode:
-                type: string
-              message:
-                type: string
-              rowNumber:
-                type: integer
-                format: int32
-                minimum: 0
-            required:
-            - purposeId
-            - severity
-            - errorCode
-            - message
-            - rowNumber
-        totalCount:
-          type: integer
-          format: int64
     Problem:
       properties:
         type:
@@ -364,20 +297,47 @@ components:
       - status
       - title
       - errors
-    SubmitTracingRequest:
+    RecoverTracingRequest:
       type: object
       properties:
         file:
           type: string
           format: binary
-          description: 'The CSV file to upload containing tracing data. <br><br> Example format: <br> `date,purpose_id,token_id,status,requests_count` <br> `2023-05-01,0e1114e6-31d1-41a4-811d-a0c3d1b70bbf,99382e29-b0cf-412b-a060-72e421b6d167,404,100`'
-        date:
-          type: string
-          pattern: ^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$
-          description: The date of the tracing data in YYYY-MM-DD format
+          description: 'The CSV file to upload containing tracing data. <br><br> Example format: <br> `date,purpose_id,token_id,status,requests_count` <br> `2023-05-01,0e1114e6-31d1-41a4-811d-a0c3d1b70bbf,4e1234e6-31d1-41a4-811d-a0c3d1b70aad,404,100`'
       required:
       - file
-      - date
+    TracingState:
+      type: string
+      enum:
+      - PENDING
+      - COMPLETED
+      - MISSING
+      - ERROR
+      - WARNING
+    SubmitTracingResponse:
+      type: object
+      properties:
+        tracingId:
+          type: string
+          format: uuid
+        errors:
+          type: boolean
+    ReplaceTracingResponse:
+      type: object
+      properties:
+        tracingId:
+          type: string
+          format: uuid
+        errors:
+          type: boolean
+    RecoverTracingResponse:
+      type: object
+      properties:
+        tracingId:
+          type: string
+          format: uuid
+        errors:
+          type: boolean
     ProblemError:
       properties:
         code:
@@ -391,14 +351,6 @@ components:
       required:
       - code
       - detail
-    TracingState:
-      type: string
-      enum:
-      - PENDING
-      - COMPLETED
-      - MISSING
-      - ERROR
-      - WARNING
     GetTracingsResponse:
       type: object
       required:
@@ -420,28 +372,58 @@ components:
         totalCount:
           type: integer
           format: int64
-    RecoverTracingResponse:
+    SubmitTracingRequest:
       type: object
       properties:
-        tracingId:
+        file:
           type: string
-          format: uuid
-        errors:
-          type: boolean
-    SubmitTracingResponse:
+          format: binary
+          description: 'The CSV file to upload containing tracing data. <br><br> Example format: <br> `date,purpose_id,token_id,status,requests_count` <br> `2023-05-01,0e1114e6-31d1-41a4-811d-a0c3d1b70bbf,99382e29-b0cf-412b-a060-72e421b6d167,404,100`'
+        date:
+          type: string
+          pattern: ^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$
+          description: The date of the tracing data in YYYY-MM-DD format
+      required:
+      - file
+      - date
+    GetTracingErrorsResponse:
       type: object
+      required:
+      - results
+      - totalCount
       properties:
-        tracingId:
-          type: string
-          format: uuid
-        errors:
-          type: boolean
+        results:
+          type: array
+          items:
+            type: object
+            properties:
+              purposeId:
+                type: string
+              severity:
+                type: string
+                enum:
+                - INVALID
+                - WARNING
+              errorCode:
+                type: string
+              message:
+                type: string
+              rowNumber:
+                type: integer
+                format: int32
+                minimum: 0
+            required:
+            - purposeId
+            - severity
+            - errorCode
+            - message
+            - rowNumber
+        totalCount:
+          type: integer
+          format: int64
   securitySchemes:
     bearerAuth:
       type: http
       description: A bearer token in the format of a JWS and conformed to the specifications included in [RFC8725](https://tools.ietf.org/html/RFC8725).
       scheme: bearer
       bearerFormat: JWT
-x-refined-from:
-- interop-tracing.yaml
-- pagopa-pdnd-tracing-openapi.yml

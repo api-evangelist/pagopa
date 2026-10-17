@@ -1,8 +1,7 @@
 openapi: 3.2.0
 info:
-  title: Pagopa Dossier API
+  title: Firma con IO - Issuer Dossier API
   version: 1.2.1
-  description: 'Operations tagged Dossier across 2 of this provider''s published API definitions: io-sign-issuer.yaml, pagopa-firma-con-io-issuer-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.io.pagopa.it/api/v1/sign
   description: production
@@ -42,11 +41,6 @@ paths:
           $ref: '#/components/responses/TooManyRequests'
         default:
           $ref: '#/components/responses/Unexpected'
-    servers:
-    - url: https://api.io.pagopa.it/api/v1/sign
-      description: production
-    - url: http://localhost:7071/api/v1/sign
-      description: local
   /dossiers/{dossierId}:
     get:
       operationId: getDossier
@@ -78,11 +72,6 @@ paths:
           $ref: '#/components/responses/TooManyRequests'
         default:
           $ref: '#/components/responses/Unexpected'
-    servers:
-    - url: https://api.io.pagopa.it/api/v1/sign
-      description: production
-    - url: http://localhost:7071/api/v1/sign
-      description: local
   /dossiers/{dossierId}/signature-requests:
     get:
       operationId: getRequestsByDossier
@@ -126,29 +115,20 @@ paths:
           $ref: '#/components/responses/TooManyRequests'
         default:
           $ref: '#/components/responses/Unexpected'
-    servers:
-    - url: https://api.io.pagopa.it/api/v1/sign
-      description: production
-    - url: http://localhost:7071/api/v1/sign
-      description: local
 components:
   schemas:
-    DocumentMetadataList:
-      type: array
-      items:
-        $ref: '#/components/schemas/DocumentMetadata'
-      minLength: 1
-    SignatureRequestList:
+    CreateDossierBody:
       type: object
       properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/SignatureRequestListView'
-        continuation_token:
-          type: string
+        title:
+          $ref: '#/components/schemas/DossierTitle'
+        support_email:
+          $ref: '#/components/schemas/DossierSupportEmail'
+        documents_metadata:
+          $ref: '#/components/schemas/DocumentMetadataList'
       required:
-      - items
+      - title
+      - documents_metadata
     SignatureFieldToBeCreatedAttrs:
       type: object
       properties:
@@ -181,6 +161,94 @@ components:
       - coordinates
       - page
       - size
+    SignatureFieldAttrs:
+      oneOf:
+      - $ref: '#/components/schemas/ExistingSignatureFieldAttrs'
+      - $ref: '#/components/schemas/SignatureFieldToBeCreatedAttrs'
+    SignatureRequestList:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/SignatureRequestListView'
+        continuation_token:
+          type: string
+      required:
+      - items
+    SignatureField:
+      type: object
+      properties:
+        attrs:
+          $ref: '#/components/schemas/SignatureFieldAttrs'
+        clause:
+          $ref: '#/components/schemas/Clause'
+      required:
+      - attrs
+      - clause
+    DossierSupportEmail:
+      type: string
+      description: Issuer's support email for a specific dossier.
+      format: email
+      example: demo@example.com
+    ExistingSignatureFieldAttrs:
+      type: object
+      properties:
+        unique_name:
+          type: string
+      required:
+      - unique_name
+    DocumentMetadata:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 3
+          maxLength: 60
+        signature_fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/SignatureField'
+      required:
+      - title
+    SignatureRequestStatus:
+      type: string
+      x-extensible-enum:
+      - DRAFT
+      - READY
+      - WAIT_FOR_SIGNATURE
+      - SIGNED
+      - REJECTED
+      - CANCELLED
+    DossierTitle:
+      type: string
+      minLength: 3
+    DossierDetailView:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        title:
+          $ref: '#/components/schemas/DossierTitle'
+        support_email:
+          $ref: '#/components/schemas/DossierSupportEmail'
+        documents_metadata:
+          $ref: '#/components/schemas/DocumentMetadataList'
+        created_at:
+          $ref: '#/components/schemas/Timestamp'
+        updated_at:
+          $ref: '#/components/schemas/Timestamp'
+      required:
+      - id
+      - title
+      - documents_metadata
+      - created_at
+      - updated_at
+    DocumentMetadataList:
+      type: array
+      items:
+        $ref: '#/components/schemas/DocumentMetadata'
+      minLength: 1
     Clause:
       type: object
       properties:
@@ -197,55 +265,43 @@ components:
       required:
       - title
       - type
-    SignatureField:
-      type: object
-      properties:
-        attrs:
-          $ref: '#/components/schemas/SignatureFieldAttrs'
-        clause:
-          $ref: '#/components/schemas/Clause'
-      required:
-      - attrs
-      - clause
-    DossierSupportEmail:
+    Id:
       type: string
-      description: Issuer's support email for a specific dossier.
-      format: email
-      example: demo@example.com
-    CreateDossierBody:
-      type: object
-      properties:
-        title:
-          $ref: '#/components/schemas/DossierTitle'
-        support_email:
-          $ref: '#/components/schemas/DossierSupportEmail'
-        documents_metadata:
-          $ref: '#/components/schemas/DocumentMetadataList'
-      required:
-      - title
-      - documents_metadata
-    DossierTitle:
-      type: string
-      minLength: 3
-    DocumentMetadata:
-      type: object
-      properties:
-        title:
-          type: string
-          minLength: 3
-          maxLength: 60
-        signature_fields:
-          type: array
-          items:
-            $ref: '#/components/schemas/SignatureField'
-      required:
-      - title
+      description: Entity Id
+      format: NonEmptyString
+      example: 01ARZ3NDEKTSV4RRFFQ69G5FAV
+      x-import: '@pagopa/ts-commons/lib/strings'
     Timestamp:
       type: string
       format: UTCISODateFromString
       description: A date-time field in ISO-8601 format and UTC timezone.
       x-import: '@pagopa/ts-commons/lib/dates'
       example: '2018-10-13T00:00:00.000Z'
+    SignatureRequestListView:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        signer_id:
+          $ref: '#/components/schemas/Id'
+        dossier_id:
+          $ref: '#/components/schemas/Id'
+        status:
+          $ref: '#/components/schemas/SignatureRequestStatus'
+        created_at:
+          $ref: '#/components/schemas/Timestamp'
+        updated_at:
+          $ref: '#/components/schemas/Timestamp'
+        expires_at:
+          $ref: '#/components/schemas/Timestamp'
+      required:
+      - id
+      - signer_id
+      - dossier_id
+      - status
+      - created_at
+      - updated_at
+      - expires_at
     ProblemDetail:
       type: object
       properties:
@@ -283,81 +339,21 @@ components:
           type: string
           format: uri
           description: An absolute URI that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.
-    SignatureRequestStatus:
-      type: string
-      x-extensible-enum:
-      - DRAFT
-      - READY
-      - WAIT_FOR_SIGNATURE
-      - SIGNED
-      - REJECTED
-      - CANCELLED
-    Id:
-      type: string
-      description: Entity Id
-      format: NonEmptyString
-      example: 01ARZ3NDEKTSV4RRFFQ69G5FAV
-      x-import: '@pagopa/ts-commons/lib/strings'
-    SignatureFieldAttrs:
-      oneOf:
-      - $ref: '#/components/schemas/ExistingSignatureFieldAttrs'
-      - $ref: '#/components/schemas/SignatureFieldToBeCreatedAttrs'
-    ExistingSignatureFieldAttrs:
-      type: object
-      properties:
-        unique_name:
-          type: string
-      required:
-      - unique_name
-    SignatureRequestListView:
-      type: object
-      properties:
-        id:
-          $ref: '#/components/schemas/Id'
-        signer_id:
-          $ref: '#/components/schemas/Id'
-        dossier_id:
-          $ref: '#/components/schemas/Id'
-        status:
-          $ref: '#/components/schemas/SignatureRequestStatus'
-        created_at:
-          $ref: '#/components/schemas/Timestamp'
-        updated_at:
-          $ref: '#/components/schemas/Timestamp'
-        expires_at:
-          $ref: '#/components/schemas/Timestamp'
-      required:
-      - id
-      - signer_id
-      - dossier_id
-      - status
-      - created_at
-      - updated_at
-      - expires_at
-    DossierDetailView:
-      type: object
-      properties:
-        id:
-          $ref: '#/components/schemas/Id'
-        title:
-          $ref: '#/components/schemas/DossierTitle'
-        support_email:
-          $ref: '#/components/schemas/DossierSupportEmail'
-        documents_metadata:
-          $ref: '#/components/schemas/DocumentMetadataList'
-        created_at:
-          $ref: '#/components/schemas/Timestamp'
-        updated_at:
-          $ref: '#/components/schemas/Timestamp'
-      required:
-      - id
-      - title
-      - documents_metadata
-      - created_at
-      - updated_at
   responses:
-    Forbidden:
-      description: You don't have enough privileges to perform this action
+    NotFound:
+      description: The specified resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetail'
+    BadRequest:
+      description: Validation error on body
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetail'
+    TooManyRequests:
+      description: Too Many Requests
       content:
         application/json:
           schema:
@@ -374,20 +370,8 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ProblemDetail'
-    BadRequest:
-      description: Validation error on body
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ProblemDetail'
-    NotFound:
-      description: The specified resource was not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ProblemDetail'
-    TooManyRequests:
-      description: Too Many Requests
+    Forbidden:
+      description: You don't have enough privileges to perform this action
       content:
         application/json:
           schema:
@@ -398,6 +382,3 @@ components:
       name: Ocp-Apim-Subscription-Key
       in: header
       description: The API key can be obtained from the reserved area
-x-refined-from:
-- io-sign-issuer.yaml
-- pagopa-firma-con-io-issuer-openapi.yml

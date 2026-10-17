@@ -1,9 +1,9 @@
 openapi: 3.2.0
 info:
-  title: Pagopa Massive operation observability APIs - v2 API
+  title: GPD Upload pagoPA - Massive Upload Massive operation…
+  description: API to support Debt Positions massive upload for organizations
   termsOfService: https://www.pagopa.gov.it/
-  version: '1.0'
-  description: 'Operations tagged Massive operation observability APIs - v2 across 3 of this provider''s published API definitions: gpd-4-aca_massive_v2.json, pagopa-gpd-aca-massive-v2-openapi.yml, pagopa-gpd-massive-v2-openapi.yml. Each path carries the servers of the definition it was published in.'
+  version: 1.2.4
 servers:
 - url: https://api.platform.pagopa.it/upload/gpd/debt-positions-service/v2
 security:
@@ -108,8 +108,6 @@ paths:
                 title: string
                 status: 400
                 detail: There was an error processing the request
-    servers:
-    - url: https://api.platform.pagopa.it/upload/gpd/debt-positions-service/v2
   /brokers/{broker-code}/organizations/{organization-fiscal-code}/debtpositions/file/{file-id}/status:
     get:
       tags:
@@ -196,8 +194,6 @@ paths:
                 title: string
                 status: 400
                 detail: There was an error processing the request
-    servers:
-    - url: https://api.platform.pagopa.it/upload/gpd/debt-positions-service/v2
   /brokers/{broker-code}/organizations/{organization-fiscal-code}/debtpositions/files:
     get:
       tags:
@@ -303,10 +299,10 @@ paths:
                 title: string
                 status: 400
                 detail: There was an error processing the request
-    servers:
-    - url: https://api.platform.pagopa.it/upload/gpd/debt-positions-service/v2
 components:
   schemas:
+    UploadStatus:
+      type: object
     ProblemJson:
       type: object
       properties:
@@ -323,11 +319,9 @@ components:
           description: A human readable explanation specific to this occurrence of the problem.
           example: There was an error processing the request
       description: Object returned as response in case of an error.
-    FileIdListResponse:
-      type: object
     UploadReportDTO:
       type: object
-    UploadStatus:
+    FileIdListResponse:
       type: object
   securitySchemes:
     apiKeyHeader:
@@ -338,7 +332,3 @@ components:
       type: apiKey
       name: subscription-key
       in: query
-x-refined-from:
-- gpd-4-aca_massive_v2.json
-- pagopa-gpd-aca-massive-v2-openapi.yml
-- pagopa-gpd-massive-v2-openapi.yml

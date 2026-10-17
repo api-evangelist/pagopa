@@ -1,13 +1,19 @@
 openapi: 3.2.0
 info:
-  title: Pagopa Remote Content API
   version: 4.1.1
+  title: IO API for Public Administration Services Remote Content API
   contact:
     name: PagoPA S.p.A.
     url: https://docs.pagopa.it/io-guida-tecnica/
   x-logo:
     url: https://io.italia.it/assets/img/io-logo-blue.svg
-  description: 'Operations tagged remote-content across 2 of this provider''s published API definitions: io-functions-services.yaml, pagopa-io-services-openapi.yml. Each path carries the servers of the definition it was published in.'
+  description: '# Warning
+
+    **This is an experimental API that is (most probably) going to change as we evolve the IO platform.**
+
+    # Introduction
+
+    This is the documentation of the IO API for 3rd party services.'
 servers:
 - url: https://api.io.pagopa.it/api/v1
 tags:
@@ -77,8 +83,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProblemJson'
-    servers:
-    - url: https://api.io.pagopa.it/api/v1
   /messages-sending/remote-contents/configurations/{configurationId}:
     get:
       tags:
@@ -162,10 +166,44 @@ paths:
             schema:
               $ref: '#/components/schemas/NewRCConfigurationPublic'
         required: true
-    servers:
-    - url: https://api.io.pagopa.it/api/v1
 components:
   schemas:
+    NewRCConfigurationPublic:
+      allOf:
+      - $ref: '#/components/schemas/NewRCConfigurationBase'
+      - $ref: '#/components/schemas/RCConfigurationEnvironment'
+    RCConfigurationBase:
+      allOf:
+      - $ref: '#/components/schemas/NewRCConfigurationBase'
+      - type: object
+        properties:
+          configuration_id:
+            type: string
+            description: Ulid string.
+            format: Ulid
+            x-import: '@pagopa/ts-commons/lib/strings'
+            example: 01ARZ3NDEKTSV4RRFFQ69G5FAV
+        required:
+        - configuration_id
+    RCConfigurationEnvironment:
+      type: object
+      properties:
+        test_environment:
+          $ref: '#/components/schemas/RCConfigurationTestEnvironment'
+        prod_environment:
+          $ref: '#/components/schemas/RCConfigurationProdEnvironment'
+    RCConfigurationProdEnvironment:
+      type: object
+      properties:
+        base_url:
+          type: string
+          minLength: 1
+          description: Base url of the server.
+        details_authentication:
+          $ref: '#/components/schemas/RCAuthenticationConfig'
+      required:
+      - base_url
+      - details_authentication
     NewRCConfigurationBase:
       type: object
       properties:
@@ -196,57 +234,38 @@ components:
       - has_precondition
       - disable_lollipop_for
       - is_lollipop_enabled
-    RCConfigurationPublic:
-      allOf:
-      - $ref: '#/components/schemas/RCConfigurationBase'
-      - $ref: '#/components/schemas/RCConfigurationEnvironment'
-    RCConfigurationProdEnvironment:
+    RCAuthenticationConfig:
       type: object
       properties:
-        base_url:
+        header_key_name:
           type: string
           minLength: 1
-          description: Base url of the server.
-        details_authentication:
-          $ref: '#/components/schemas/RCAuthenticationConfig'
+          description: header key name
+        key:
+          type: string
+          minLength: 1
+          description: authentication config key
+        type:
+          type: string
+          minLength: 1
+          description: authentication config type
       required:
-      - base_url
-      - details_authentication
-    RCConfigurationTestEnvironment:
-      allOf:
-      - $ref: '#/components/schemas/RCConfigurationProdEnvironment'
-      - type: object
-        properties:
-          test_users:
-            type: array
-            items:
-              $ref: '#/components/schemas/FiscalCode'
-        required:
-        - test_users
-    RCConfigurationBase:
-      allOf:
-      - $ref: '#/components/schemas/NewRCConfigurationBase'
-      - type: object
-        properties:
-          configuration_id:
-            type: string
-            description: Ulid string.
-            format: Ulid
-            x-import: '@pagopa/ts-commons/lib/strings'
-            example: 01ARZ3NDEKTSV4RRFFQ69G5FAV
-        required:
-        - configuration_id
-    NewRCConfigurationPublic:
-      allOf:
-      - $ref: '#/components/schemas/NewRCConfigurationBase'
-      - $ref: '#/components/schemas/RCConfigurationEnvironment'
-    RCConfigurationEnvironment:
+      - header_key_name
+      - key
+      - type
+    RCConfigurationListResponse:
       type: object
       properties:
-        test_environment:
-          $ref: '#/components/schemas/RCConfigurationTestEnvironment'
-        prod_environment:
-          $ref: '#/components/schemas/RCConfigurationProdEnvironment'
+        rcConfigList:
+          type: array
+          items:
+            $ref: '#/components/schemas/RCConfigurationResponse'
+    FiscalCode:
+      type: string
+      description: User's fiscal code.
+      format: FiscalCode
+      x-import: '@pagopa/ts-commons/lib/strings'
+      example: SPNDNL80R13C555X
     RCConfigurationResponse:
       allOf:
       - $ref: '#/components/schemas/RCConfigurationPublic'
@@ -257,25 +276,10 @@ components:
             minLength: 1
         required:
         - user_id
-    RCConfigurationListResponse:
-      type: object
-      properties:
-        rcConfigList:
-          type: array
-          items:
-            $ref: '#/components/schemas/RCConfigurationResponse'
-    HasPrecondition:
-      type: string
-      x-extensible-enum:
-      - ALWAYS
-      - ONCE
-      - NEVER
-    FiscalCode:
-      type: string
-      description: User's fiscal code.
-      format: FiscalCode
-      x-import: '@pagopa/ts-commons/lib/strings'
-      example: SPNDNL80R13C555X
+    RCConfigurationPublic:
+      allOf:
+      - $ref: '#/components/schemas/RCConfigurationBase'
+      - $ref: '#/components/schemas/RCConfigurationEnvironment'
     ProblemJson:
       type: object
       properties:
@@ -315,25 +319,23 @@ components:
           description: 'An absolute URI that identifies the specific occurrence of the problem.
 
             It may or may not yield further information if dereferenced.'
-    RCAuthenticationConfig:
-      type: object
-      properties:
-        header_key_name:
-          type: string
-          minLength: 1
-          description: header key name
-        key:
-          type: string
-          minLength: 1
-          description: authentication config key
-        type:
-          type: string
-          minLength: 1
-          description: authentication config type
-      required:
-      - header_key_name
-      - key
-      - type
+    RCConfigurationTestEnvironment:
+      allOf:
+      - $ref: '#/components/schemas/RCConfigurationProdEnvironment'
+      - type: object
+        properties:
+          test_users:
+            type: array
+            items:
+              $ref: '#/components/schemas/FiscalCode'
+        required:
+        - test_users
+    HasPrecondition:
+      type: string
+      x-extensible-enum:
+      - ALWAYS
+      - ONCE
+      - NEVER
   securitySchemes:
     SubscriptionKey:
       type: apiKey
@@ -345,6 +347,3 @@ components:
       name: Ocp-Apim-Subscription-Key
       in: header
       description: The `manage` API key obtained through the Backoffice IO.
-x-refined-from:
-- io-functions-services.yaml
-- pagopa-io-services-openapi.yml

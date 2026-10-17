@@ -1,11 +1,11 @@
 openapi: 3.2.0
 info:
-  title: Pagopa Payment API
+  title: EMD Payment API
   version: 1.4.1-SNAPSHOT
+  description: EMD Payment
   contact:
     name: PagoPA S.p.A.
     email: cstar@pagopa.it
-  description: 'Operations tagged Payment across 2 of this provider''s published API definitions: mdc-emd-payment.yml, pagopa-mdc-payment-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - description: Development Test
   url: https://api-emd.dev.cstar.pagopa.it/emd/payment
@@ -226,16 +226,6 @@ paths:
               required: false
               schema:
                 $ref: '#/components/schemas/RetryAfter'
-    servers:
-    - description: Development Test
-      url: https://api-emd.dev.cstar.pagopa.it/emd/payment
-      x-internal: true
-    - description: User Acceptance Test
-      url: https://api-emd.uat.cstar.pagopa.it/emd/payment
-      x-internal: true
-    - description: Prod
-      url: https://api-emd.cstar.pagopa.it/emd/payment
-      x-internal: false
   /retrievalTokens/{retrievalId}:
     get:
       tags:
@@ -446,16 +436,6 @@ paths:
               required: false
               schema:
                 $ref: '#/components/schemas/RetryAfter'
-    servers:
-    - description: Development Test
-      url: https://api-emd.dev.cstar.pagopa.it/emd/payment
-      x-internal: true
-    - description: User Acceptance Test
-      url: https://api-emd.uat.cstar.pagopa.it/emd/payment
-      x-internal: true
-    - description: Prod
-      url: https://api-emd.cstar.pagopa.it/emd/payment
-      x-internal: false
   /token:
     get:
       tags:
@@ -689,39 +669,8 @@ paths:
               required: false
               schema:
                 $ref: '#/components/schemas/RetryAfter'
-    servers:
-    - description: Development Test
-      url: https://api-emd.dev.cstar.pagopa.it/emd/payment
-      x-internal: true
-    - description: User Acceptance Test
-      url: https://api-emd.uat.cstar.pagopa.it/emd/payment
-      x-internal: true
-    - description: Prod
-      url: https://api-emd.cstar.pagopa.it/emd/payment
-      x-internal: false
 components:
   schemas:
-    RetrievalErrorDTO:
-      type: object
-      required:
-      - code
-      - message
-      properties:
-        code:
-          type: string
-          enum:
-          - TPP_NOT_FOUND
-          - RETRIEVAL_NOT_FOUND
-          - AUTHENTICATION_FAILED
-          - RETRIEVAL_GENERIC_ERROR
-          - TOO_MANY_REQUESTS
-          - BAD_REQUEST
-          description: "\"ENG: Error code: TPP_NOT_FOUND: TPP does not exist or is not active,\n RETRIEVAL_NOT_FOUND: Retrieval does not exist or is not active,\n AUTHENTICATION_FAILED: Something went wrong with authentication,\n RETRIEVAL_GENERIC_ERROR: Application error,\n TOO_MANY_REQUESTS: Too many requests,\n BAD_REQUEST: Bad request - IT: Codice di errore:\n TPP_NOT_FOUND: La TPP non esiste o non è attiva,\n RETRIEVAL_NOT_FOUND: Il retrieval non esiste o non è attivo,\n AUTHENTICATION_FAILED: Qualcosa è andato storto con l'autenticazione,\n RETRIEVAL_GENERIC_ERROR: Errore applicativo,\n TOO_MANY_REQUESTS: Troppe richieste,\n BAD_REQUEST: Request errata\""
-        message:
-          type: string
-          description: 'ENG: Error message - IT: Messaggio di errore'
-          maxLength: 250
-          pattern: ^[\w\s.,!?'"-]+$
     RetrievalResponseDTO:
       type: object
       required:
@@ -767,12 +716,19 @@ components:
           type: boolean
           description: 'ENG: Flag indicating whether the TPP is integrated with the payment system. - IT: Flag che indica se il TPP è integrato con il sistema di pagamento.'
           example: true
-    RetryAfter:
-      description: The number of seconds to wait before allowing a follow-up request
-      type: integer
-      format: int32
-      minimum: 1
-      maximum: 240
+    RetrievaIdResponseDTO:
+      type: object
+      required:
+      - retrievalId
+      description: Retrieval Response information
+      properties:
+        retrievalId:
+          type: string
+          description: 'ENG: Unique ID that identify retrieval payload - IT: Identificativo univoco del retrieval payload'
+          pattern: ^[ -~]{1,50}$
+          minLength: 50
+          maxLength: 50
+          example: 0e4c6629-8753-234s-b0da-1f796999ec2-15038637960920
     RetrievalRequestDTO:
       type: object
       required:
@@ -801,37 +757,51 @@ components:
           maxLength: 50
           example: v1
           pattern: ^[a-zA-Z0-9_-]{1,50}$
-    RetrievaIdResponseDTO:
-      type: object
-      required:
-      - retrievalId
-      description: Retrieval Response information
-      properties:
-        retrievalId:
-          type: string
-          description: 'ENG: Unique ID that identify retrieval payload - IT: Identificativo univoco del retrieval payload'
-          pattern: ^[ -~]{1,50}$
-          minLength: 50
-          maxLength: 50
-          example: 0e4c6629-8753-234s-b0da-1f796999ec2-15038637960920
-    RateLimitLimit:
-      description: The number of allowed requests in the current period
+    RetryAfter:
+      description: The number of seconds to wait before allowing a follow-up request
       type: integer
       format: int32
       minimum: 1
       maximum: 240
-    RateLimitReset:
-      description: The number of seconds left in the current period
-      type: integer
-      format: int32
-      minimum: 1
-      maximum: 60
+    RetrievalErrorDTO:
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: string
+          enum:
+          - TPP_NOT_FOUND
+          - RETRIEVAL_NOT_FOUND
+          - AUTHENTICATION_FAILED
+          - RETRIEVAL_GENERIC_ERROR
+          - TOO_MANY_REQUESTS
+          - BAD_REQUEST
+          description: "\"ENG: Error code: TPP_NOT_FOUND: TPP does not exist or is not active,\n RETRIEVAL_NOT_FOUND: Retrieval does not exist or is not active,\n AUTHENTICATION_FAILED: Something went wrong with authentication,\n RETRIEVAL_GENERIC_ERROR: Application error,\n TOO_MANY_REQUESTS: Too many requests,\n BAD_REQUEST: Bad request - IT: Codice di errore:\n TPP_NOT_FOUND: La TPP non esiste o non è attiva,\n RETRIEVAL_NOT_FOUND: Il retrieval non esiste o non è attivo,\n AUTHENTICATION_FAILED: Qualcosa è andato storto con l'autenticazione,\n RETRIEVAL_GENERIC_ERROR: Errore applicativo,\n TOO_MANY_REQUESTS: Troppe richieste,\n BAD_REQUEST: Request errata\""
+        message:
+          type: string
+          description: 'ENG: Error message - IT: Messaggio di errore'
+          maxLength: 250
+          pattern: ^[\w\s.,!?'"-]+$
     AccessControlAllowOrigin:
       description: Indicates whether the response can be shared with requesting code from the given origin
       type: string
       pattern: ^[ -~]{1,2048}$
       minLength: 1
       maxLength: 2048
+    RateLimitReset:
+      description: The number of seconds left in the current period
+      type: integer
+      format: int32
+      minimum: 1
+      maximum: 60
+    RateLimitLimit:
+      description: The number of allowed requests in the current period
+      type: integer
+      format: int32
+      minimum: 1
+      maximum: 240
   securitySchemes:
     oAuth2:
       description: 'A bearer token in the format of a JWS and conforms to the specifications
@@ -845,6 +815,3 @@ components:
           tokenUrl: /token
           refreshUrl: /token
           scopes: {}
-x-refined-from:
-- mdc-emd-payment.yml
-- pagopa-mdc-payment-openapi.yml

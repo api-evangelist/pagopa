@@ -1,9 +1,9 @@
 openapi: 3.2.0
 info:
-  title: Pagopa Payments receipts API
-  version: 0.12.52
+  title: GPD Payments pagoPA - REST for Auth Payments receipts API
+  description: REST API del servizio Payments per Gestione Posizione Debitorie - for Auth
   termsOfService: https://www.pagopa.gov.it/
-  description: 'Operations tagged Payments receipts API across 2 of this provider''s published API definitions: gpd_payments.json, pagopa-gpd-payments-openapi.yml. Each path carries the servers of the definition it was published in.'
+  version: 0.12.52
 servers:
 - url: https://api.platform.pagopa.it/gpd/payments-receipts-service/v1
 security:
@@ -120,8 +120,6 @@ paths:
                 title: string
                 status: 200
                 detail: There was an error processing the request
-    servers:
-    - url: https://api.platform.pagopa.it/gpd/payments-receipts-service/v1
   /payments/{organizationfiscalcode}/receipts/{iuv}:
     get:
       tags:
@@ -222,23 +220,8 @@ paths:
                 title: string
                 status: 200
                 detail: There was an error processing the request
-    servers:
-    - url: https://api.platform.pagopa.it/gpd/payments-receipts-service/v1
 components:
   schemas:
-    ReceiptModelResponse:
-      type: object
-      properties:
-        organizationFiscalCode:
-          type: string
-        iuv:
-          type: string
-        debtor:
-          type: string
-        paymentDateTime:
-          type: string
-        status:
-          type: string
     ReceiptsInfo:
       required:
       - receipts_list
@@ -265,6 +248,19 @@ components:
           type: string
           description: A human readable explanation specific to this occurrence of the problem.
           example: There was an error processing the request
+    ReceiptModelResponse:
+      type: object
+      properties:
+        organizationFiscalCode:
+          type: string
+        iuv:
+          type: string
+        debtor:
+          type: string
+        paymentDateTime:
+          type: string
+        status:
+          type: string
   securitySchemes:
     apiKeyHeader:
       type: apiKey
@@ -274,6 +270,3 @@ components:
       type: apiKey
       name: subscription-key
       in: query
-x-refined-from:
-- gpd_payments.json
-- pagopa-gpd-payments-openapi.yml

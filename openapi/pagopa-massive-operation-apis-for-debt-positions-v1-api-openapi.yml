@@ -1,9 +1,9 @@
 openapi: 3.2.0
 info:
-  title: Pagopa Massive operation APIs for Debt Positions - v1 API
-  version: 0.5.3
+  title: GPD Upload pagoPA - Massive Upload Massive operation APIs…
+  description: API to support Debt Positions massive upload for organizations
   termsOfService: https://www.pagopa.gov.it/
-  description: 'Operations tagged Massive operation APIs for Debt Positions - v1 across 2 of this provider''s published API definitions: gpd_massive.json, pagopa-gpd-massive-v1-openapi.yml. Each path carries the servers of the definition it was published in.'
+  version: 0.5.3
 servers:
 - url: https://api.platform.pagopa.it/upload/gpd/debt-positions-service/v1
 security:
@@ -232,8 +232,6 @@ paths:
                 title: string
                 status: 400
                 detail: There was an error processing the request
-    servers:
-    - url: https://api.platform.pagopa.it/upload/gpd/debt-positions-service/v1
 components:
   schemas:
     ProblemJson:
@@ -261,6 +259,3 @@ components:
       type: apiKey
       name: subscription-key
       in: query
-x-refined-from:
-- gpd_massive.json
-- pagopa-gpd-massive-v1-openapi.yml

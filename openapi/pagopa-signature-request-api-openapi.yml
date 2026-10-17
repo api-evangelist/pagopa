@@ -1,8 +1,7 @@
 openapi: 3.2.0
 info:
-  title: Pagopa Signature Request API
+  title: Firma con IO - Issuer Signature Request API
   version: 1.2.1
-  description: 'Operations tagged Signature Request across 2 of this provider''s published API definitions: io-sign-issuer.yaml, pagopa-firma-con-io-issuer-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.io.pagopa.it/api/v1/sign
   description: production
@@ -44,11 +43,6 @@ paths:
           $ref: '#/components/responses/TooManyRequests'
         default:
           $ref: '#/components/responses/Unexpected'
-    servers:
-    - url: https://api.io.pagopa.it/api/v1/sign
-      description: production
-    - url: http://localhost:7071/api/v1/sign
-      description: local
   /signature-requests/{signatureRequestId}:
     get:
       operationId: getSignatureRequest
@@ -80,11 +74,6 @@ paths:
           $ref: '#/components/responses/TooManyRequests'
         default:
           $ref: '#/components/responses/Unexpected'
-    servers:
-    - url: https://api.io.pagopa.it/api/v1/sign
-      description: production
-    - url: http://localhost:7071/api/v1/sign
-      description: local
   /signature-requests/{signatureRequestId}/status:
     put:
       operationId: setSignatureRequestStatus
@@ -118,11 +107,6 @@ paths:
           $ref: '#/components/responses/TooManyRequests'
         default:
           $ref: '#/components/responses/Unexpected'
-    servers:
-    - url: https://api.io.pagopa.it/api/v1/sign
-      description: production
-    - url: http://localhost:7071/api/v1/sign
-      description: local
   /signature-requests/{signatureRequestId}/documents/{documentId}/upload_url:
     get:
       operationId: getDocumentUploadUrl
@@ -159,11 +143,6 @@ paths:
           $ref: '#/components/responses/TooManyRequests'
         default:
           $ref: '#/components/responses/Unexpected'
-    servers:
-    - url: https://api.io.pagopa.it/api/v1/sign
-      description: production
-    - url: http://localhost:7071/api/v1/sign
-      description: local
   /signature-requests/{signatureRequestId}/notification:
     put:
       operationId: sendNotification
@@ -193,61 +172,51 @@ paths:
           $ref: '#/components/responses/TooManyRequests'
         default:
           $ref: '#/components/responses/Unexpected'
-    servers:
-    - url: https://api.io.pagopa.it/api/v1/sign
-      description: production
-    - url: http://localhost:7071/api/v1/sign
-      description: local
 components:
+  responses:
+    UnprocessableContent:
+      description: Unprocessable Content
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetail'
+    NotFound:
+      description: The specified resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetail'
+    BadRequest:
+      description: Validation error on body
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetail'
+    TooManyRequests:
+      description: Too Many Requests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetail'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetail'
+    Unexpected:
+      description: Unexpected error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetail'
+    Forbidden:
+      description: You don't have enough privileges to perform this action
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetail'
   schemas:
-    DocumentReady:
-      allOf:
-      - $ref: '#/components/schemas/Document'
-      - type: object
-        properties:
-          status:
-            type: string
-            enum:
-            - READY
-          uploaded_at:
-            $ref: '#/components/schemas/Timestamp'
-          url:
-            type: string
-            format: uri
-        required:
-        - status
-        - uploaded_at
-        - url
-    DocumentMetadataList:
-      type: array
-      items:
-        $ref: '#/components/schemas/DocumentMetadata'
-      minLength: 1
-    DocumentDetailView:
-      oneOf:
-      - $ref: '#/components/schemas/DocumentToBeUploaded'
-      - $ref: '#/components/schemas/DocumentToBeValidated'
-      - $ref: '#/components/schemas/DocumentReady'
-      - $ref: '#/components/schemas/DocumentRejected'
-    SetSignatureRequestStatusBody:
-      type: string
-      x-extensible-enum:
-      - READY
-      - CANCELLED
-    CreateSignatureRequestBody:
-      type: object
-      properties:
-        dossier_id:
-          $ref: '#/components/schemas/Id'
-        signer_id:
-          $ref: '#/components/schemas/Id'
-        expires_at:
-          $ref: '#/components/schemas/Timestamp'
-        documents_metadata:
-          $ref: '#/components/schemas/DocumentMetadataList'
-      required:
-      - dossier_id
-      - signer_id
     SignatureFieldToBeCreatedAttrs:
       type: object
       properties:
@@ -280,22 +249,6 @@ components:
       - coordinates
       - page
       - size
-    Clause:
-      type: object
-      properties:
-        title:
-          type: string
-          minLength: 5
-          maxLength: 80
-        type:
-          type: string
-          enum:
-          - REQUIRED
-          - UNFAIR
-          - OPTIONAL
-      required:
-      - title
-      - type
     Document:
       type: object
       properties:
@@ -312,6 +265,30 @@ components:
       - metadata
       - created_at
       - updated_at
+    SignatureFieldAttrs:
+      oneOf:
+      - $ref: '#/components/schemas/ExistingSignatureFieldAttrs'
+      - $ref: '#/components/schemas/SignatureFieldToBeCreatedAttrs'
+    DocumentRejected:
+      allOf:
+      - $ref: '#/components/schemas/Document'
+      - type: object
+        properties:
+          status:
+            type: string
+            enum:
+            - REJECTED
+          uploaded_at:
+            $ref: '#/components/schemas/Timestamp'
+          rejected_at:
+            $ref: '#/components/schemas/Timestamp'
+          reject_reason:
+            type: string
+        required:
+        - status
+        - uploaded_at
+        - rejected_at
+        - reject_reason
     DocumentToBeValidated:
       allOf:
       - $ref: '#/components/schemas/Document'
@@ -326,6 +303,20 @@ components:
         required:
         - status
         - uploaded_at
+    SetSignatureRequestStatusBody:
+      type: string
+      x-extensible-enum:
+      - READY
+      - CANCELLED
+    DocumentDetailView:
+      oneOf:
+      - $ref: '#/components/schemas/DocumentToBeUploaded'
+      - $ref: '#/components/schemas/DocumentToBeValidated'
+      - $ref: '#/components/schemas/DocumentReady'
+      - $ref: '#/components/schemas/DocumentRejected'
+    UploadUrl:
+      type: string
+      format: uri
     SignatureField:
       type: object
       properties:
@@ -336,6 +327,118 @@ components:
       required:
       - attrs
       - clause
+    NotificationDetailView:
+      type: object
+      properties:
+        io_message_id:
+          type: string
+      required:
+      - io_message_id
+    ExistingSignatureFieldAttrs:
+      type: object
+      properties:
+        unique_name:
+          type: string
+      required:
+      - unique_name
+    DocumentMetadata:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 3
+          maxLength: 60
+        signature_fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/SignatureField'
+      required:
+      - title
+    SignatureRequestStatus:
+      type: string
+      x-extensible-enum:
+      - DRAFT
+      - READY
+      - WAIT_FOR_SIGNATURE
+      - SIGNED
+      - REJECTED
+      - CANCELLED
+    DocumentMetadataList:
+      type: array
+      items:
+        $ref: '#/components/schemas/DocumentMetadata'
+      minLength: 1
+    Clause:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 5
+          maxLength: 80
+        type:
+          type: string
+          enum:
+          - REQUIRED
+          - UNFAIR
+          - OPTIONAL
+      required:
+      - title
+      - type
+    Id:
+      type: string
+      description: Entity Id
+      format: NonEmptyString
+      example: 01ARZ3NDEKTSV4RRFFQ69G5FAV
+      x-import: '@pagopa/ts-commons/lib/strings'
+    Timestamp:
+      type: string
+      format: UTCISODateFromString
+      description: A date-time field in ISO-8601 format and UTC timezone.
+      x-import: '@pagopa/ts-commons/lib/dates'
+      example: '2018-10-13T00:00:00.000Z'
+    DocumentToBeUploaded:
+      allOf:
+      - $ref: '#/components/schemas/Document'
+      - type: object
+        properties:
+          status:
+            type: string
+            enum:
+            - WAIT_FOR_UPLOAD
+        required:
+        - status
+    CreateSignatureRequestBody:
+      type: object
+      properties:
+        dossier_id:
+          $ref: '#/components/schemas/Id'
+        signer_id:
+          $ref: '#/components/schemas/Id'
+        expires_at:
+          $ref: '#/components/schemas/Timestamp'
+        documents_metadata:
+          $ref: '#/components/schemas/DocumentMetadataList'
+      required:
+      - dossier_id
+      - signer_id
+    DocumentReady:
+      allOf:
+      - $ref: '#/components/schemas/Document'
+      - type: object
+        properties:
+          status:
+            type: string
+            enum:
+            - READY
+          uploaded_at:
+            $ref: '#/components/schemas/Timestamp'
+          url:
+            type: string
+            format: uri
+        required:
+        - status
+        - uploaded_at
+        - url
     SignatureRequestDetailView:
       type: object
       properties:
@@ -379,39 +482,6 @@ components:
       - documents
       - created_at
       - updated_at
-    UploadUrl:
-      type: string
-      format: uri
-    DocumentToBeUploaded:
-      allOf:
-      - $ref: '#/components/schemas/Document'
-      - type: object
-        properties:
-          status:
-            type: string
-            enum:
-            - WAIT_FOR_UPLOAD
-        required:
-        - status
-    DocumentMetadata:
-      type: object
-      properties:
-        title:
-          type: string
-          minLength: 3
-          maxLength: 60
-        signature_fields:
-          type: array
-          items:
-            $ref: '#/components/schemas/SignatureField'
-      required:
-      - title
-    Timestamp:
-      type: string
-      format: UTCISODateFromString
-      description: A date-time field in ISO-8601 format and UTC timezone.
-      x-import: '@pagopa/ts-commons/lib/dates'
-      example: '2018-10-13T00:00:00.000Z'
     ProblemDetail:
       type: object
       properties:
@@ -449,108 +519,9 @@ components:
           type: string
           format: uri
           description: An absolute URI that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.
-    SignatureRequestStatus:
-      type: string
-      x-extensible-enum:
-      - DRAFT
-      - READY
-      - WAIT_FOR_SIGNATURE
-      - SIGNED
-      - REJECTED
-      - CANCELLED
-    Id:
-      type: string
-      description: Entity Id
-      format: NonEmptyString
-      example: 01ARZ3NDEKTSV4RRFFQ69G5FAV
-      x-import: '@pagopa/ts-commons/lib/strings'
-    SignatureFieldAttrs:
-      oneOf:
-      - $ref: '#/components/schemas/ExistingSignatureFieldAttrs'
-      - $ref: '#/components/schemas/SignatureFieldToBeCreatedAttrs'
-    ExistingSignatureFieldAttrs:
-      type: object
-      properties:
-        unique_name:
-          type: string
-      required:
-      - unique_name
-    NotificationDetailView:
-      type: object
-      properties:
-        io_message_id:
-          type: string
-      required:
-      - io_message_id
-    DocumentRejected:
-      allOf:
-      - $ref: '#/components/schemas/Document'
-      - type: object
-        properties:
-          status:
-            type: string
-            enum:
-            - REJECTED
-          uploaded_at:
-            $ref: '#/components/schemas/Timestamp'
-          rejected_at:
-            $ref: '#/components/schemas/Timestamp'
-          reject_reason:
-            type: string
-        required:
-        - status
-        - uploaded_at
-        - rejected_at
-        - reject_reason
-  responses:
-    Forbidden:
-      description: You don't have enough privileges to perform this action
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ProblemDetail'
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ProblemDetail'
-    UnprocessableContent:
-      description: Unprocessable Content
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ProblemDetail'
-    Unexpected:
-      description: Unexpected error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ProblemDetail'
-    BadRequest:
-      description: Validation error on body
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ProblemDetail'
-    NotFound:
-      description: The specified resource was not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ProblemDetail'
-    TooManyRequests:
-      description: Too Many Requests
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ProblemDetail'
   securitySchemes:
     SubscriptionKey:
       type: apiKey
       name: Ocp-Apim-Subscription-Key
       in: header
       description: The API key can be obtained from the reserved area
-x-refined-from:
-- io-sign-issuer.yaml
-- pagopa-firma-con-io-issuer-openapi.yml

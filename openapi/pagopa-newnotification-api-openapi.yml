@@ -1,14 +1,22 @@
 openapi: 3.2.0
 info:
-  title: Pagopa New Notification API
+  termsOfService: https://selfcare.notifichedigitali.it/termini-di-servizio
+  x-api-id: api-external-b2b-pa
+  title: 'Piattaforma Notifiche: API B2B per le Pubbliche…'
+  x-summary: 'Piattaforma Notifiche: API B2B per le Pubbliche Amministrazioni'
   version: 1.0.0
+  description: '## Abstract
+
+    API utilizzate dalle pubbliche amministrazioni per __inviare richieste di notifiche__ e
+
+    __ottenere informazioni in modalità pull__ sullo stato della
+
+    _"richiesta di notifica"_ (accettata o rifiutata) e, in caso di richiesta accettata,
+
+    sulle comunicazioni effettuate, o solo tentate, nei confronti dei destinatari della notifica.'
   contact:
     name: 'SEND: supporto enti'
     url: https://pagopa.atlassian.net/servicedesk/customer/portal/5
-  termsOfService: https://selfcare.notifichedigitali.it/termini-di-servizio
-  x-api-id: api-external-b2b-pa
-  x-summary: 'Piattaforma Notifiche: API B2B per le Pubbliche Amministrazioni'
-  description: 'Operations tagged NewNotification across 2 of this provider''s published API definitions: send-b2b-pa-bundle.yaml, pagopa-send-b2b-pa-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.notifichedigitali.it
   description: Ambiente di produzione
@@ -58,11 +66,6 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/Problem'
-    servers:
-    - url: https://api.notifichedigitali.it
-      description: Ambiente di produzione
-    - url: https://api.uat.notifichedigitali.it
-      description: Ambiente di collaudo
   /delivery/v2.6/requests:
     post:
       summary: Richiesta invio notifica
@@ -111,11 +114,6 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/Problem'
-    servers:
-    - url: https://api.notifichedigitali.it
-      description: Ambiente di produzione
-    - url: https://api.uat.notifichedigitali.it
-      description: Ambiente di collaudo
   /delivery/requests:
     post:
       deprecated: true
@@ -165,11 +163,6 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/Problem'
-    servers:
-    - url: https://api.notifichedigitali.it
-      description: Ambiente di produzione
-    - url: https://api.uat.notifichedigitali.it
-      description: Ambiente di collaudo
   /delivery/v2.1/requests:
     post:
       deprecated: true
@@ -219,11 +212,6 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/Problem'
-    servers:
-    - url: https://api.notifichedigitali.it
-      description: Ambiente di produzione
-    - url: https://api.uat.notifichedigitali.it
-      description: Ambiente di collaudo
   /delivery/v2.3/requests:
     post:
       deprecated: true
@@ -273,11 +261,6 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/Problem'
-    servers:
-    - url: https://api.notifichedigitali.it
-      description: Ambiente di produzione
-    - url: https://api.uat.notifichedigitali.it
-      description: Ambiente di collaudo
   /delivery/v2.4/requests:
     post:
       deprecated: true
@@ -327,11 +310,6 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/Problem'
-    servers:
-    - url: https://api.notifichedigitali.it
-      description: Ambiente di produzione
-    - url: https://api.uat.notifichedigitali.it
-      description: Ambiente di collaudo
   /delivery/v2.5/requests:
     post:
       deprecated: true
@@ -385,160 +363,89 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/Problem'
-    servers:
-    - url: https://api.notifichedigitali.it
-      description: Ambiente di produzione
-    - url: https://api.uat.notifichedigitali.it
-      description: Ambiente di collaudo
 components:
   schemas:
-    NewNotificationRequestV23:
-      description: I campi utilizzati per la creazione di una nuova Notifica.
+    NotificationAttachmentDigests:
+      description: Codici per la verifica del corretto caricamento di un allegato
       type: object
       required:
-      - paProtocolNumber
-      - subject
-      - recipients
-      - documents
-      - physicalCommunicationType
-      - notificationFeePolicy
-      - senderDenomination
-      - senderTaxId
-      - taxonomyCode
+      - sha256
       properties:
-        idempotenceToken:
-          description: Identificativo utilizzabile dal chiamante per disambiguare differenti  "richieste di notificazione" effettuate con lo stesso numero di protocollo  (campo _paProtocolNumber_). Questo può essere necessario in caso di  "richiesta di notifica" rifiutata per errori nei codici di verifica degli allegati.
+        sha256:
           type: string
-          pattern: ^[ -~]*$
-          maxLength: 256
-        paProtocolNumber:
-          description: Numero di protocollo che la PA mittente assegna alla notifica stessa
-          type: string
-          pattern: ^.*$
-          maxLength: 256
-        subject:
-          type: string
-          description: titolo della notifica
-          maxLength: 134
-          pattern: ^.*$
-        abstract:
-          type: string
-          description: descrizione sintetica della notifica
-          pattern: ^.*$
-          maxLength: 1024
-        recipients:
-          type: array
-          description: Informazioni sui destinatari
-          items:
-            $ref: '#/components/schemas/NotificationRecipientV23'
-          minItems: 1
-        documents:
-          type: array
-          description: Documenti notificati
-          items:
-            $ref: '#/components/schemas/NotificationDocument'
-          minItems: 1
-        notificationFeePolicy:
-          $ref: '#/components/schemas/NotificationFeePolicy'
-        cancelledIun:
-          $ref: '#/components/schemas/IUN'
-        physicalCommunicationType:
-          type: string
-          description: Tipologia comunicazione fisica
-          enum:
-          - AR_REGISTERED_LETTER
-          - REGISTERED_LETTER_890
-        senderDenomination:
-          $ref: '#/components/schemas/Denomination'
-        senderTaxId:
-          description: Sender PA fiscal code
-          example: '77777777777'
-          type: string
-          maxLength: 11
-          minLength: 11
-          pattern: ^\d+$
-        group:
-          type: string
-          description: Gruppo di utenti dell'ente mittente che può visualizzare la notifica
-          pattern: ^[ -~]*$
-          maxLength: 1024
-        amount:
-          type: integer
-          format: int32
-          description: Importo della notifica in eurocent
-        paymentExpirationDate:
-          type: string
-          minLength: 10
-          maxLength: 10
-          pattern: ^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|[12][0-9]|0[1-9])$
-          description: Data di scadenza del pagamento nel formato YYYY-MM-DD riferito all'Italia
-        taxonomyCode:
-          type: string
-          minLength: 7
-          maxLength: 7
-          pattern: ^([0-9]{6}[A-Z]{1})$
-          description: Codice tassonomico della notifica basato sulla definizione presente nell'allegato 2 capitolo C del bando [__AVVISO PUBBLICO MISURA 1.4.5 PIATTAFORMA NOTIFICHE DIGITALI__](https://pnrrcomuni.fondazioneifel.it/bandi_public/Bando/325)
-        paFee:
-          $ref: '#/components/schemas/PaFeeV23'
-        vat:
-          $ref: '#/components/schemas/VatV23'
-        pagoPaIntMode:
-          type: string
-          description: 'Modalitá di integrazione pagoPA per l''attualizazione del costo della notifica. <br/> - _NONE_: nessuna attualizzazione. <br/> - _SYNC_: modalitá sincrona. <br/> - _ASYNC_: modalitá asincrona. <br/>'
-          enum:
-          - NONE
-          - SYNC
-          - ASYNC
-    NotificationPhysicalAddress:
-      description: Indirizzo fisico
-      type: object
-      required:
-      - address
-      - municipality
-      properties:
-        at:
-          type: string
-          description: Campo "presso" dell'indirizzo
-          pattern: ^.*$
+          description: Digest "sha256" della codifica binaria dell'allegato in base64
+          example: jezIVxlG1M1woCSUngM6KipUN3/p8cG5RMIPnuEanlE=
+          minLength: 44
           maxLength: 44
-        address:
+          pattern: ^[A-Za-z0-9+\/]{43}=|[A-Za-z0-9+\/]{44}$
+    NotificationRecipientV21:
+      description: Informazioni sui destinatari
+      required:
+      - denomination
+      - recipientType
+      - taxId
+      - physicalAddress
+      type: object
+      additionalProperties: false
+      properties:
+        recipientType:
           type: string
-          description: Indirizzo del domicilio fisico
+          description: 'Tipologia di destinatario: Persona Fisica (PF) o Persona Giuridica (PG)'
+          enum:
+          - PF
+          - PG
+        taxId:
+          $ref: '#/components/schemas/TaxId'
+        denomination:
+          $ref: '#/components/schemas/Denomination'
+        digitalDomicile:
+          $ref: '#/components/schemas/NotificationDigitalAddress'
+        physicalAddress:
+          $ref: '#/components/schemas/NotificationPhysicalAddress'
+        payments:
+          $ref: '#/components/schemas/NotificationPayments'
+    NotificationAttachmentBodyRef:
+      description: Riferimento all'allegato precaricato
+      required:
+      - key
+      - versionToken
+      type: object
+      properties:
+        key:
+          type: string
+          description: Chiave in cui è stato salvato l'allegato
+          maxLength: 512
+          pattern: ^(safestorage:\/\/)?[A-Za-z0-9._-]+$
+        versionToken:
+          type: string
+          description: Token per recuperare l'esatta istanza dell'allegato, che dovrà coincidere con l'__x-amz-version-id__ ottenuto nell'header della response in fase di upload del documento ad esso associato.
           pattern: ^.*$
-          minLength: 2
-          maxLength: 1024
-        addressDetails:
-          type: string
-          description: Seconda riga dell'indirizzo fisico
-          pattern: ^.*$
-          maxLength: 1024
-        zip:
-          type: string
-          description: Codice di avviamento postale. In caso di invio estero diventa facoltativo
-          minLength: 0
-          maxLength: 15
-          pattern: ^(\w|\ |\-)*$
-        municipality:
-          type: string
-          description: Comune
-          pattern: ^.*$
-          minLength: 2
           maxLength: 256
-        municipalityDetails:
+    NotificationRecipientV24:
+      description: Informazioni sui destinatari
+      required:
+      - denomination
+      - recipientType
+      - taxId
+      type: object
+      additionalProperties: false
+      properties:
+        recipientType:
           type: string
-          description: Frazione o località
-          pattern: ^.*$
-          maxLength: 256
-        province:
-          type: string
-          description: Provincia
-          pattern: ^.*$
-          maxLength: 256
-        foreignState:
-          type: string
-          description: Denominazione paese estero
-          pattern: ^.*$
-          maxLength: 256
+          description: 'Tipologia di destinatario: Persona Fisica (PF) o Persona Giuridica (PG)'
+          enum:
+          - PF
+          - PG
+        taxId:
+          $ref: '#/components/schemas/TaxId'
+        denomination:
+          $ref: '#/components/schemas/Denomination'
+        digitalDomicile:
+          $ref: '#/components/schemas/NotificationDigitalAddress'
+        physicalAddress:
+          $ref: '#/components/schemas/NotificationPhysicalAddress'
+        payments:
+          $ref: '#/components/schemas/NotificationPayments'
     NotificationRecipientV23:
       description: Informazioni sui destinatari
       required:
@@ -565,31 +472,56 @@ components:
           $ref: '#/components/schemas/NotificationPhysicalAddress'
         payments:
           $ref: '#/components/schemas/NotificationPayments'
-    IUN:
-      description: Identificativo Univoco Notifica
+    paTaxId:
+      description: Payment PA fiscal code
+      example: '77777777777'
       type: string
-      minLength: 25
-      maxLength: 25
-      pattern: ^[A-Z]{4}-[A-Z]{4}-[A-Z]{4}-[0-9]{6}-[A-Z]{1}-[0-9]{1}$
-    NewNotificationResponse:
-      title: Identificativi della richiesta di notifica
-      description: Contiene le informazioni per identificare una richiesta di invio notifica che non è ancora stata accettata da Piattaforma notifiche.
-      type: object
+      maxLength: 11
+      minLength: 11
+      pattern: ^\d+$
+    PaFeeV23:
+      type: integer
+      description: Costo espresso in eurocent sostenuto dal mittente, per l'elaborazione degli atti, provvedimenti, avvisi e comunicazioni oggetto di notifica, per il relativo deposito sulla piattaforma e per la gestione degli  esiti della notifica (Decreto 30 maggio 2022 - Art. 3, comma 1, lettera a). <br/> Obbligatoria per notifiche con notificationFeePolicy=DELIVERY_MODE <br/> Per le notifiche effettuate con versioni precedenti alla 2.3 si assume il valore di default 100.<br/> Esempio paFee ad 1€ -> 100 <br/>
+      format: int32
+      minimum: 0
+      maximum: 100
+    NotificationPaymentAttachment:
+      description: Un modulo di pagamento allegato alla notifica
+      allOf:
+      - $ref: '#/components/schemas/NotificationAttachment'
+    NotificationRecipient:
+      description: Informazioni sui destinatari
       required:
-      - notificationRequestId
-      - paProtocolNumber
+      - denomination
+      - recipientType
+      - taxId
+      - physicalAddress
+      type: object
       properties:
-        notificationRequestId:
+        recipientType:
           type: string
-          description: identificativo univoco di una richiesta di invio notifica, non è lo IUN
-          maxLength: 36
-          pattern: ^[A-Za-z0-9+/=]{36}$
-        paProtocolNumber:
-          type: string
-          description: Identificativo inviato dalla pubblica amministrazione
-        idempotenceToken:
-          description: Ripetizione del token usato per disambiguare "richieste di notificazione"  effettuate con lo stesso numero di protocollo (campo _paProtocolNumber_).
-          type: string
+          description: 'Tipologia di destinatario: Persona Fisica (PF) o Persona Giuridica (PG)'
+          enum:
+          - PF
+          - PG
+        taxId:
+          $ref: '#/components/schemas/TaxId'
+        denomination:
+          $ref: '#/components/schemas/Denomination'
+        digitalDomicile:
+          $ref: '#/components/schemas/NotificationDigitalAddress'
+        physicalAddress:
+          $ref: '#/components/schemas/NotificationPhysicalAddress'
+        payment:
+          $ref: '#/components/schemas/NotificationPaymentInfo'
+    NotificationPaymentItem:
+      minProperties: 1
+      additionalProperties: false
+      properties:
+        pagoPa:
+          $ref: '#/components/schemas/PagoPaPayment'
+        f24:
+          $ref: '#/components/schemas/F24Payment'
     PreLoadRequest:
       title: Richiesta di precaricamento di un File
       type: object
@@ -618,6 +550,31 @@ components:
           minLength: 44
           maxLength: 44
           pattern: ^[A-Za-z0-9+\/]{43}=|[A-Za-z0-9+\/]{44}$
+    TaxId:
+      description: C.F. persona fisica o persona giuridica
+      type: string
+      minLength: 11
+      maxLength: 16
+      pattern: ^([A-Z]{6}[0-9LMNPQRSTUV]{2}[A-Z]{1}[0-9LMNPQRSTUV]{2}[A-Z]{1}[0-9LMNPQRSTUV]{3}[A-Z]{1})|([0-9]{11})$
+    noticeCode:
+      description: Payment notice number  numero avviso
+      example: '302000100000019421'
+      type: string
+      maxLength: 18
+      minLength: 18
+      pattern: ^\d+$
+    NotificationFeePolicy:
+      type: string
+      description: 'Politica di addebitamento dei costi di notifica. <br/> - _FLAT_RATE_: costo forfettario fisso. In questa modalità SEND non gestisce  il costo della notifica per il destinatario.<br/> - _DELIVERY_MODE_: costo calcolato in base all''effettivo percorso di notifica. <br/>'
+      enum:
+      - FLAT_RATE
+      - DELIVERY_MODE
+    VatV21:
+      type: integer
+      description: IVA espressa in percentuale imposta al mittente sulla notifica analogica. <br/> Obbligatoria per notifiche con notificationFeePolicy=DELIVERY_MODE e modalità di integrazione Async o modalità di pagamento F24.<br/> Il default nei casi di non obbligatorietà è 22 <br/> Per rispettare retro-compatibilitá campo non restituito nelle API v2.1 <br/> Esempio vat al 22% -> 22 <br/>
+      format: int32
+      minimum: 0
+      maximum: 100
     Problem:
       properties:
         type:
@@ -659,190 +616,42 @@ components:
       required:
       - status
       - errors
-    ProblemError:
-      properties:
-        code:
-          description: Internal code of the error, in human-readable format
-          example: PN_PARAMETER_TOO_LONG | PN_PARAMETER_TOO_SHORT | PN_DUPLICATE_ENTRY | etc...
-          type: string
-        element:
-          description: Parameter or request body field name for validation error
-          example: body.order.item[2].quantity
-          type: string
-        detail:
-          description: A human readable explanation specific to this occurrence of the problem.
-          example: Parameter not valid
-          maxLength: 1024
-          type: string
-      required:
-      - code
-    NotificationAttachmentBodyRef:
-      description: Riferimento all'allegato precaricato
-      required:
-      - key
-      - versionToken
-      type: object
-      properties:
-        key:
-          type: string
-          description: Chiave in cui è stato salvato l'allegato
-          maxLength: 512
-          pattern: ^(safestorage:\/\/)?[A-Za-z0-9._-]+$
-        versionToken:
-          type: string
-          description: Token per recuperare l'esatta istanza dell'allegato, che dovrà coincidere con l'__x-amz-version-id__ ottenuto nell'header della response in fase di upload del documento ad esso associato.
-          pattern: ^.*$
-          maxLength: 256
-    NewNotificationRequestV21:
-      description: I campi utilizzati per la creazione di una nuova Notifica.
+    NewNotificationResponse:
+      title: Identificativi della richiesta di notifica
+      description: Contiene le informazioni per identificare una richiesta di invio notifica che non è ancora stata accettata da Piattaforma notifiche.
       type: object
       required:
+      - notificationRequestId
       - paProtocolNumber
-      - subject
-      - recipients
-      - documents
-      - physicalCommunicationType
-      - notificationFeePolicy
-      - senderDenomination
-      - senderTaxId
-      - taxonomyCode
       properties:
-        idempotenceToken:
-          description: Identificativo utilizzabile dal chiamante per disambiguare differenti  "richieste di notificazione" effettuate con lo stesso numero di protocollo  (campo _paProtocolNumber_). Questo può essere necessario in caso di  "richiesta di notifica" rifiutata per errori nei codici di verifica degli allegati.
+        notificationRequestId:
           type: string
-          pattern: ^[ -~]*$
-          maxLength: 256
+          description: identificativo univoco di una richiesta di invio notifica, non è lo IUN
+          maxLength: 36
+          pattern: ^[A-Za-z0-9+/=]{36}$
         paProtocolNumber:
-          description: Numero di protocollo che la PA mittente assegna alla notifica stessa
           type: string
-          pattern: ^.*$
-          maxLength: 256
-        subject:
+          description: Identificativo inviato dalla pubblica amministrazione
+        idempotenceToken:
+          description: Ripetizione del token usato per disambiguare "richieste di notificazione"  effettuate con lo stesso numero di protocollo (campo _paProtocolNumber_).
           type: string
-          description: titolo della notifica
-          maxLength: 134
-          pattern: ^.*$
-        abstract:
-          type: string
-          description: descrizione sintetica della notifica
-          pattern: ^.*$
-          maxLength: 1024
-        recipients:
-          type: array
-          description: Informazioni sui destinatari
-          items:
-            $ref: '#/components/schemas/NotificationRecipientV21'
-        documents:
-          type: array
-          description: Documenti notificati
-          items:
-            $ref: '#/components/schemas/NotificationDocument'
-          minItems: 1
-        notificationFeePolicy:
-          $ref: '#/components/schemas/NotificationFeePolicy'
-        cancelledIun:
-          $ref: '#/components/schemas/IUN'
-        physicalCommunicationType:
-          type: string
-          description: Tipologia comunicazione fisica
-          enum:
-          - AR_REGISTERED_LETTER
-          - REGISTERED_LETTER_890
-        senderDenomination:
-          $ref: '#/components/schemas/Denomination'
-        senderTaxId:
-          description: Sender PA fiscal code
-          example: '77777777777'
-          type: string
-          maxLength: 11
-          minLength: 11
-          pattern: ^\d+$
-        group:
-          type: string
-          description: Gruppo di utenti dell'ente mittente che può visualizzare la notifica
-          pattern: ^[ -~]*$
-          maxLength: 1024
-        amount:
-          type: integer
-          format: int32
-          description: Importo della notifica in eurocent
-        paymentExpirationDate:
-          type: string
-          minLength: 10
-          maxLength: 10
-          pattern: ^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|[12][0-9]|0[1-9])$
-          description: Data di scadenza del pagamento nel formato YYYY-MM-DD riferito all'Italia
-        taxonomyCode:
-          type: string
-          minLength: 7
-          maxLength: 7
-          pattern: ^([0-9]{6}[A-Z]{1})$
-          description: Codice tassonomico della notifica basato sulla definizione presente nell'allegato 2 capitolo C del bando [__AVVISO PUBBLICO MISURA 1.4.5 PIATTAFORMA NOTIFICHE DIGITALI__](https://pnrrcomuni.fondazioneifel.it/bandi_public/Bando/325)
-        paFee:
-          $ref: '#/components/schemas/PaFeeV21'
-        vat:
-          $ref: '#/components/schemas/VatV21'
-        pagoPaIntMode:
-          type: string
-          description: 'Modalitá di integrazione pagoPA per l''attualizazione del costo della notifica. <br/> - _NONE_: nessuna attualizzazione. <br/> - _SYNC_: modalitá sincrona. <br/> - _ASYNC_: modalitá asincrona. (non ancora supportata)<br/>'
-          enum:
-          - NONE
-          - SYNC
-          - ASYNC
-    VatV21:
-      type: integer
-      description: IVA espressa in percentuale imposta al mittente sulla notifica analogica. <br/> Obbligatoria per notifiche con notificationFeePolicy=DELIVERY_MODE e modalità di integrazione Async o modalità di pagamento F24.<br/> Il default nei casi di non obbligatorietà è 22 <br/> Per rispettare retro-compatibilitá campo non restituito nelle API v2.1 <br/> Esempio vat al 22% -> 22 <br/>
-      format: int32
-      minimum: 0
-      maximum: 100
-    NotificationPaymentAttachment:
-      description: Un modulo di pagamento allegato alla notifica
+    NotificationDocument:
+      description: Un documento da notificare
       allOf:
       - $ref: '#/components/schemas/NotificationAttachment'
-    NotificationRecipientV21:
-      description: Informazioni sui destinatari
-      required:
-      - denomination
-      - recipientType
-      - taxId
-      - physicalAddress
-      type: object
-      additionalProperties: false
-      properties:
-        recipientType:
-          type: string
-          description: 'Tipologia di destinatario: Persona Fisica (PF) o Persona Giuridica (PG)'
-          enum:
-          - PF
-          - PG
-        taxId:
-          $ref: '#/components/schemas/TaxId'
-        denomination:
-          $ref: '#/components/schemas/Denomination'
-        digitalDomicile:
-          $ref: '#/components/schemas/NotificationDigitalAddress'
-        physicalAddress:
-          $ref: '#/components/schemas/NotificationPhysicalAddress'
-        payments:
-          $ref: '#/components/schemas/NotificationPayments'
-    PagoPaPayment:
-      title: Informazioni per effettuare il pagamento con sistema pagoPA
-      description: "Informazioni utili per effettuare il pagamento di una notifica, sono associate al destinatario perché le spese di notifica possono differire a seconda del canale di notifica utilizzato. <br/>\n  - _noticeCode_: \"codice avviso pagoPA\" di pagamento del sistema pagoPA, usato per pagamento online.<br/>\n  - _creditorTaxId_: codice fiscale dell'ente a cui fa riferimento il \"codice avviso pagoPA\". <br/>\n  - _applyCost_: flag per indicare se l'avviso pagoPA deve contenere i costi di notifica. <br/>\n  - _pagoPaForm_: riferimento al PDF contenete il bollettino pagoPA<br/>"
-      type: object
-      required:
-      - noticeCode
-      - creditorTaxId
-      - applyCost
-      properties:
-        noticeCode:
-          $ref: '#/components/schemas/noticeCode'
-        creditorTaxId:
-          $ref: '#/components/schemas/paTaxId'
-        applyCost:
-          type: boolean
-          description: Flag per indicare se l'avviso pagoPa deve contenere i costi di notifica
-        attachment:
-          $ref: '#/components/schemas/NotificationPaymentAttachment'
+      - type: object
+        properties:
+          title:
+            type: string
+            description: Titolo del documento allegato. Stringa alfanumerica con caratteri utilizzabili in un nome file.
+            minLength: 1
+            maxLength: 512
+            pattern: ^.*$
+          docIdx:
+            type: string
+            description: Indice del documento partendo da 0.
+            maxLength: 3
+            pattern: ^\d+$
     NewNotificationRequestV25:
       description: I campi utilizzati per la creazione di una nuova Notifica.
       type: object
@@ -946,61 +755,189 @@ components:
           maxItems: 1
           items:
             type: string
-    TaxId:
-      description: C.F. persona fisica o persona giuridica
+    Denomination:
+      description: 'Denominazione ente o persona fisica / ragione sociale. La codifica prevede i caratteri ISO LATIN 1, senza | e senza i caratteri di controllo, ovvero la seguente regexp: ^[ -{}~\u00A0-ÿ]*$'
       type: string
-      minLength: 11
-      maxLength: 16
-      pattern: ^([A-Z]{6}[0-9LMNPQRSTUV]{2}[A-Z]{1}[0-9LMNPQRSTUV]{2}[A-Z]{1}[0-9LMNPQRSTUV]{3}[A-Z]{1})|([0-9]{11})$
-    NotificationDocument:
-      description: Un documento da notificare
-      allOf:
-      - $ref: '#/components/schemas/NotificationAttachment'
-      - type: object
-        properties:
-          title:
-            type: string
-            description: Titolo del documento allegato. Stringa alfanumerica con caratteri utilizzabili in un nome file.
-            minLength: 1
-            maxLength: 512
-            pattern: ^.*$
-          docIdx:
-            type: string
-            description: Indice del documento partendo da 0.
-            maxLength: 3
-            pattern: ^\d+$
+      minLength: 1
+      maxLength: 88
+      pattern: ^.*$
+    NotificationPaymentInfo:
+      title: Informazioni per effettuare il pagamento
+      description: "Informazioni utili per effettuare il pagamento di una notifica, sono associate al destinatario perché le spese di notifica possono differire a seconda del canale di notifica utilizzato. <br/>\n  - _noticeCode_: \"codice avviso pagoPA\" di pagamento del sistema pagoPA, usato per pagamento online.<br/>\n  - _creditorTaxId_: codice fiscale dell'ente a cui fa riferimento il \"codice avviso pagoPA\". <br/>\n  - _pagoPaForm_: riferimento al PDF contenete il bollettino pagoPA<br/>"
+      type: object
+      required:
+      - noticeCode
+      - creditorTaxId
+      properties:
+        noticeCode:
+          $ref: '#/components/schemas/noticeCode'
+        creditorTaxId:
+          $ref: '#/components/schemas/paTaxId'
+        noticeCodeAlternative:
+          $ref: '#/components/schemas/noticeCode'
+        pagoPaForm:
+          $ref: '#/components/schemas/NotificationPaymentAttachment'
+    PagoPaPayment:
+      title: Informazioni per effettuare il pagamento con sistema pagoPA
+      description: "Informazioni utili per effettuare il pagamento di una notifica, sono associate al destinatario perché le spese di notifica possono differire a seconda del canale di notifica utilizzato. <br/>\n  - _noticeCode_: \"codice avviso pagoPA\" di pagamento del sistema pagoPA, usato per pagamento online.<br/>\n  - _creditorTaxId_: codice fiscale dell'ente a cui fa riferimento il \"codice avviso pagoPA\". <br/>\n  - _applyCost_: flag per indicare se l'avviso pagoPA deve contenere i costi di notifica. <br/>\n  - _pagoPaForm_: riferimento al PDF contenete il bollettino pagoPA<br/>"
+      type: object
+      required:
+      - noticeCode
+      - creditorTaxId
+      - applyCost
+      properties:
+        noticeCode:
+          $ref: '#/components/schemas/noticeCode'
+        creditorTaxId:
+          $ref: '#/components/schemas/paTaxId'
+        applyCost:
+          type: boolean
+          description: Flag per indicare se l'avviso pagoPa deve contenere i costi di notifica
+        attachment:
+          $ref: '#/components/schemas/NotificationPaymentAttachment'
+    PaFeeV21:
+      type: integer
+      description: Costo espresso in eurocent che la PA imputa per la notifica. <br/> Obbligatoria per notifiche con notificationFeePolicy=DELIVERY_MODE e modalità di integrazione Async o modalità di pagamento F24.<br/> Il default nei casi di non obbligatorietà è 100 <br/> Esempio paFee ad 1€ -> 100 <br/>
+      format: int32
+      minimum: 0
+      maximum: 100
     NotificationPayments:
       title: Pagamenti collegati alla notifica per il destinatario
       description: Lista dei pagamenti collegati alla notifica per il destinatario. Possono essere pagamenti rateali o alternativi
       type: array
       items:
         $ref: '#/components/schemas/NotificationPaymentItem'
-    NotificationPaymentItem:
-      minProperties: 1
-      additionalProperties: false
+    NotificationDigitalAddress:
+      description: Indirizzo di invio della notifica
+      required:
+      - address
+      - type
+      type: object
       properties:
-        pagoPa:
-          $ref: '#/components/schemas/PagoPaPayment'
-        f24:
-          $ref: '#/components/schemas/F24Payment'
-    NotificationAttachment:
-      description: Un allegato della notifica.
+        type:
+          type: string
+          description: tipo di indirizzo PEC, REM, SERCQ, ...
+          enum:
+          - PEC
+        address:
+          type: string
+          example: account@domain.it
+          description: Indirizzo PEC o REM che il mittente della notifica intende utilizzare per  raggiungere il destinatario.
+          pattern: ^(?:[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?|\[(?:(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(?:25[0-5]|2[0-4]\d|[01]?\d\d?|[a-zA-Z0-9-]*[a-zA-Z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])$
+          maxLength: 320
+    NewNotificationRequestV21:
+      description: I campi utilizzati per la creazione di una nuova Notifica.
       type: object
       required:
-      - digests
-      - contentType
-      - ref
+      - paProtocolNumber
+      - subject
+      - recipients
+      - documents
+      - physicalCommunicationType
+      - notificationFeePolicy
+      - senderDenomination
+      - senderTaxId
+      - taxonomyCode
       properties:
-        digests:
-          $ref: '#/components/schemas/NotificationAttachmentDigests'
-        contentType:
+        idempotenceToken:
+          description: Identificativo utilizzabile dal chiamante per disambiguare differenti  "richieste di notificazione" effettuate con lo stesso numero di protocollo  (campo _paProtocolNumber_). Questo può essere necessario in caso di  "richiesta di notifica" rifiutata per errori nei codici di verifica degli allegati.
           type: string
-          description: tipo di contenuto dell'allegato, supportato application/pdf
-          minLength: 15
-          maxLength: 15
-          pattern: ^application\/pdf$
-        ref:
-          $ref: '#/components/schemas/NotificationAttachmentBodyRef'
+          pattern: ^[ -~]*$
+          maxLength: 256
+        paProtocolNumber:
+          description: Numero di protocollo che la PA mittente assegna alla notifica stessa
+          type: string
+          pattern: ^.*$
+          maxLength: 256
+        subject:
+          type: string
+          description: titolo della notifica
+          maxLength: 134
+          pattern: ^.*$
+        abstract:
+          type: string
+          description: descrizione sintetica della notifica
+          pattern: ^.*$
+          maxLength: 1024
+        recipients:
+          type: array
+          description: Informazioni sui destinatari
+          items:
+            $ref: '#/components/schemas/NotificationRecipientV21'
+        documents:
+          type: array
+          description: Documenti notificati
+          items:
+            $ref: '#/components/schemas/NotificationDocument'
+          minItems: 1
+        notificationFeePolicy:
+          $ref: '#/components/schemas/NotificationFeePolicy'
+        cancelledIun:
+          $ref: '#/components/schemas/IUN'
+        physicalCommunicationType:
+          type: string
+          description: Tipologia comunicazione fisica
+          enum:
+          - AR_REGISTERED_LETTER
+          - REGISTERED_LETTER_890
+        senderDenomination:
+          $ref: '#/components/schemas/Denomination'
+        senderTaxId:
+          description: Sender PA fiscal code
+          example: '77777777777'
+          type: string
+          maxLength: 11
+          minLength: 11
+          pattern: ^\d+$
+        group:
+          type: string
+          description: Gruppo di utenti dell'ente mittente che può visualizzare la notifica
+          pattern: ^[ -~]*$
+          maxLength: 1024
+        amount:
+          type: integer
+          format: int32
+          description: Importo della notifica in eurocent
+        paymentExpirationDate:
+          type: string
+          minLength: 10
+          maxLength: 10
+          pattern: ^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|[12][0-9]|0[1-9])$
+          description: Data di scadenza del pagamento nel formato YYYY-MM-DD riferito all'Italia
+        taxonomyCode:
+          type: string
+          minLength: 7
+          maxLength: 7
+          pattern: ^([0-9]{6}[A-Z]{1})$
+          description: Codice tassonomico della notifica basato sulla definizione presente nell'allegato 2 capitolo C del bando [__AVVISO PUBBLICO MISURA 1.4.5 PIATTAFORMA NOTIFICHE DIGITALI__](https://pnrrcomuni.fondazioneifel.it/bandi_public/Bando/325)
+        paFee:
+          $ref: '#/components/schemas/PaFeeV21'
+        vat:
+          $ref: '#/components/schemas/VatV21'
+        pagoPaIntMode:
+          type: string
+          description: 'Modalitá di integrazione pagoPA per l''attualizazione del costo della notifica. <br/> - _NONE_: nessuna attualizzazione. <br/> - _SYNC_: modalitá sincrona. <br/> - _ASYNC_: modalitá asincrona. (non ancora supportata)<br/>'
+          enum:
+          - NONE
+          - SYNC
+          - ASYNC
+    ProblemError:
+      properties:
+        code:
+          description: Internal code of the error, in human-readable format
+          example: PN_PARAMETER_TOO_LONG | PN_PARAMETER_TOO_SHORT | PN_DUPLICATE_ENTRY | etc...
+          type: string
+        element:
+          description: Parameter or request body field name for validation error
+          example: body.order.item[2].quantity
+          type: string
+        detail:
+          description: A human readable explanation specific to this occurrence of the problem.
+          example: Parameter not valid
+          maxLength: 1024
+          type: string
+      required:
+      - code
     NotificationMetadataAttachment:
       description: Un metadato allegato della notifica.
       type: object
@@ -1019,36 +956,109 @@ components:
           pattern: ^application\/json$
         ref:
           $ref: '#/components/schemas/NotificationAttachmentBodyRef'
-    PaFeeV23:
-      type: integer
-      description: Costo espresso in eurocent sostenuto dal mittente, per l'elaborazione degli atti, provvedimenti, avvisi e comunicazioni oggetto di notifica, per il relativo deposito sulla piattaforma e per la gestione degli  esiti della notifica (Decreto 30 maggio 2022 - Art. 3, comma 1, lettera a). <br/> Obbligatoria per notifiche con notificationFeePolicy=DELIVERY_MODE <br/> Per le notifiche effettuate con versioni precedenti alla 2.3 si assume il valore di default 100.<br/> Esempio paFee ad 1€ -> 100 <br/>
-      format: int32
-      minimum: 0
-      maximum: 100
-    F24Payment:
-      title: Informazioni per effettuare il pagamento tramite modello F24
-      description: "Informazioni utili per effettuare il pagamento di una notifica, sono associate al destinatario perché le spese di notifica possono differire a seconda del canale di notifica utilizzato. <br/>\n  - _title_: titolo del documento pdf da mostrare all'utente .<br/>\n  - _applyCost_: flag per indicare se il modello F24 deve contenere i costi di notifica.<br/>\n  - _metadataAttachment_: riferimento ai metadati per la generazione del modello F24.<br/>"
+    IUN:
+      description: Identificativo Univoco Notifica
+      type: string
+      minLength: 25
+      maxLength: 25
+      pattern: ^[A-Z]{4}-[A-Z]{4}-[A-Z]{4}-[0-9]{6}-[A-Z]{1}-[0-9]{1}$
+    NewNotificationRequestV23:
+      description: I campi utilizzati per la creazione di una nuova Notifica.
       type: object
       required:
-      - title
-      - applyCost
-      - metadataAttachment
+      - paProtocolNumber
+      - subject
+      - recipients
+      - documents
+      - physicalCommunicationType
+      - notificationFeePolicy
+      - senderDenomination
+      - senderTaxId
+      - taxonomyCode
       properties:
-        title:
-          description: Titolo del documento pdf da mostrare all'utente
+        idempotenceToken:
+          description: Identificativo utilizzabile dal chiamante per disambiguare differenti  "richieste di notificazione" effettuate con lo stesso numero di protocollo  (campo _paProtocolNumber_). Questo può essere necessario in caso di  "richiesta di notifica" rifiutata per errori nei codici di verifica degli allegati.
           type: string
-        applyCost:
-          type: boolean
-          description: Flag per indicare se il modello F24 deve contere i costi di notifica
-        metadataAttachment:
-          $ref: '#/components/schemas/NotificationMetadataAttachment'
-    paTaxId:
-      description: Payment PA fiscal code
-      example: '77777777777'
-      type: string
-      maxLength: 11
-      minLength: 11
-      pattern: ^\d+$
+          pattern: ^[ -~]*$
+          maxLength: 256
+        paProtocolNumber:
+          description: Numero di protocollo che la PA mittente assegna alla notifica stessa
+          type: string
+          pattern: ^.*$
+          maxLength: 256
+        subject:
+          type: string
+          description: titolo della notifica
+          maxLength: 134
+          pattern: ^.*$
+        abstract:
+          type: string
+          description: descrizione sintetica della notifica
+          pattern: ^.*$
+          maxLength: 1024
+        recipients:
+          type: array
+          description: Informazioni sui destinatari
+          items:
+            $ref: '#/components/schemas/NotificationRecipientV23'
+          minItems: 1
+        documents:
+          type: array
+          description: Documenti notificati
+          items:
+            $ref: '#/components/schemas/NotificationDocument'
+          minItems: 1
+        notificationFeePolicy:
+          $ref: '#/components/schemas/NotificationFeePolicy'
+        cancelledIun:
+          $ref: '#/components/schemas/IUN'
+        physicalCommunicationType:
+          type: string
+          description: Tipologia comunicazione fisica
+          enum:
+          - AR_REGISTERED_LETTER
+          - REGISTERED_LETTER_890
+        senderDenomination:
+          $ref: '#/components/schemas/Denomination'
+        senderTaxId:
+          description: Sender PA fiscal code
+          example: '77777777777'
+          type: string
+          maxLength: 11
+          minLength: 11
+          pattern: ^\d+$
+        group:
+          type: string
+          description: Gruppo di utenti dell'ente mittente che può visualizzare la notifica
+          pattern: ^[ -~]*$
+          maxLength: 1024
+        amount:
+          type: integer
+          format: int32
+          description: Importo della notifica in eurocent
+        paymentExpirationDate:
+          type: string
+          minLength: 10
+          maxLength: 10
+          pattern: ^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|[12][0-9]|0[1-9])$
+          description: Data di scadenza del pagamento nel formato YYYY-MM-DD riferito all'Italia
+        taxonomyCode:
+          type: string
+          minLength: 7
+          maxLength: 7
+          pattern: ^([0-9]{6}[A-Z]{1})$
+          description: Codice tassonomico della notifica basato sulla definizione presente nell'allegato 2 capitolo C del bando [__AVVISO PUBBLICO MISURA 1.4.5 PIATTAFORMA NOTIFICHE DIGITALI__](https://pnrrcomuni.fondazioneifel.it/bandi_public/Bando/325)
+        paFee:
+          $ref: '#/components/schemas/PaFeeV23'
+        vat:
+          $ref: '#/components/schemas/VatV23'
+        pagoPaIntMode:
+          type: string
+          description: 'Modalitá di integrazione pagoPA per l''attualizazione del costo della notifica. <br/> - _NONE_: nessuna attualizzazione. <br/> - _SYNC_: modalitá sincrona. <br/> - _ASYNC_: modalitá asincrona. <br/>'
+          enum:
+          - NONE
+          - SYNC
+          - ASYNC
     NewNotificationRequestV24:
       description: I campi utilizzati per la creazione di una nuova Notifica.
       type: object
@@ -1245,109 +1255,91 @@ components:
           - NONE
           - SYNC
           - ASYNC
-    NotificationPaymentInfo:
-      title: Informazioni per effettuare il pagamento
-      description: "Informazioni utili per effettuare il pagamento di una notifica, sono associate al destinatario perché le spese di notifica possono differire a seconda del canale di notifica utilizzato. <br/>\n  - _noticeCode_: \"codice avviso pagoPA\" di pagamento del sistema pagoPA, usato per pagamento online.<br/>\n  - _creditorTaxId_: codice fiscale dell'ente a cui fa riferimento il \"codice avviso pagoPA\". <br/>\n  - _pagoPaForm_: riferimento al PDF contenete il bollettino pagoPA<br/>"
+    NotificationAttachment:
+      description: Un allegato della notifica.
       type: object
       required:
-      - noticeCode
-      - creditorTaxId
+      - digests
+      - contentType
+      - ref
       properties:
-        noticeCode:
-          $ref: '#/components/schemas/noticeCode'
-        creditorTaxId:
-          $ref: '#/components/schemas/paTaxId'
-        noticeCodeAlternative:
-          $ref: '#/components/schemas/noticeCode'
-        pagoPaForm:
-          $ref: '#/components/schemas/NotificationPaymentAttachment'
-    PaFeeV21:
-      type: integer
-      description: Costo espresso in eurocent che la PA imputa per la notifica. <br/> Obbligatoria per notifiche con notificationFeePolicy=DELIVERY_MODE e modalità di integrazione Async o modalità di pagamento F24.<br/> Il default nei casi di non obbligatorietà è 100 <br/> Esempio paFee ad 1€ -> 100 <br/>
-      format: int32
-      minimum: 0
-      maximum: 100
-    Denomination:
-      description: 'Denominazione ente o persona fisica / ragione sociale. La codifica prevede i caratteri ISO LATIN 1, senza | e senza i caratteri di controllo, ovvero la seguente regexp: ^[ -{}~\u00A0-ÿ]*$'
-      type: string
-      minLength: 1
-      maxLength: 88
-      pattern: ^.*$
-    NotificationRecipientV24:
-      description: Informazioni sui destinatari
-      required:
-      - denomination
-      - recipientType
-      - taxId
-      type: object
-      additionalProperties: false
-      properties:
-        recipientType:
+        digests:
+          $ref: '#/components/schemas/NotificationAttachmentDigests'
+        contentType:
           type: string
-          description: 'Tipologia di destinatario: Persona Fisica (PF) o Persona Giuridica (PG)'
-          enum:
-          - PF
-          - PG
-        taxId:
-          $ref: '#/components/schemas/TaxId'
-        denomination:
-          $ref: '#/components/schemas/Denomination'
-        digitalDomicile:
-          $ref: '#/components/schemas/NotificationDigitalAddress'
-        physicalAddress:
-          $ref: '#/components/schemas/NotificationPhysicalAddress'
-        payments:
-          $ref: '#/components/schemas/NotificationPayments'
-    VatV23:
-      type: integer
-      description: IVA espressa in percentuale sui costi degli avvisi in formato cartaceo.<br/> Obbligatoria per notifiche con notificationFeePolicy=DELIVERY_MODE. <br/> Per le notifiche effettuate con versioni precedenti alla 2.3 si assume il valore di default 22. <br/> Esempio vat al 22% -> 22 <br/>
-      format: int32
-      minimum: 0
-      maximum: 100
-    NotificationDigitalAddress:
-      description: Indirizzo di invio della notifica
+          description: tipo di contenuto dell'allegato, supportato application/pdf
+          minLength: 15
+          maxLength: 15
+          pattern: ^application\/pdf$
+        ref:
+          $ref: '#/components/schemas/NotificationAttachmentBodyRef'
+    F24Payment:
+      title: Informazioni per effettuare il pagamento tramite modello F24
+      description: "Informazioni utili per effettuare il pagamento di una notifica, sono associate al destinatario perché le spese di notifica possono differire a seconda del canale di notifica utilizzato. <br/>\n  - _title_: titolo del documento pdf da mostrare all'utente .<br/>\n  - _applyCost_: flag per indicare se il modello F24 deve contenere i costi di notifica.<br/>\n  - _metadataAttachment_: riferimento ai metadati per la generazione del modello F24.<br/>"
+      type: object
+      required:
+      - title
+      - applyCost
+      - metadataAttachment
+      properties:
+        title:
+          description: Titolo del documento pdf da mostrare all'utente
+          type: string
+        applyCost:
+          type: boolean
+          description: Flag per indicare se il modello F24 deve contere i costi di notifica
+        metadataAttachment:
+          $ref: '#/components/schemas/NotificationMetadataAttachment'
+    NotificationPhysicalAddress:
+      description: Indirizzo fisico
+      type: object
       required:
       - address
-      - type
-      type: object
+      - municipality
       properties:
-        type:
+        at:
           type: string
-          description: tipo di indirizzo PEC, REM, SERCQ, ...
-          enum:
-          - PEC
+          description: Campo "presso" dell'indirizzo
+          pattern: ^.*$
+          maxLength: 44
         address:
           type: string
-          example: account@domain.it
-          description: Indirizzo PEC o REM che il mittente della notifica intende utilizzare per  raggiungere il destinatario.
-          pattern: ^(?:[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?|\[(?:(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(?:25[0-5]|2[0-4]\d|[01]?\d\d?|[a-zA-Z0-9-]*[a-zA-Z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])$
-          maxLength: 320
-    noticeCode:
-      description: Payment notice number  numero avviso
-      example: '302000100000019421'
-      type: string
-      maxLength: 18
-      minLength: 18
-      pattern: ^\d+$
-    NotificationFeePolicy:
-      type: string
-      description: 'Politica di addebitamento dei costi di notifica. <br/> - _FLAT_RATE_: costo forfettario fisso. In questa modalità SEND non gestisce  il costo della notifica per il destinatario.<br/> - _DELIVERY_MODE_: costo calcolato in base all''effettivo percorso di notifica. <br/>'
-      enum:
-      - FLAT_RATE
-      - DELIVERY_MODE
-    NotificationAttachmentDigests:
-      description: Codici per la verifica del corretto caricamento di un allegato
-      type: object
-      required:
-      - sha256
-      properties:
-        sha256:
+          description: Indirizzo del domicilio fisico
+          pattern: ^.*$
+          minLength: 2
+          maxLength: 1024
+        addressDetails:
           type: string
-          description: Digest "sha256" della codifica binaria dell'allegato in base64
-          example: jezIVxlG1M1woCSUngM6KipUN3/p8cG5RMIPnuEanlE=
-          minLength: 44
-          maxLength: 44
-          pattern: ^[A-Za-z0-9+\/]{43}=|[A-Za-z0-9+\/]{44}$
+          description: Seconda riga dell'indirizzo fisico
+          pattern: ^.*$
+          maxLength: 1024
+        zip:
+          type: string
+          description: Codice di avviamento postale. In caso di invio estero diventa facoltativo
+          minLength: 0
+          maxLength: 15
+          pattern: ^(\w|\ |\-)*$
+        municipality:
+          type: string
+          description: Comune
+          pattern: ^.*$
+          minLength: 2
+          maxLength: 256
+        municipalityDetails:
+          type: string
+          description: Frazione o località
+          pattern: ^.*$
+          maxLength: 256
+        province:
+          type: string
+          description: Provincia
+          pattern: ^.*$
+          maxLength: 256
+        foreignState:
+          type: string
+          description: Denominazione paese estero
+          pattern: ^.*$
+          maxLength: 256
     PreLoadResponse:
       title: Informazioni per il caricamento file
       description: Per ogni richiesta che è stata fatta viene fornito un presigned URL e le  informazioni per usarlo.
@@ -1378,31 +1370,6 @@ components:
           description: la chiave restituita sarà globalmente unica e andrà utilizzata nella richiesta  di notifica.
           example: PN_NOTIFICATION_ATTACHMENTS-0001-301W-B9CB-9U72-WIKD
           type: string
-    NotificationRecipient:
-      description: Informazioni sui destinatari
-      required:
-      - denomination
-      - recipientType
-      - taxId
-      - physicalAddress
-      type: object
-      properties:
-        recipientType:
-          type: string
-          description: 'Tipologia di destinatario: Persona Fisica (PF) o Persona Giuridica (PG)'
-          enum:
-          - PF
-          - PG
-        taxId:
-          $ref: '#/components/schemas/TaxId'
-        denomination:
-          $ref: '#/components/schemas/Denomination'
-        digitalDomicile:
-          $ref: '#/components/schemas/NotificationDigitalAddress'
-        physicalAddress:
-          $ref: '#/components/schemas/NotificationPhysicalAddress'
-        payment:
-          $ref: '#/components/schemas/NotificationPaymentInfo'
     NewNotificationRequestV26:
       description: I campi utilizzati per la creazione di una nuova Notifica.
       type: object
@@ -1514,11 +1481,14 @@ components:
           maximum: 100
           default: 0
           example: 0
+    VatV23:
+      type: integer
+      description: IVA espressa in percentuale sui costi degli avvisi in formato cartaceo.<br/> Obbligatoria per notifiche con notificationFeePolicy=DELIVERY_MODE. <br/> Per le notifiche effettuate con versioni precedenti alla 2.3 si assume il valore di default 22. <br/> Esempio vat al 22% -> 22 <br/>
+      format: int32
+      minimum: 0
+      maximum: 100
   securitySchemes:
     ApiKeyAuth:
       type: apiKey
       in: header
       name: x-api-key
-x-refined-from:
-- send-b2b-pa-bundle.yaml
-- pagopa-send-b2b-pa-openapi.yml
