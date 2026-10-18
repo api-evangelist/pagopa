@@ -25,6 +25,15 @@ tags:
 - Public Sector
 - Digital Identity
 - Interoperability
+- Notification
+- Italy
+tags_raw:
+- Company
+- Payments
+- Government
+- Public Sector
+- Digital Identity
+- Interoperability
 - Notifications
 - Italy
 image: https://avatars.githubusercontent.com/u/57742367?v=4
@@ -579,6 +588,8 @@ apis:
   humanURL: https://developer.pagopa.it/it/pago-pa/api/recupero-receipt
   baseURL: https://api.platform.pagopa.it/bizevents/service/v1
   tags:
+  - Agreements
+  tags_raw:
   - agreements
   properties:
   - type: OpenAPI
@@ -781,6 +792,8 @@ apis:
   humanURL: https://developer.pagopa.it/it/pago-pa/api/recupero-receipt
   baseURL: https://api.platform.pagopa.it/bizevents/service/v1
   tags:
+  - Attributes
+  tags_raw:
   - attributes
   properties:
   - type: OpenAPI
@@ -1185,6 +1198,8 @@ apis:
   humanURL: https://developer.pagopa.it/it/pago-pa/api/recupero-receipt
   baseURL: https://api.platform.pagopa.it/bizevents/service/v1
   tags:
+  - Callback
+  tags_raw:
   - callback
   properties:
   - type: OpenAPI
@@ -1589,6 +1604,8 @@ apis:
   humanURL: https://developer.pagopa.it/it/pago-pa/api/recupero-receipt
   baseURL: https://api.platform.pagopa.it/bizevents/service/v1
   tags:
+  - Cart
+  tags_raw:
   - Carts
   properties:
   - type: OpenAPI
@@ -2198,6 +2215,8 @@ apis:
   humanURL: https://developer.pagopa.it/it/pago-pa/api/recupero-receipt
   baseURL: https://api.platform.pagopa.it/bizevents/service/v1
   tags:
+  - Clients
+  tags_raw:
   - clients
   properties:
   - type: OpenAPI
@@ -2399,7 +2418,8 @@ apis:
   description: Create operation.
   humanURL: https://developer.pagopa.it/it/pago-pa/api/recupero-receipt
   baseURL: https://api.platform.pagopa.it/bizevents/service/v1
-  tags:
+  tags: []
+  tags_raw:
   - create
   properties:
   - type: OpenAPI
@@ -3209,6 +3229,8 @@ apis:
   humanURL: https://developer.pagopa.it/it/pago-pa/api/recupero-receipt
   baseURL: https://api.platform.pagopa.it/bizevents/service/v1
   tags:
+  - Delegation
+  tags_raw:
   - delegations
   properties:
   - type: OpenAPI
@@ -3410,7 +3432,8 @@ apis:
   description: Delete operation.
   humanURL: https://developer.pagopa.it/it/pago-pa/api/recupero-receipt
   baseURL: https://api.platform.pagopa.it/bizevents/service/v1
-  tags:
+  tags: []
+  tags_raw:
   - delete
   properties:
   - type: OpenAPI
@@ -4017,6 +4040,8 @@ apis:
   humanURL: https://developer.pagopa.it/it/pago-pa/api/recupero-receipt
   baseURL: https://api.platform.pagopa.it/bizevents/service/v1
   tags:
+  - e-Services
+  tags_raw:
   - eservices
   properties:
   - type: OpenAPI
@@ -4218,7 +4243,8 @@ apis:
   description: E-Service Templates routes
   humanURL: https://developer.pagopa.it/it/pago-pa/api/recupero-receipt
   baseURL: https://api.platform.pagopa.it/bizevents/service/v1
-  tags:
+  tags: []
+  tags_raw:
   - eserviceTemplates
   properties:
   - type: OpenAPI
@@ -4421,6 +4447,8 @@ apis:
   humanURL: https://developer.pagopa.it/it/pago-pa/api/recupero-receipt
   baseURL: https://api.platform.pagopa.it/bizevents/service/v1
   tags:
+  - Event
+  tags_raw:
   - events
   properties:
   - type: OpenAPI
@@ -4825,6 +4853,8 @@ apis:
   humanURL: https://developer.pagopa.it/it/pago-pa/api/recupero-receipt
   baseURL: https://api.platform.pagopa.it/bizevents/service/v1
   tags:
+  - Health
+  tags_raw:
   - health
   properties:
   - type: OpenAPI
@@ -5229,6 +5259,8 @@ apis:
   humanURL: https://developer.pagopa.it/it/pago-pa/api/recupero-receipt
   baseURL: https://api.platform.pagopa.it/bizevents/service/v1
   tags:
+  - Homes
+  tags_raw:
   - Home
   properties:
   - type: OpenAPI
@@ -5430,7 +5462,8 @@ apis:
   description: Invocazioni per sapere lo stato dell'E-service di PDND Interoprabilità
   humanURL: https://developer.pagopa.it/it/pago-pa/api/recupero-receipt
   baseURL: https://api.platform.pagopa.it/bizevents/service/v1
-  tags:
+  tags: []
+  tags_raw:
   - interopProbing
   properties:
   - type: OpenAPI
@@ -5633,6 +5666,8 @@ apis:
   humanURL: https://developer.pagopa.it/it/pago-pa/api/recupero-receipt
   baseURL: https://api.platform.pagopa.it/bizevents/service/v1
   tags:
+  - Keys
+  tags_raw:
   - keys
   properties:
   - type: OpenAPI
@@ -6037,6 +6072,8 @@ apis:
   humanURL: https://developer.pagopa.it/it/pago-pa/api/recupero-receipt
   baseURL: https://api.platform.pagopa.it/bizevents/service/v1
   tags:
+  - Manage
+  tags_raw:
   - manage
   properties:
   - type: OpenAPI
@@ -6846,7 +6883,8 @@ apis:
     apis for debt positions - v1.
   humanURL: https://developer.pagopa.it/it/pago-pa/api/recupero-receipt
   baseURL: https://api.platform.pagopa.it/bizevents/service/v1
-  tags:
+  tags: []
+  tags_raw:
   - Massive operation APIs for Debt Positions - v1
   properties:
   - type: OpenAPI
@@ -7050,7 +7088,8 @@ apis:
     apis for debt positions - v2.
   humanURL: https://developer.pagopa.it/it/pago-pa/api/recupero-receipt
   baseURL: https://api.platform.pagopa.it/bizevents/service/v1
-  tags:
+  tags: []
+  tags_raw:
   - Massive operation APIs for Debt Positions - v2
   properties:
   - type: OpenAPI
@@ -8065,6 +8104,8 @@ apis:
   humanURL: https://developer.pagopa.it/it/pago-pa/api/recupero-receipt
   baseURL: https://api.platform.pagopa.it/bizevents/service/v1
   tags:
+  - Message
+  tags_raw:
   - Messages
   properties:
   - type: OpenAPI
@@ -9886,6 +9927,8 @@ apis:
   humanURL: https://developer.pagopa.it/it/pago-pa/api/recupero-receipt
   baseURL: https://api.platform.pagopa.it/bizevents/service/v1
   tags:
+  - Organization
+  tags_raw:
   - Organizations
   properties:
   - type: OpenAPI
@@ -10088,6 +10131,8 @@ apis:
   humanURL: https://developer.pagopa.it/it/pago-pa/api/recupero-receipt
   baseURL: https://api.platform.pagopa.it/bizevents/service/v1
   tags:
+  - Payments
+  tags_raw:
   - Payment
   properties:
   - type: OpenAPI
@@ -11503,7 +11548,8 @@ apis:
   description: Producer Keychains routes
   humanURL: https://developer.pagopa.it/it/pago-pa/api/recupero-receipt
   baseURL: https://api.platform.pagopa.it/bizevents/service/v1
-  tags:
+  tags: []
+  tags_raw:
   - producerKeychains
   properties:
   - type: OpenAPI
@@ -11706,6 +11752,8 @@ apis:
   humanURL: https://developer.pagopa.it/it/pago-pa/api/recupero-receipt
   baseURL: https://api.platform.pagopa.it/bizevents/service/v1
   tags:
+  - Product
+  tags_raw:
   - products
   properties:
   - type: OpenAPI
@@ -12514,6 +12562,8 @@ apis:
   humanURL: https://developer.pagopa.it/it/pago-pa/api/recupero-receipt
   baseURL: https://api.platform.pagopa.it/bizevents/service/v1
   tags:
+  - Purposes
+  tags_raw:
   - purposes
   properties:
   - type: OpenAPI
@@ -12715,7 +12765,8 @@ apis:
   description: Purpose Templates routes
   humanURL: https://developer.pagopa.it/it/pago-pa/api/recupero-receipt
   baseURL: https://api.platform.pagopa.it/bizevents/service/v1
-  tags:
+  tags: []
+  tags_raw:
   - purposeTemplates
   properties:
   - type: OpenAPI
@@ -12917,7 +12968,8 @@ apis:
   description: Read operation.
   humanURL: https://developer.pagopa.it/it/pago-pa/api/recupero-receipt
   baseURL: https://api.platform.pagopa.it/bizevents/service/v1
-  tags:
+  tags: []
+  tags_raw:
   - read
   properties:
   - type: OpenAPI
@@ -14537,7 +14589,8 @@ apis:
     for specifiche integrazione messaggi di cortesia (server to server).
   humanURL: https://developer.pagopa.it/it/pago-pa/api/recupero-receipt
   baseURL: https://api.platform.pagopa.it/bizevents/service/v1
-  tags:
+  tags: []
+  tags_raw:
   - Specifiche Integrazione Messaggi Di Cortesia (Server To Server)
   properties:
   - type: OpenAPI
@@ -15347,6 +15400,8 @@ apis:
   humanURL: https://developer.pagopa.it/it/pago-pa/api/recupero-receipt
   baseURL: https://api.platform.pagopa.it/bizevents/service/v1
   tags:
+  - Tenants
+  tags_raw:
   - tenants
   properties:
   - type: OpenAPI
@@ -15751,6 +15806,8 @@ apis:
   humanURL: https://developer.pagopa.it/it/pago-pa/api/recupero-receipt
   baseURL: https://api.platform.pagopa.it/bizevents/service/v1
   tags:
+  - Transaction
+  tags_raw:
   - transaction
   properties:
   - type: OpenAPI
@@ -15952,7 +16009,8 @@ apis:
   description: Update operation.
   humanURL: https://developer.pagopa.it/it/pago-pa/api/recupero-receipt
   baseURL: https://api.platform.pagopa.it/bizevents/service/v1
-  tags:
+  tags: []
+  tags_raw:
   - update
   properties:
   - type: OpenAPI
@@ -16155,6 +16213,8 @@ apis:
   humanURL: https://developer.pagopa.it/it/pago-pa/api/recupero-receipt
   baseURL: https://api.platform.pagopa.it/bizevents/service/v1
   tags:
+  - User
+  tags_raw:
   - users
   properties:
   - type: OpenAPI
