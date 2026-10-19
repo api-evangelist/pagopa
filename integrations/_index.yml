@@ -26,3 +26,79 @@
     detected: '2026-10-14'
   status: not-a-workflow
   arazzo: null
+- slug: pagopa-npm-registry
+  label: npm registry
+  partner: npm
+  partner_name: npm registry
+  category: official SDK (JavaScript/TypeScript)
+  type: register
+  channel: package-registry
+  evidence: https://www.npmjs.com/package/@pagopa/interop-outbound-models
+  source: edge
+  relationship: distribution-channel
+  contract_reference:
+    register: npm registry (public registry JSON)
+    spec_file: null
+    language: JavaScript/TypeScript
+    packages:
+    - name: '@pagopa/interop-outbound-models'
+      version: 1.8.24
+      released: '2026-10-15'
+      released_field: modified
+      lapsed: false
+      page: https://www.npmjs.com/package/@pagopa/interop-outbound-models
+      repo_leg: github-org:pagopa
+      publisher_leg: email:pagopa.it
+      matched_by: domain
+    - name: '@pagopa/io-pagopa-commons'
+      version: 4.0.0
+      released: '2026-06-26'
+      released_field: modified
+      lapsed: false
+      page: https://www.npmjs.com/package/@pagopa/io-pagopa-commons
+      repo_leg: github-org:pagopa
+      publisher_leg: email:pagopa.it
+      matched_by: domain
+    - name: '@pagopa/io-react-native-wallet'
+      version: 3.8.3
+      released: '2026-10-14'
+      released_field: modified
+      lapsed: false
+      page: https://www.npmjs.com/package/@pagopa/io-react-native-wallet
+      repo_leg: github-org:pagopa
+      publisher_leg: email:pagopa.it
+      matched_by: domain
+    - name: '@pagopa/io-wallet-oid4vci'
+      version: 1.5.8
+      released: '2026-09-25'
+      released_field: modified
+      lapsed: false
+      page: https://www.npmjs.com/package/@pagopa/io-wallet-oid4vci
+      repo_leg: github-org:pagopa
+      publisher_leg: email:pagopa.it
+      matched_by: domain
+    - name: '@pagopa/mui-italia'
+      version: 2.7.0
+      released: '2026-10-16'
+      released_field: modified
+      lapsed: false
+      page: https://www.npmjs.com/package/@pagopa/mui-italia
+      repo_leg: github-org:pagopa
+      publisher_leg: email:pagopa.it
+      matched_by: domain
+    - name: '@pagopa/openapi-codegen-ts'
+      version: 14.2.0
+      released: '2026-06-26'
+      released_field: modified
+      lapsed: false
+      page: https://www.npmjs.com/package/@pagopa/openapi-codegen-ts
+      repo_leg: github-org:pagopa
+      publisher_leg: email:pagopa.it
+      matched_by: domain
+    current: true
+    signal_note: 'an official package on the registry: distribution, not an integration; lapsed = no release in
+      24 months'
+    detected_by: sweep-official-sdks.py
+    detected: '2026-10-18'
+  status: not-a-workflow
+  arazzo: null
